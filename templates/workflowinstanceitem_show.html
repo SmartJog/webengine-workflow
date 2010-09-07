@@ -1,0 +1,23 @@
+{% extends "workflow/base.html" %}
+
+{% block fullpage %}
+<div class="fullpage">
+
+    <div class="idcard idtitle">{{ workflowinstanceitem }} </div>
+    {% if request.user.is_superuser %}
+        <a href='/admin/workflow/item/{{workflowinstanceitem.item.id}}'/>Edit item</a>
+    {% endif %}
+    <table class="workflowinstanceitems">
+        <tr><td style='font-weight: bold'> Workflow </td>              <td> {{ workflowinstanceitem.workflowinstance.workflow }} - {{ workflowinstanceitem.workflowinstance.version }} ( created {{ workflowinstanceitem.workflowinstance.creation_date }} )  </td></tr>
+        <tr><td style='font-weight: bold'> Category </td>        <td> {{ workflowinstanceitem.item.workflow_category.name }} </td></tr>
+        <tr><td style='font-weight: bold'> Label </td>           <td> {{ workflowinstanceitem.item.label }} </td></tr>
+        <tr><td style='font-weight: bold'> Details </td>         <td>
+        {% for detail in workflowinstanceitem.item.details %}
+            {{ detail }}<br/>
+        {% endfor %}
+        <tr><td style='font-weight: bold'> Validation </td>      <td> {{ workflowinstanceitem.validation }} </td></tr>
+        <tr><td style='font-weight: bold'> Assigned to </td>          <td> {{ workflowinstanceitem.assigned_to }} </td></tr>
+    </table>
+
+</div>
+{% endblock fullpage %}

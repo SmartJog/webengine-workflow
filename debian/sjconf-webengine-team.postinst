@@ -1,0 +1,21 @@
+#!/bin/sh
+# PostInstall script for WebEngine.
+
+set -e
+
+#DEBHELPER#
+
+if ! sjconf --list-plugins | grep "^Plugin webengine-workflowinstance$" > /dev/null
+then
+    sjconf --install-conf --link /etc/webengine/sjconf/confs/webengine-workflowinstance.conf
+    if [ -e /etc/webengine/sjconf/templates/webengine-workflowinstance/webengine-workflowinstance.conf ]
+    then
+        sjconf --install-template --link /etc/webengine/sjconf/templates/webengine-workflowinstance
+    fi
+    sjconf --install-plugin --link /usr/share/sjconf-webengine-workflowinstance/webengine-workflowinstance.py
+    sjconf --enable-plugin webengine-workflowinstance
+    sjconf --deploy --restart webengine-workflowinstance
+fi
+
+
+exit 0

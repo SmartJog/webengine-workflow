@@ -1,0 +1,4 @@
+sjconf/plugins/*.py usr/share/sjconf-webengine-workflowinstance/
+sjconf/templates/webengine-workflowinstance/*.conf etc/webengine/sjconf/templates/webengine-workflowinstance/
+sjconf/confs/*.conf etc/webengine/sjconf/confs/
+debian/tmp/usr/share/man

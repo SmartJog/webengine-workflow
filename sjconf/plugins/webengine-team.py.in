@@ -1,0 +1,32 @@
+from sjconf import *
+
+
+class Plugin(PluginWithTemplate):
+
+    VERSION = '@VERSION@'
+
+    def name(self):
+        return __name__
+
+    def version(self):
+        return Plugin.VERSION
+
+    def template_path(self, file_path, confs_to_item):
+        return self.sjconf.etc_dir + '/webengine/sjconf/templates/webengine-team/webengine-team.conf'
+
+    def conf_section_class(self):
+        return Plugin.ConfSection
+
+    def conf_types(self):
+        return ()
+
+    def conf_files_path(self):
+        return (self.sjconf.etc_dir + '/webengine/webengine-team.conf',)
+
+    def services_to_restart(self):
+        return ('apache2',)
+
+    class ConfSection(Conf.ConfSection):
+        def __getitem__(self, key):
+            return Conf.ConfSection.__getitem__(self, key)
+

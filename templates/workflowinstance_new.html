@@ -1,0 +1,32 @@
+{% extends "workflow/base.html" %}
+
+{% block fullpage %}
+<div class="fullpage">
+
+    <div class="idcard idtitle">Workflow creation</div>
+
+    {% ifequal status "NEW" %}
+        <div>
+            <form action={% url workflow-workflowinstance-new %} method=POST>
+                {{ form.workflow.label }} : {{ form.workflow }}
+                {{ form.version.label }} : {{ form.version }}
+                <input type=submit title="Create"></input>
+            </form>
+        </div>
+    {% endifequal %}
+
+    {% ifequal status "OK" %}
+        <div>
+            <span> workflow created </span>
+        </div>
+    {% endifequal %}
+
+    {% ifequal status "KO" %}
+        <div>
+            <span> workflow not created : {{ error }} </span>
+        </div>
+    {% endifequal %}
+
+
+</div>
+{% endblock fullpage %}

@@ -1,0 +1,39 @@
+{% extends "workflow/base.html" %}
+
+{% block fullpage %}
+<div class="fullpage">
+
+    <div class="idcard idtitle">Workflows for "{{ workflowinstance }}" </div>
+    <table class="workflowinstanceitem">
+    <tr><td colspan=3 style="font-weight: bold;"> {{ workflow }} </td></tr>
+    <tr> <td> Item </td><td> Assigned to </td> <td> Validation </td></tr>
+    {% for category in categories %}
+        <tr cols=3>
+            <td style="font-weight: bold; text-align: center" colspan=3> {{ category.name }} </td>
+        </tr>
+        {% for workflowinstanceitem in category.workflowinstanceitems %}
+        <tr>
+            <td> <a href={% url workflow-workflowinstanceitem-show workflowinstanceitem.id %}> {{ workflowinstanceitem.item.label }} </a></td>
+            
+            {% ifequal workflowinstanceitem.assigned_to None %}
+                <td><a href= {% url workflow-workflowinstanceitem-take workflowinstanceitem.id %}>take</a></td>
+            {% else %}
+                <td> {{ workflowinstanceitem.assigned_to }} <a href={% url workflow-workflowinstanceitem-untake workflowinstanceitem.id %}> <img src="/medias/workflow/img/untake.png" class="untake"/> </a> </td>
+            {% endifequal %}
+        
+            <td>
+                {% for validation in validations %}
+                    {% ifequal validation  workflowinstanceitem.validation %}
+                    <a href={% url workflow-workflowinstanceitem-invalidate workflowinstanceitem.id %}> <img src="/medias/workflow/img/validation_{{ validation }}.png" class="validation_enabled" alt={{ validation }}/> </a>
+                    {% else %}
+                    <a href={% url workflow-workflowinstanceitem-validate workflowinstanceitem.id validation.id %}> <img src="/medias/workflow/img/validation_{{ validation }}_disabled.png"  class="validation_disabled" alt="{{ validation }}"/> </a>
+                    {% endifequal %}
+                {% endfor %}
+            </td>
+        </tr>
+        {% endfor %}
+    {% endfor %}
+    </table>
+
+</div>
+{% endblock fullpage %}

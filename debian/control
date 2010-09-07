@@ -1,0 +1,21 @@
+Source: webengine-workflowinstance
+Section: misc
+Priority: optional
+Maintainer: Philippe Bridant <philippe.bridant@smartjog.com>
+Uploaders: Philippe Bridant <philippe@bridant@smartjog.com>
+Build-Depends: debhelper (>= 7.0.15), cdbs (>= 0.4.52), python-central (>= 0.6), sjconf1 (>= 1.8), txt2tags
+XS-Python-Version: >= 2.5
+Standards-Version: 3.8.4
+
+Package: webengine-workflowinstance
+Architecture: all
+Depends: ${misc:Depends}, ${python:Depends}, webengine
+XB-Python-Version: ${python:Versions}
+Recommends: sjconf-webengine-workflowinstance
+Description: Plugin workflowinstance for WebEngine
+
+Package: sjconf-webengine-workflowinstance
+Architecture: all
+Depends: ${misc:Depends}, ${python:Depends}, sjconf1 (>= 1.2), webengine-workflowinstance (= ${binary:Version})
+XB-Python-Version: ${python:Versions}
+Description: Sjconf plugin workflowinstance for WebEngine

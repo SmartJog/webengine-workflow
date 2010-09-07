@@ -1,0 +1,14 @@
+{% extends "workflow/base.html" %}
+
+{% block fullpage %}
+<div class="fullpage">
+
+    <div class="idcard idtitle">Workflow management</div>
+    <ul>
+        <li> <a href={% url workflow-workflowinstance-list %} > List workflows </a> </li>
+        <li> <a href={% url workflow-workflowinstance-new %} > Create a new workflow </a> </li>
+        <li> <a href={% url workflow-item-new %} > Create items </a> </li>
+    </ul>
+
+</div>
+{% endblock fullpage %}
