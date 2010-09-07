@@ -6,7 +6,7 @@ include /usr/share/cdbs/1/class/autotools.mk
 
 DEB_CONFIGURE_EXTRA_FLAGS := 
 
-PYTHON_PACKAGES := webengine-workflowinstance 
+PYTHON_PACKAGES := webengine-workflow
 
 $(patsubst %,binary-install/%,$(PYTHON_PACKAGES)) ::
 	dh_pycentral -p$(cdbs_curpkg)

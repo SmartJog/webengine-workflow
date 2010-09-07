@@ -1,5 +1,5 @@
-webengine-workflowinstance (0.1.0~dev-1) unstable; urgency=low
+webengine-workflow (0.1.0~dev-1) unstable; urgency=low
 
-  * Initial workflowinstance.
+  * Initial workflow.
 
  -- Philippe Bridant <philippe@bridant@smartjog.com>  Wed, 25 Feb 2009 10:24:19 +0100
