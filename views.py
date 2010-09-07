@@ -2,6 +2,7 @@ from webengine.utils.decorators import render
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
+from webengine.utils.log import logger
 
 
 
@@ -59,7 +60,7 @@ def workflowinstance_show(request, workflowinstance_id):
     categories = {}
     for workflowinstanceitem in workflowinstanceitems:
         category_id=workflowinstanceitem.item.workflow_category.id
-        categories.setdefault(category_id, {'name' : workflowinstanceitem.item.workflow_category.name, 'workflowinstanceitems' : {}})
+        categories.setdefault(category_id, {'id' : workflowinstanceitem.item.workflow_category.id, 'name' : workflowinstanceitem.item.workflow_category.name, 'workflowinstanceitems' : {}})
         categories[category_id]['workflowinstanceitems'][workflowinstanceitem.id] = workflowinstanceitem
 
     for category in categories:
@@ -72,12 +73,15 @@ def workflowinstance_delete(request, workflowinstance_id):
     WorkflowInstance.objects.filter(id=workflowinstance_id).delete()
     return HttpResponseRedirect(reverse('workflow-workflowinstance-list'))
 
+def workflowinstanceitem_assign_to_person(workflowinstanceitem, person):
+    workflowinstanceitem.assigned_to = person
+    workflowinstanceitem.save()
+
 @login_required
 def workflowinstanceitem_take(request, workflowinstanceitem_id):
     workflowinstanceitem = WorkflowInstanceItems.objects.filter(id=workflowinstanceitem_id)[0]
     person = Person.objects.filter(django_user=request.user.id)[0]
-    workflowinstanceitem.assigned_to = person
-    workflowinstanceitem.save()
+    workflowinstanceitem_assign_to_person(workflowinstanceitem, person)
     return HttpResponseRedirect(reverse('workflow-workflowinstance-show', args=[workflowinstanceitem.workflowinstance.id]))
 
 @login_required
@@ -153,3 +157,20 @@ def item_new(request):
         form = ItemNewForm(request)
 
     return {'form' : form, "status" : "NEW"}
+
+@login_required
+def workflowinstance_take_category(request, workflowinstance_id, category_id):
+    items = WorkflowInstanceItems.objects.filter(workflowinstance__id=workflowinstance_id)
+    person = Person.objects.filter(django_user=request.user.id)[0]
+    for item in items:
+        if item.item.workflow_category.id == int(category_id):
+            workflowinstanceitem_assign_to_person(item, person)
+    return HttpResponseRedirect(reverse('workflow-workflowinstance-show', args=[workflowinstance_id]))
+
+@login_required
+def workflowinstance_untake_category(request, workflowinstance_id, category_id):
+    items = WorkflowInstanceItems.objects.filter(workflowinstance__id=workflowinstance_id)
+    for item in items:
+        if item.item.workflow_category.id == int(category_id):
+            workflowinstanceitem_assign_to_person(item, None)
+    return HttpResponseRedirect(reverse('workflow-workflowinstance-show', args=[workflowinstance_id]))

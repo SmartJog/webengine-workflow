@@ -9,7 +9,7 @@
     <tr> <td> Item </td><td> Assigned to </td> <td> Validation </td></tr>
     {% for category in categories %}
         <tr cols=3>
-            <td style="font-weight: bold; text-align: center" colspan=3> {{ category.name }} </td>
+            <td style="font-weight: bold; text-align: center" colspan=3> {{ category.name }} <a href= {% url workflow-workflowinstance-take_category workflowinstance.id category.id %}>take</a> <a href= {% url workflow-workflowinstance-untake_category workflowinstance.id category.id %}>untake</a> </td>
         </tr>
         {% for workflowinstanceitem in category.workflowinstanceitems %}
         <tr>
