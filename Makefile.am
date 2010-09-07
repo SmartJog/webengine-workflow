@@ -1,4 +1,4 @@
-ACLOCAL_AMFLAGS = -I /usr/share/sjconf/autotools
+ACLOCAL_AMFLAGS = 
 
-SUBDIRS = templates medias sjconf locale
+SUBDIRS = templates medias locale
 dist_workflowinstance_PYTHON = __init__.py models.py urls.py views.py

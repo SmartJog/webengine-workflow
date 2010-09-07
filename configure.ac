@@ -7,7 +7,6 @@ AC_PREREQ(2.52)
 AM_INIT_AUTOMAKE([foreign tar-ustar])
 AM_PATH_PYTHON
 
-AC_PROG_SJCONF
 AC_PATH_PROG(TXT2TAGS, txt2tags)
 AC_PATH_PROG(MSGFMT, msgfmt)
 
@@ -29,11 +28,5 @@ AC_CONFIG_FILES([
 	medias/img/Makefile
 	medias/js/Makefile
 	locale/Makefile
-	sjconf/Makefile
-	sjconf/plugins/webengine-workflowinstance.py
-	sjconf/templates/Makefile
-	sjconf/templates/webengine-workflowinstance/Makefile
-	sjconf/confs/Makefile
-	sjconf/doc/Makefile
 	])
 AC_OUTPUT

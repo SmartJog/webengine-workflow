@@ -18,7 +18,7 @@
             {% ifequal workflowinstanceitem.assigned_to None %}
                 <td><a href= {% url workflow-workflowinstanceitem-take workflowinstanceitem.id %}>take</a></td>
             {% else %}
-                <td> {{ workflowinstanceitem.assigned_to }} <a href={% url workflow-workflowinstanceitem-untake workflowinstanceitem.id %}> <img src="/medias/workflow/img/untake.png" class="untake"/> </a> </td>
+                <td style='width: 120px'> {{ workflowinstanceitem.assigned_to }} <a href={% url workflow-workflowinstanceitem-untake workflowinstanceitem.id %}> <img src="/medias/workflow/img/untake.png" class="untake"/> </a> </td>
             {% endifequal %}
         
             <td>
