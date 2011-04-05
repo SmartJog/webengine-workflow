@@ -3,3 +3,4 @@ Version 0.1.0~dev
 	* Initial commit.
 	* Added possibility to take all items of a certain category in an
 	workflow instance items.
+	* Modified initial template to have webengine compatibility.

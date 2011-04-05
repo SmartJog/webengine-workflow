@@ -1,5 +1,14 @@
 webengine-workflow (0.1.0~dev-1) unstable; urgency=low
 
+  [ Philippe Bridant ]
   * Initial workflow.
 
- -- Philippe Bridant <philippe@bridant@smartjog.com>  Wed, 25 Feb 2009 10:24:19 +0100
+  [ Bryann Lamour ]
+  * Cleaned up rules.
+  * Added webengine (>= 0.12) dependency.
+  * Added webengine-team dependency.
+  * Removed webengine-team.install
+  * Moved webengine-team.postrm to webengine-workflow.postrm
+  * Moved webengine-team.postinst to webengine-workflow.postinst
+
+ -- Bryann Lamour <bryann.lamour@smartjog.com>  Tue, 05 Apr 2011 12:05:46 +0200

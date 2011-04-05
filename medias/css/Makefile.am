@@ -1,1 +1,1 @@
-dist_mediascss_DATA = 
+dist_mediascss_DATA = style.css
