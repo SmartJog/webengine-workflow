@@ -1,4 +1,4 @@
-webengine-workflow (0.1.0~dev-1) unstable; urgency=low
+webengine-workflow (0.1.0-1) unstable; urgency=low
 
   * Initial release.
   * Add myself to Uploaders.
@@ -7,4 +7,4 @@ webengine-workflow (0.1.0~dev-1) unstable; urgency=low
   * Update Copyright to 2010-2011.
   * Extend description.
 
- -- Bryann Lamour <bryann.lamour@smartjog.com>  Fri, 06 May 2011 14:54:49 +0200
+ -- Bryann Lamour <bryann.lamour@smartjog.com>  Fri, 06 May 2011 15:49:33 +0200
