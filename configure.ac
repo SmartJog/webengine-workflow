@@ -20,6 +20,7 @@ AC_SUBST([mediasjsdir], [\$\(mediasdir\)/js])
 AC_SUBST([templatesdir], [\$\(webenginedir\)/templates/workflow])
 AC_SUBST([localesdir], [\$\(workflowdir\)/locale])
 AC_SUBST([templatetagsdir], [\$\(workflowdir\)/templatetags])
+AC_SUBST([appteamdir], [\$\(workflowdir\)/appteam])
 
 AC_CONFIG_FILES([
 	Makefile
@@ -30,5 +31,6 @@ AC_CONFIG_FILES([
 	medias/js/Makefile
 	locale/Makefile
 	templatetags/Makefile
+	appteam/Makefile
 	])
 AC_OUTPUT

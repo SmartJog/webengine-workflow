@@ -1,4 +1,4 @@
-SUBDIRS = templates medias locale templatetags
+SUBDIRS = templates medias locale templatetags appteam
 dist_workflow_PYTHON =	\
 	admin.py	\
 	forms.py	\
