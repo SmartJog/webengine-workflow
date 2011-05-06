@@ -5,10 +5,7 @@
     <link href="/medias/workflow/css/style.css" type="text/css" rel="stylesheet">
 {% endblock %}
 
+{% block pagetitle %}{% trans "Workflow" %} {% ifnotequal workflowinstance None %} {{ workflowinstance }} {%else%} {{ workflowinstanceitem.workflowinstance }} {%endifnotequal%} {% endblock %}
 
-
-
-{% block title %}{% trans "Workflow" %}{% endblock %}
-
-    {% block content %}
-    {% endblock content %}
+    {% block fullpage %}
+    {% endblock fullpage %}

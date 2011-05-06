@@ -9,7 +9,7 @@
         <h2> {{ workflow.name }} </h2>
         {% for workflowinstance in workflow.workflowinstances %}
             <li>
-            <a href={% url workflow-workflowinstance-show workflowinstance.id %}>{{ workflowinstance.version }} </a> <a href={% url workflow-workflowinstance-delete workflowinstance.id %}> <img src="/medias/workflow/img/untake.png" class="untake"/> </a> 
+            <a href={% url workflow-workflowinstance-show workflowinstance.id display.all %}>{{ workflowinstance.version }} </a> <a href={% url workflow-workflowinstance-delete workflowinstance.id %}> <img src="/medias/workflow/img/untake.png" class="untake"/> </a> 
 
             </li>
         {% endfor %}

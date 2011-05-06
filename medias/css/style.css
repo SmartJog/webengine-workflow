@@ -1,45 +1,243 @@
-div.fullpage {
-	margin: 0 7px;
-}
+/* Global */
 
 a {
-	line-height: 20px;
-	font-size: 11px;
-	color: #4d4d4d;
-	text-decoration: none;
+    line-height: 10px;
+    font-size: 11px;
+    color: black;
+    text-decoration: none;
 }
 
-.untake {
-    border: 0px;
+div.fullpage {
+    margin: 10px;
+    padding: 3px;
+    padding-left: 22px;
+    font-size: 11px;
 }
 
+/* **** */
 
-table.workflowinstanceitems tr td {
-    border: 1px solid black;
-    border-collapse: collapse;
+/* For detail page of items */
+
+.item_action {
+    margin-top: 10px;
+    margin-bottom: 25px;
+}
+
+.item_action span.title_item {
+    position: relative;
+    left: 20px;
+}
+
+.item_action table.state-item {
+    float: right;
+    margin-right: 45px;
+    margin-top: -3px;
+}
+
+.item_action table.state-item td {
     padding-left: 10px;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    padding-right: 10px;
-    padding-right: 10px;
 }
 
-table.workflowinstanceitems td {
+.item_action a#button_back_workflow {
+	text-decoration: underline;
+	color: #6D9EFF;
 }
 
-.validation_disabled {
-    text-decoration: line-through;
-    border: 0px;
+.item_action a[id|=shortcut] {
+    font-weight: bold;
+    color: #babdb6;
+    font-size: 20px;
 }
 
-.validation_enabled {
+.item_action a[id|=shortcut]:not([href]) {
+    font-size: 20px;
+    color: black;
+}
+
+.details {
+    margin-bottom: 20px;
+}
+
+.details h2 {
+    font-size: larger;
+    border-top: 1px solid black;
+}
+
+.details h2 a {
+    color: #0066dd;
     text-decoration: underline;
-    border: 0px;
 }
 
-table {
-    border-collapse: collapse;
+.details pre {
+    position: relative;
+    font-family: "Monospace", serif;
+    left: 10px; 
+    padding: 5px;
+    overflow: auto;
 }
+
+.all_comments h2 {
+    font-size: larger;
+    border-top: 1px solid black;
+}
+
+.all_comments h3 {
+    border-top: 1px solid black;
+    margin-bottom: 10px;
+}
+
+.one_comment {
+    margin: 10px;
+    margin-bottom: 20px;
+}
+
+.one_comment pre {
+    font-family: "Monospace", serif;
+    position: relative;
+    left: 10px;
+    overflow: auto;
+}
+
+.one_comment span#ancre_comment a {
+    color: #0066dd;
+}
+
+.add_details {
+    margin-bottom: 20px;
+    display: none;
+}
+
+.add_details h2 {
+    font-size: larger;
+    border-top: 1px solid black;
+    padding-top: 3px;
+}
+
+.add_comment {
+    margin-bottom: 20px;
+}
+
+.add_comment h2 {
+    font-size: larger;
+    border-top: 1px solid black;
+    padding-top: 3px;
+}
+
+/* End for detail page of item */
+
+/* For workflow instance page */
+
+.progress_workflow {
+    height: 75px;
+    padding: 10px;
+    margin: 10px;
+}
+
+.progress_bar_stats {
+    margin: 20px;
+    text-align: center;
+}
+
+.progress_bar_stats ul,li {
+    display: inline;
+}
+
+.progress_bar_stats span {
+    background-color: #73d216;
+    width: 11px;
+    height: 10px;
+    border: 1px solid black;
+    display: inline-block;
+}
+
+.progress_bar_stats span#stats-success {
+    background-color: #73bd5a;
+}
+
+.progress_bar_stats span#stats-failed {
+    background-color: #dc5555;
+}
+
+.progress_bar_stats span#stats-unsolved {
+    background-color: #babdb6;
+}
+
+.filters_workflow {
+   height: 10px;
+   text-align: center;
+   margin-bottom: 20px;
+}
+
+.filters_workflow label {
+    padding: 3px;
+}
+
+.category_workflow {
+    text-decoration: bold;
+    border-top: 1px solid gray;
+    color: black;
+    margin-bottom: 25px;
+    width: 100%;
+}
+
+.category_workflow th {
+    font-weight: bold;
+    text-align: left;
+    padding-left: 5px;
+}
+
+.category_workflow a.item_workflow {
+    width: 70%;
+    padding-left: 5px
+}
+
+.category_workflow td.take_untake_group {
+    text-align: center;
+}
+
+.category_workflow td.take-item {
+    width: 20%;
+    text-align: center;
+}
+
+.category_workflow td.untake-item {
+    width: 20%;
+    text-align: center;
+}
+
+.category_workflow td[id|=action-shortcuts] {
+    width: 10%;
+    text-align: center;
+}
+
+td[id|=action-shortcuts] a {
+    font-weight: bold;
+    font-size: 20px;
+    color: black;
+}
+
+td[id|=action-shortcuts] a[href] {
+    color: #babdb6;
+}
+
+.urls:hover {
+    text-decoration: underline;
+}
+
+a.item_workflow:hover {
+    text-decoration: underline;
+}
+
+table tr.odd_line {
+    background-color: #ddd;
+    padding-left: 50px;
+}
+
+table tr.highlight:hover {
+    background: #BFD4FF;
+}
+
+/* End for workflow instance page */
 
 li {
 	line-height: 18px;
@@ -47,13 +245,6 @@ li {
 	padding-left: 18px;
 	cursor: pointer;
     list-style: none;
-}
-
-div.fullpage {
-	margin: 10px;
-	padding: 3px;
-	padding-left: 22px;
-	font-size: 11px;
 }
 
 div.fullpage p.help {

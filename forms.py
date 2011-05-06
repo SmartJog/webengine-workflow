@@ -27,3 +27,15 @@ class ItemNewForm(forms.Form):
         self.request = request
         self.fields['category'] = forms.ChoiceField(label=_("Category"), choices=get_categories())
         self.fields['items']    = forms.CharField ( widget=forms.widgets.Textarea(), label="Items")
+
+class CommentItemNewForm(forms.Form):
+    def __init__(self, request, *args, **kwargs):
+        super(CommentItemNewForm, self).__init__(*args, **kwargs)
+        self.request = request
+        self.fields['comments'] = forms.CharField(widget=forms.widgets.Textarea(attrs={"style": "width: 100%;"}), label="Comments")
+
+class DetailItemForm(forms.Form):
+    def __init__(self, request, initialValue, *args, **kwargs):
+        super(DetailItemForm, self).__init__(*args, **kwargs)
+        self.request = request
+        self.fields['details'] = forms.CharField(widget=forms.widgets.Textarea(attrs={"style": "width: 100%;"}), label="Details", initial=initialValue)

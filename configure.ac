@@ -19,6 +19,7 @@ AC_SUBST([mediasimgdir], [\$\(mediasdir\)/img])
 AC_SUBST([mediasjsdir], [\$\(mediasdir\)/js])
 AC_SUBST([templatesdir], [\$\(webenginedir\)/templates/workflow])
 AC_SUBST([localesdir], [\$\(workflowdir\)/locale])
+AC_SUBST([templatetagsdir], [\$\(workflowdir\)/templatetags])
 
 AC_CONFIG_FILES([
 	Makefile
@@ -28,5 +29,6 @@ AC_CONFIG_FILES([
 	medias/img/Makefile
 	medias/js/Makefile
 	locale/Makefile
+	templatetags/Makefile
 	])
 AC_OUTPUT

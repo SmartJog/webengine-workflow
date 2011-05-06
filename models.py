@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth import models as AuthModels
 from team import models as teammodels
+import datetime
 
 class Workflow(models.Model):
     id = models.AutoField(primary_key = True)
@@ -54,3 +55,12 @@ class WorkflowInstanceItems(models.Model):
     def __unicode__(self):
         return "%s - %s - %s" %(self.workflowinstance, self.item.workflow_category.name, self.item.label)
 
+class CommentInstanceItem(models.Model):
+    id = models.AutoField(primary_key=True)
+    item = models.ForeignKey(WorkflowInstanceItems, null=False)
+    person = models.ForeignKey(teammodels.Person, null=True, blank=True)
+    date = models.DateField(default=datetime.datetime.now())
+    comments = models.TextField(max_length=1000, null=True, blank=True)
+
+    def __unicode__(self):
+        return self.comments
