@@ -1,3 +1,11 @@
+webengine-workflow (0.1.1~dev-1) unstable; urgency=low
+
+  * New upstream release.
+  * Update copyright as package is now under the LGPL 2.1.
+  * Bump Standards-Version to 3.9.2.
+
+ -- Rémi Cardona <remi.cardona@smartjog.com>  Mon, 09 May 2011 15:09:52 +0200
+
 webengine-workflow (0.1.0-1) unstable; urgency=low
 
   [ Bryann Lamour ]

@@ -7,3 +7,4 @@ dist_workflow_PYTHON =	\
 	teammodels.py	\
 	urls.py		\
 	views.py
+dist_doc_DATA = README.rst
