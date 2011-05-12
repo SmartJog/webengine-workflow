@@ -31,24 +31,24 @@ function  _update_item_shortcut(data, link, el) {
     link = link.split('/');
     if ($(el).hasClass("shortcut-disabled-None")) {
 	link[link.length - 1] = "OK/";
-	var ok_shortcut = "<a class='shortcut-disabled-OK shortcut' href=" + link.join('/').replace("/no_state/", "/validate/");
+	var ok_shortcut = "<a class='shortcut-disabled-OK shortcut'";
 	ok_shortcut += " title='Click to validate'><img src='/medias/workflow/img/validation_OK_disabled.png'/></a>";
 	var no_state_shortcut = "<a title='Item is untested'> ? </a>";
 	link[link.length - 1] = "KO/";
-	var ko_shortcut = "<a class='shortcut-disabled-KO shortcut' href='" + link.join('/').replace("/no_state/", "/validate/");
+	var ko_shortcut = "<a class='shortcut-disabled-KO shortcut'";
 	ko_shortcut += "' title='Click to mark as broken'><img src='/medias/workflow/img/validation_KO_disabled.png'/></a>";
 	$(el).parent().attr("class", "state-item-None");
     } else {
 	if ($(el).hasClass("shortcut-disabled-KO")) {
 		link[link.length - 2] = "OK";
-		var ok_shortcut = "<a class='shortcut-disabled-OK shortcut' href='" + link.join('/');
+		var ok_shortcut = "<a class='shortcut-disabled-OK shortcut'";
 		ok_shortcut += "' title='Click to validate'><img src='/medias/workflow/img/validation_OK_disabled.png'/></a>";
 		var ko_shortcut = "<a class='shortcut-enabled-KO' title='Item is broken'>";
 		ko_shortcut += "<img src='/medias/workflow/img/validation_KO.png'/></a>";
 		$(el).parent().attr("class", "state-item-KO");
 	} else {
 		link[link.length - 2] = "KO";
-		var ko_shortcut = "<a class='shortcut-disabled-KO shortcut' href='" + link.join('/');
+		var ko_shortcut = "<a class='shortcut-disabled-KO shortcut'";
 		ko_shortcut += "' title='Click to mark as broken'><img src='/medias/workflow/img/validation_KO_disabled.png'/></a>";
 		var ok_shortcut = "<a class='shortcut-enabled-KO shortcut' title='Item is validated'>";
 		ok_shortcut += "<img src='/medias/workflow/img/validation_OK.png'/></a>";
@@ -65,12 +65,6 @@ function  _update_item_shortcut(data, link, el) {
 	$(el).parent().html(ok_shortcut + no_state_shortcut + ko_shortcut);
 	compute_total_items_state();
     }
-}
-
-function update_item_shortcut() {
-    link = $(this).attr("href");
-    item_has_changed(this, link, _update_item_shortcut);
-    return false;
 }
 
 /* ***************** */

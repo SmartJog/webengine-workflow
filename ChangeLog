@@ -1,7 +1,8 @@
-Version 0.1.1~dev
+Version 0.2.0~dev
 
 	* Release under the LGPL 2.1.
 	* Add README.
+	* Major overhaul of the database model, extensive use of BackBone.js.
 
 Version 0.1.0 Released on 2011/05/06
 

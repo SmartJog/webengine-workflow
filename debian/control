@@ -9,7 +9,7 @@ Standards-Version: 3.9.2
 
 Package: webengine-workflow
 Architecture: all
-Depends: ${misc:Depends}, ${python:Depends}, webengine (>= 0.12.0), webengine-team
+Depends: ${misc:Depends}, ${python:Depends}, webengine (>= 0.12.0), webengine-team, libjs-backbone (>= 0.3.3)
 XB-Python-Version: ${python:Versions}
 Description: Plugin workflow for WebEngine
  Workflow page, useful to manage RVP
