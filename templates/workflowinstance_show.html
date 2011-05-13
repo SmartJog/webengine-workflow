@@ -84,7 +84,7 @@ var gl_mine = {{ counter.Mine }};
 		</td>
 	{% endifequal %}
 
-	<td id="action-shortcuts-{{ workflowinstanceitem.id }}" class="state-item-{{ workflowinstanceitem.validation }}">
+	<td id="action-shortcuts-{{ workflowinstanceitem.id }}" class="state-item-{{ workflowinstanceitem.validation }} shortcut-cell">
 		{% ifequal validations.0 workflowinstanceitem.validation %}
 			<a title="Item is validated">
 			<img src="/medias/workflow/img/validation_OK.png" alt="enabled" />

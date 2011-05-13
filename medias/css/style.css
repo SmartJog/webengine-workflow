@@ -43,17 +43,6 @@ div.fullpage {
 	color: #6D9EFF;
 }
 
-.item_action a[id|=shortcut] {
-    font-weight: bold;
-    color: #babdb6;
-    font-size: 20px;
-}
-
-.item_action a[id|=shortcut]:not([href]) {
-    font-size: 20px;
-    color: black;
-}
-
 .details {
     margin-bottom: 20px;
 }
@@ -205,18 +194,18 @@ div.fullpage {
     text-align: center;
 }
 
-.category_workflow td[id|=action-shortcuts] {
+.category_workflow td.shortcut-cell {
     width: 10%;
     text-align: center;
 }
 
-td[id|=action-shortcuts] a {
+td.shortcut-cell a {
     font-weight: bold;
     font-size: 20px;
     color: black;
 }
 
-td[id|=action-shortcuts] a.shortcut-disabled-None {
+td.shortcut-cell a.shortcut-disabled-None {
     color: #babdb6;
 }
 

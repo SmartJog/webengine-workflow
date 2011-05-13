@@ -133,7 +133,7 @@ $(document).ready(function() {
             var labelItem = $(allItemLines[i]).find("a.item_workflow").html();
             var detailItemURL = $(allItemLines[i]).find("a.item_workflow").attr("href");
             var ownerItem = $(allItemLines[i]).find("td.untake-item").contents()[0];
-            var stateItem = $(allItemLines[i]).find("td[id|=action-shortcuts]").attr("class").split('-')[2];
+            var stateItem = $(allItemLines[i]).find("td.shortcut-cell").attr("class").split(' ')[0].split('-')[2];
             var modelToAdd = new workflowItem({label : labelItem, detailURL : detailItemURL, owner : ownerItem, state : stateItem});
             itemsCollection.add(modelToAdd, {silent : true});
             new workflowItemView({el : $(allItemLines[i]), model : modelToAdd});
