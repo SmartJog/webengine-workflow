@@ -100,8 +100,7 @@ var gl_mine = {{ counter.Mine }};
 		{% if validations.1.label == workflowinstanceitem.validation.label or validations.2.label == workflowinstanceitem.validation.label%}
 			<a title="Item is untested"> ? </a>
 		{% else %}
-			<a class="shortcut-disabled-None shortcut" href="{% url workflow-workflowinstanceitem-nostate workflowinstanceitem.id %}"
-			title="Reset item validation"> ? </a>
+			<a class="shortcut-disabled-None shortcut" title="Reset item validation"> ? </a>
 		{% endif %}
 
 		{% ifequal validations.1 workflowinstanceitem.validation %}

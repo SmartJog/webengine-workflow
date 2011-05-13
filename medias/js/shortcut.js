@@ -56,7 +56,7 @@ function  _update_item_shortcut(data, link, el) {
 	}
 	link[link.length - 2] = '';
 	link[link.length - 1] = '';
-	var no_state_shortcut = "<a class='shortcut-disabled-None shortcut' href='" + link.join('/').replace('validate', 'no_state');
+	var no_state_shortcut = "<a class='shortcut-disabled-None shortcut'";
 	no_state_shortcut += "' title='Reset item validation'> ? </a>";
     }
     if ($("span#action_shortcuts").html()) {

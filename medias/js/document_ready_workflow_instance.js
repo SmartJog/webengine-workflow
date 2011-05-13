@@ -11,8 +11,10 @@ $(document).ready(function() {
     workflowItem = Backbone.Model.extend({
         url         : function () {
             var targetURL = this.attributes.baseURL;
-            targetURL += "validate/" + this.id + '/';
-            targetURL += this.attributes.state == "OK" ? "KO/" : "OK/";
+            targetURL += this.attributes.actionURL + this.id + '/';
+            if (this.attributes.actionURL == "validate/") {
+                targetURL += this.attributes.state;
+            }
             return targetURL;
         },
         validate    : function (attrs) {
@@ -21,6 +23,7 @@ $(document).ready(function() {
             this.attributes.owner = options.owner ? options.owner.data.trim() : null;
             this.id = this.attributes.detailURL.split('/')[this.attributes.detailURL.split('/').length - 2];
             this.attributes.baseURL = "/workflow/workflowinstance/item/";
+            this.attributes.actionURL = null;
         }
     });
 
@@ -30,17 +33,32 @@ $(document).ready(function() {
 
     workflowItemView = Backbone.View.extend({
         events  : {
-            "click a.shortcut"      :       "updateItemState"
+            "click a.shortcut-disabled-None"    :       "resetItemState",
+            "click a.shortcut-disabled-OK"      :       "updateItemState",
+            "click a.shortcut-disabled-KO"      :       "updateItemState",
         },
         updateItemState : function(e) {
+            this.model.set({actionURL : "validate/"});
+            this.model.set({state : $(e.target).parent().attr("class").split(' ')[0].split('-')[2]});
             this.model.fetch({
                 success : function(model, resp) {
                     _update_item_shortcut(resp, model.url(), $(e.target).parent());
-                    var stateItem = model.get("state");
-                    model.set({state : stateItem == "OK" ? "KO" : "OK"});
                 },
                 error   : function(model, resp) {
-                    alert("KO");
+                    model.set({state : model.get("state") == "OK" ? "KO" : "OK"});
+                    alert("KO"); // ********************* Display une vrai erreur ************************
+                }
+            });
+        },
+        resetItemState  : function(e) {
+            this.model.set({actionURL : "no_state/"});
+            this.model.fetch({
+                success : function(model, resp) {
+                    model.set({state : "None"});
+                    _update_item_shortcut(resp, model.url(), $(e.target));
+                },
+                error   : function(model, resp) {
+                    alert("KO"); // ********************* Display une vrai erreur ************************
                 }
             });
         },

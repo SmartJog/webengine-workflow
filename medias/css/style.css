@@ -216,7 +216,7 @@ td[id|=action-shortcuts] a {
     color: black;
 }
 
-td[id|=action-shortcuts] a[href] {
+td[id|=action-shortcuts] a.shortcut-disabled-None {
     color: #babdb6;
 }
 
