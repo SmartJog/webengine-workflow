@@ -72,18 +72,11 @@ function  _update_item_shortcut(data, link, el) {
 /* Take one item */
 
 function _update_item_add_owner(data, link, el) {
-    var href = $(el).find("a").attr("href").replace("/take/", "/untake/");
     var content = data["assigned_to_firstname"] + " " + data["assigned_to_lastname"].toUpperCase();
-    content += " <a href='" + href + "' title='Untake item'><img src='/medias/workflow/img/untake.png' /></a>";
+    content += " <a title='Untake item'><img src='/medias/workflow/img/untake.png' /></a>";
     $(el).attr("class", "untake-item owner-" + data["assigned_to"]).html(content);
     $(el).attr("id", "untake-item-" + data["item_id"]);
     compute_taken_untaken_items();
-}
-
-function update_item_add_owner() {
-    link = $(this).find("a").attr("href");
-    item_has_changed(this, link, _update_item_add_owner);
-    return false;
 }
 
 /* ***************** */
@@ -91,17 +84,10 @@ function update_item_add_owner() {
 /* Untake one item */
 
 function _update_item_reset_owner(data, link, el) {
-    var href = $(el).find("a").attr("href").replace("/untake/", "/take/");
-    var content = "<a href='" + href + "' title='Take item'>take</a>";
+    var content = "<a title='Take item'>take</a>";
     $(el).attr("class", "take-item owner-None").html(content);
     $(el).attr("id", "take-item-" + data["item_id"]);
     compute_taken_untaken_items();
-}
-
-function update_item_reset_owner() {
-    link = $(this).find("a").attr("href");
-    item_has_changed(this, link, _update_item_reset_owner);
-    return false;
 }
 
 /* ***************** */

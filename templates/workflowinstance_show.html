@@ -75,12 +75,12 @@ var gl_mine = {{ counter.Mine }};
 
 	{% ifequal workflowinstanceitem.assigned_to None %}
 		<td class="take-item owner-{{ workflowinstanceitem.assigned_to_id }}" id="take-item-{{ workflowinstanceitem.id }}">
-			<a href="{% url workflow-workflowinstanceitem-take workflowinstanceitem.id %}" title="Take item">take</a>
+			<a title="Take item">take</a>
 		</td>
 	{% else %}
 		<td class="untake-item owner-{{ workflowinstanceitem.assigned_to_id }}" id="untake-item-{{ workflowinstanceitem.id }}">
 			{{ workflowinstanceitem.assigned_to }}
-			<a href="{% url workflow-workflowinstanceitem-untake workflowinstanceitem.id %}" title="Reset owner of item">
+			<a title="Reset owner of item">
 			<img src="/medias/workflow/img/untake.png" />
 			</a>
 		</td>

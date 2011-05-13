@@ -2,8 +2,6 @@ $(document).ready(function() {
 	$("#progress_bar").append(progressbar);
 	update_statistics_progressbar();
 	update_statistics_filters();
-	$(".category_workflow td.take-item").live("click", update_item_add_owner);
-	$(".category_workflow td.untake-item").live("click", update_item_reset_owner);
 	$("a.untake-group").live("click", update_whole_group_reset_owner);
 	$("a.take-group").live("click", update_whole_group_add_owner);
 
@@ -36,6 +34,8 @@ $(document).ready(function() {
             "click a.shortcut-disabled-None"    :       "resetItemState",
             "click a.shortcut-disabled-OK"      :       "updateItemState",
             "click a.shortcut-disabled-KO"      :       "updateItemState",
+            "click td.take-item"                :       "takeOrUntakeOneItem",
+            "click td.untake-item"              :       "takeOrUntakeOneItem"
         },
         updateItemState : function(e) {
             this.model.set({actionURL : "validate/"});
@@ -56,6 +56,22 @@ $(document).ready(function() {
                 success : function(model, resp) {
                     model.set({state : "None"});
                     _update_item_shortcut(resp, model.url(), $(e.target));
+                },
+                error   : function(model, resp) {
+                    alert("KO"); // ********************* Display une vrai erreur ************************
+                }
+            });
+        },
+        takeOrUntakeOneItem    : function(e) {
+            var actionOnItem = $(e.target).parents("td").attr("class").split('-')[0] + '/';
+            this.model.set({actionURL : actionOnItem});
+            this.model.fetch({
+                success : function(model, resp) {
+                   if (actionOnItem == "take/") {
+                    _update_item_add_owner(resp, model.url(), $(e.target).parents("td"));
+                    } else {
+                    _update_item_reset_owner(resp, model.url(), $(e.target).parents("td"));
+                    }
                 },
                 error   : function(model, resp) {
                     alert("KO"); // ********************* Display une vrai erreur ************************
