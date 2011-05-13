@@ -58,7 +58,7 @@ $(document).ready(function() {
                 },
                 error   : function(model, resp) {
                     model.set({state : model.get("state") == "OK" ? "KO" : "OK"});
-                    alert("KO"); // ********************* Display une vrai erreur ************************
+                    confirm("An error happened. Would you like to refresh the page ?") ? (location.reload()) : (_);
                 }
             });
         },
@@ -70,7 +70,7 @@ $(document).ready(function() {
                     _update_item_shortcut(resp, model.url(), $(e.target));
                 },
                 error   : function(model, resp) {
-                    alert("KO"); // ********************* Display une vrai erreur ************************
+                    confirm("An error happened. Would you like to refresh the page ?") ? (location.reload()) : (_);
                 }
             });
         },
@@ -86,7 +86,7 @@ $(document).ready(function() {
                     }
                 },
                 error   : function(model, resp) {
-                    alert("KO"); // ********************* Display une vrai erreur ************************
+                    confirm("An error happened. Would you like to refresh the page ?") ? (location.reload()) : (_);
                 }
             });
         },
@@ -110,7 +110,7 @@ $(document).ready(function() {
                     }
                 },
                 error   : function(model, resp) {
-                    alert("KO"); // ********************* Display une vrai erreur ************************
+                    confirm("An error happened. Would you like to refresh the page ?") ? (location.reload()) : (_);
                 }
             });
         },
