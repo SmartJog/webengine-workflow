@@ -2,9 +2,6 @@ $(document).ready(function() {
 	$("#progress_bar").append(progressbar);
 	update_statistics_progressbar();
 	update_statistics_filters();
-	$("a.untake-group").live("click", update_whole_group_reset_owner);
-	$("a.take-group").live("click", update_whole_group_add_owner);
-
 
     workflowItem = Backbone.Model.extend({
         url         : function () {
@@ -22,6 +19,21 @@ $(document).ready(function() {
             this.id = this.attributes.detailURL.split('/')[this.attributes.detailURL.split('/').length - 2];
             this.attributes.baseURL = "/workflow/workflowinstance/item/";
             this.attributes.actionURL = null;
+        }
+    });
+
+    workflowCategory = Backbone.Model.extend({
+        url         : function() {
+            var targetURL = this.attributes.baseURL;
+            targetURL += this.attributes.actionURL + this.attributes.workflowId + '/'
+            targetURL += this.id + '/';
+            return targetURL;
+        },
+        initialize  : function(otpions) {
+            this.attributes.baseURL = "/workflow/workflowinstance/category/";
+            this.attributes.actionURL = null;
+            this.attributes.workflowId = $("div.categories_table_workflow").attr("id").split('-')[1];
+            this.id = this.attributes.categoryId;
         }
     });
 
@@ -82,7 +94,40 @@ $(document).ready(function() {
         }
     });
 
+    workflowCategoryView = Backbone.View.extend({
+        events      : {
+            "click td.take_untake_group"    :   "takeOrUntakeGroupOfItem"
+        },
+        takeOrUntakeGroupOfItem : function(e) {
+            var actionOnGroup = $(e.target).attr("class").split('-')[0] + '/';
+            this.model.set({actionURL : actionOnGroup});
+            this.model.fetch({
+                success : function(model, resp) {
+                    if (actionOnGroup == "take/") {
+                    _update_whole_group_add_owner(resp);
+                    } else {
+                    _update_whole_group_reset_owner(resp);
+                    }
+                },
+                error   : function(model, resp) {
+                    alert("KO"); // ********************* Display une vrai erreur ************************
+                }
+            });
+        },
+        initialize   : function(options) {
+        }
+    });
+
     function generateBackboneModelsCollection() {
+        // Generate view/models for categories
+        var allCategoriesLines = $("tr.category-header");
+        for (var i = 0 ; i < allCategoriesLines.length ; i++) {
+            var categoryName = $(allCategoriesLines[i]).find("th").html();
+            var categoryId = $(allCategoriesLines[i]).parents("table").attr("id").split('-')[1];
+            var modelToAdd = new workflowCategory({label : categoryName, categoryId : categoryId});
+            new workflowCategoryView({el : $(allCategoriesLines[i]), model : modelToAdd});
+        }
+        // Generate view/models for  items
         var allItemLines = $("tr.highlight");
         for (var i = 0 ; i < allItemLines.length ; i++) {
             var labelItem = $(allItemLines[i]).find("a.item_workflow").html();

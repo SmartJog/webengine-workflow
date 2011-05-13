@@ -45,19 +45,17 @@ var gl_mine = {{ counter.Mine }};
 	<label><input type="radio" id="filters-failed" onClick="$(location).attr('href','{% url workflow-workflowinstance-show workflowinstance.id display.failed %}');" /></label>
 </div>
 
-<div class="categories_table_workflow">
+<div class="categories_table_workflow" id="workflowinstance_id-{{ workflowinstance.id }}">
 {% for category in categories %}
 <table class="category_workflow" id="category_id-{{ category.id }}">
 {% for workflowinstanceitem in category.workflowinstanceitems %}
 
 	{% ifequal forloop.counter 1 %}
-	<tr>
+	<tr class="category-header">
 		<th> {{ category.name }} </th>
 		<td class="take_untake_group">
-			<a class="take-group" href="{% url workflow-workflowinstance-take_category workflowinstance.id category.id %}"
-			title="Take all items of the category">take</a>&nbsp;/&nbsp;
-			<a class="untake-group" href="{% url workflow-workflowinstance-untake_category workflowinstance.id category.id %}"
-			title="Untake all items of the category">untake</a>
+            <a class="take-group" title="Take all items of the category">take</a>&nbsp;/&nbsp;
+			<a class="untake-group" title="Untake all items of the category">untake</a>
 		</td>
 	</tr>
 	{% endifequal %}
