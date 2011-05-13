@@ -102,19 +102,6 @@ function _update_whole_group_reset_owner(data) {
     }
 }
 
-function update_whole_group_reset_owner() {
-    link = $(this).attr("href");
-    $.ajax({
-    url: link,
-    type: "POST",
-    dataType: "json",
-    timeout: 3000,
-    success: function(data, textStatus, jqXHR) { _update_whole_group_reset_owner(data); },
-    error: function(XMLHttpRequest, textStatus, errorThrown) { alert(error_message); },
-    });
-    return false;
-}
-
 /* ***************** */
 
 /* Take a whole group */
@@ -125,20 +112,6 @@ function _update_whole_group_add_owner(data) {
 	  data["item_id"] = $(element_to_add[i]).attr("id").split('-')[2];
 	  _update_item_add_owner(data, null, element_to_add[i]);
     }
-}
-
-
-function update_whole_group_add_owner() {
-    link = $(this).attr("href");
-    $.ajax({
-    url: link,
-    type: "POST",
-    dataType: "json",
-    timeout: 3000,
-    success: function(data, textStatus, jqXHR) { _update_whole_group_add_owner(data); },
-    error: function(XMLHttpRequest, textStatus, errorThrown) { alert(error_message); },
-    });
-    return false;
 }
 
 /* ***************** */
