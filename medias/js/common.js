@@ -46,18 +46,12 @@ function edit_details() {
 }
 
 var update_statistics_filters = function update_statistics_filters() {
-    $("input[type=radio]#filters-all + span").remove();
-    $("input[type=radio]#filters-all").parent().append("<span> All items (" + gl_total + ")</span>");
-    $("input[type=radio]#filters-mine + span").remove();
-    $("input[type=radio]#filters-mine").parent().append("<span> Mine items (" + gl_mine + ")</span>");
-    $("input[type=radio]#filters-untaken + span").remove();
-    $("input[type=radio]#filters-untaken").parent().append("<span> Untaken (" + gl_untaken + ")</span>");
-    $("input[type=radio]#filters-taken + span").remove();
-    $("input[type=radio]#filters-taken").parent().append("<span> Taken (" + gl_taken + ")</span>");
-    $("input[type=radio]#filters-successful + span").remove();
-    $("input[type=radio]#filters-successful").parent().append("<span> Successful items (" + gl_success + ")</span>");
-    $("input[type=radio]#filters-failed + span").remove();
-    $("input[type=radio]#filters-failed").parent().append("<span> Broken items (" + gl_failed + ")</span>");
+    $("input[type=radio]#filters-all + span").html(" All items (" + gl_total + ")");
+    $("input[type=radio]#filters-mine + span").html(" Mine items (" + gl_mine + ")");
+    $("input[type=radio]#filters-untaken + span").html(" Untaken (" + gl_untaken + ")");
+    $("input[type=radio]#filters-taken + span").html(" Taken (" + gl_taken + ")");
+    $("input[type=radio]#filters-successful + span").html(" Successful items (" + gl_success + ")");
+    $("input[type=radio]#filters-failed + span").html(" Broken items (" + gl_failed + ")");
 
     $("#filters-" + location.pathname.split('/')[5]).attr("checked", "checked").parent().attr("style", "font-weight: bold;");
 }
