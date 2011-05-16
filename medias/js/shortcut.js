@@ -97,8 +97,10 @@ function _update_item_reset_owner(data, link, el) {
 function _update_whole_group_reset_owner(data) {
     var element_to_add = $("table#category_id-" + data["category_id"] + " td.untake-item");
       for (var i = 0; i < element_to_add.length ; i++) {
-	  data["item_id"] = $(element_to_add[i]).attr("id").split('-')[2];
-	  _update_item_reset_owner(data, null, element_to_add[i]);
+        if ($(element_to_add[i]).attr("class").split(' ')[1].split('-')[1] == data["person_id"]) {
+            data["item_id"] = $(element_to_add[i]).attr("id").split('-')[2];
+            _update_item_reset_owner(data, null, element_to_add[i]);
+        }
     }
 }
 
