@@ -19,6 +19,7 @@ $(document).ready(function() {
             this.id = this.attributes.detailURL.split('/')[this.attributes.detailURL.split('/').length - 2];
             this.attributes.baseURL = "/workflow/workflowinstance/item/";
             this.attributes.actionURL = null;
+            this.attributes.ajaxCallback = null;
         }
     });
 
@@ -52,7 +53,7 @@ $(document).ready(function() {
         updateItemState : function(e) {
             this.model.set({actionURL : "validate/"});
             this.model.set({state : $(e.target).parent().attr("class").split(' ')[0].split('-')[2]});
-            this.model.fetch({
+            this.model.set({ajaxCallback : {
                 success : function(model, resp) {
                     _update_item_shortcut(resp, model.url(), $(e.target).parent());
                 },
@@ -60,11 +61,12 @@ $(document).ready(function() {
                     model.set({state : model.get("state") == "OK" ? "KO" : "OK"});
                     confirm("An error happened. Would you like to refresh the page ?") ? (location.reload()) : (_);
                 }
-            });
+            }});
+            _item_has_changed(this.model, 1, $(e.target).parents("td"), 0);
         },
         resetItemState  : function(e) {
             this.model.set({actionURL : "no_state/"});
-            this.model.fetch({
+            this.model.set({ajaxCallback :{
                 success : function(model, resp) {
                     model.set({state : "None"});
                     _update_item_shortcut(resp, model.url(), $(e.target));
@@ -72,23 +74,25 @@ $(document).ready(function() {
                 error   : function(model, resp) {
                     confirm("An error happened. Would you like to refresh the page ?") ? (location.reload()) : (_);
                 }
-            });
+            }});
+            _item_has_changed(this.model, 1, $(e.target).parents("td"), 0);
         },
         takeOrUntakeOneItem    : function(e) {
             var actionOnItem = $(e.target).parents("td").attr("class").split('-')[0] + '/';
             this.model.set({actionURL : actionOnItem});
-            this.model.fetch({
+            this.model.set({ajaxCallback : {
                 success : function(model, resp) {
                    if (actionOnItem == "take/") {
                     _update_item_add_owner(resp, model.url(), $(e.target).parents("td"));
-                    } else {
-                    _update_item_reset_owner(resp, model.url(), $(e.target).parents("td"));
-                    }
+                   } else {
+                   _update_item_reset_owner(resp, model.url(), $(e.target).parents("td"));
+                   }
                 },
                 error   : function(model, resp) {
                     confirm("An error happened. Would you like to refresh the page ?") ? (location.reload()) : (_);
                 }
-            });
+            }});
+            _item_has_changed(this.model, 1, $(e.target).parents("td"), 1);
         },
         initialize  : function() {
         }

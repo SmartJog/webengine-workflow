@@ -1,41 +1,34 @@
-function _check_if_has_changed(el, data, link, callback) {
-    if ($("td#take-item-" + data["item_id"]).html()) {
-	var take_untake_cell_validation = $("td#take-item-" + data["item_id"]).attr("class").split(' ')[1].split('-')[1];
+function _check_if_has_changed(data, model, el, toCheck) {
+    if (toCheck) {
+        var itemOwner = $(el).attr("class").split(' ')[1].split('-')[1];
+        return itemOwner == data["assigned_to"];
     } else {
-	var take_untake_cell_validation = $("td#untake-item-" + data["item_id"]).attr("class").split(' ')[1].split('-')[1];
-    }
-    if ($("td#action-shortcuts-" + data["item_id"]).attr("class").split('-')[2] == data["validation"]
-	   && take_untake_cell_validation == data["assigned_to"]) {
-	$.ajax({
-	url: link,
-	type: "POST",
-	dataType: "json",
-	timeout: 3000,
-	success: function(data, textStatus, jqXHR) { callback(data, link, el); },
-	error: function(XMLHttpRequest, textStatus, errorThrown) { alert(error_message); },
-	});
-    } else {
-	confirm("Your current version is not up to date. Would you like to refresh the page ?") ? (location.reload()) : (_);
+        var itemState = $(el).attr("class").split(' ')[0].split('-')[2];
+        return itemState == data["validation"];
     }
 }
 
-function item_has_changed(el, link_callback, callback) {
-    if ($(el).attr("id")) {
-	var id = $(el).attr("id").split('-')[2];
+function _item_has_changed(model, itemOrGroupOf, elParent, toCheck) {
+    if (itemOrGroupOf) {
+        var link = checkBaseURL + model.id + "/0/";
     } else {
-	var id = $(el).parent().attr("id").split(' ')[0].split('-')[2];
-    }
-    if ($(el).attr("id").indexOf("group") > 0) {
-	var link = "/workflow/workflowinstance/check/0/" + id + "/";
-    } else {
-	var link = "/workflow/workflowinstance/check/" + id + "/0/";
+        var link = checkBaseURL + "0/" + model.id + '/';
     }
     $.ajax({
 	url: link,
 	type: "POST",
 	dataType: "json",
 	timeout: 3000,
-	success: function(data, textStatus, jqXHR) { _check_if_has_changed(el, data, link_callback, callback); },
+	success: function(data, textStatus, jqXHR) {
+        if (_check_if_has_changed(data, model, elParent, toCheck)) {
+            model.fetch({
+                success : model.attributes.ajaxCallback.success,
+                error   : model.attributes.ajaxCallback.error
+            });
+        } else {
+            confirm("Your workflow is not up to date. Would you like to refresh the page ?") ? (location.reload()) : (_);
+        }
+    },
 	error: function(XMLHttpRequest, textStatus, errorThrown) { alert(error_message); },
 	});
 }

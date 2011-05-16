@@ -115,4 +115,5 @@ function _update_whole_group_add_owner(data) {
 }
 
 /* ***************** */
-var error_message = "Errors unexpectedly happened. Please refresh the page."
+var error_message = "Errors unexpectedly happened. Please refresh the page.";
+var checkBaseURL = "/workflow/workflowinstance/check/";
