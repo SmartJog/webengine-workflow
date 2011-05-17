@@ -50,22 +50,18 @@ var gl_mine = {{ counter.Mine }};
 <div class="categories_table_workflow" id="workflowinstance_id-{{ workflowinstance.id }}">
 {% for category in categories %}
 <table class="category_workflow" id="category_id-{{ category.id }}">
-{% for workflowinstanceitem in category.workflowinstanceitems %}
-
-	{% ifequal forloop.counter 1 %}
 	<tr class="category-header">
-		<th> {{ category.name }} </th>
+        <th> {{ forloop.counter }} - {{ category.name }} </th>
         <td class="take_untake_group" id="category_group-{{category.id}}">
             <a class="take-group" title="Take all items of the category">take</a>&nbsp;/&nbsp;
 			<a class="untake-group" title="Untake all items of the category">untake</a>
 		</td>
 	</tr>
-	{% endifequal %}
-
+{% for workflowinstanceitem in category.workflowinstanceitems %}
 	<tr class="highlight {% if forloop.counter|divisibleby:2 %}{% else %}odd_line{% endif %}">
 	<td>
 		<a class="item_workflow" href="{% url workflow-workflowinstanceitem-show workflowinstanceitem.id %}"
-		title="Label item"> {{ workflowinstanceitem.item.label }}</a>
+            title="Label item">{{ forloop.counter }} - {{ workflowinstanceitem.item.label }}</a>
 		{% for URL in workflowinstanceitem.item.label|link_ticket %}
 			{% ifequal forloop.counter 1 %}|&nbsp;{% endifequal %}
 			<a class="urls" href="{{ URL }}" alt="Ticket {{ URL }}"> {{ URL|get_ticket_name }}</a>
