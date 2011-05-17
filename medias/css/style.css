@@ -209,6 +209,11 @@ td.shortcut-cell a.shortcut-disabled-None {
     color: #babdb6;
 }
 
+.urls {
+    color: blue;
+    font-weight: bold;
+}
+
 .urls:hover {
     text-decoration: underline;
 }
