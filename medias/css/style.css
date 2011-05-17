@@ -175,7 +175,7 @@ div.fullpage {
     padding-left: 5px;
 }
 
-.category_workflow a.item_workflow {
+.category_workflow a.label_item {
     width: 70%;
     padding-left: 10px;
 }
@@ -218,7 +218,7 @@ td.shortcut-cell a.shortcut-disabled-None {
     text-decoration: underline;
 }
 
-a.item_workflow:hover {
+a.label_item:hover {
     text-decoration: underline;
 }
 
