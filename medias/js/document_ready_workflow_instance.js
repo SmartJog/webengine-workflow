@@ -62,7 +62,7 @@ $(document).ready(function() {
                     confirm("An error happened. Would you like to refresh the page ?") ? (location.reload()) : (_);
                 }
             }});
-            _item_has_changed(this.model, 1, $(e.target).parents("td"), 0);
+            _item_has_changed(this.model, $(e.target).parents("td"), 0);
         },
         resetItemState  : function(e) {
             this.model.set({actionURL : "no_state/"});
@@ -75,7 +75,7 @@ $(document).ready(function() {
                     confirm("An error happened. Would you like to refresh the page ?") ? (location.reload()) : (_);
                 }
             }});
-            _item_has_changed(this.model, 1, $(e.target).parents("td"), 0);
+            _item_has_changed(this.model, $(e.target).parents("td"), 0);
         },
         takeOrUntakeOneItem    : function(e) {
             var actionOnItem = $(e.target).parents("td").attr("class").split('-')[0] + '/';
@@ -92,7 +92,7 @@ $(document).ready(function() {
                     confirm("An error happened. Would you like to refresh the page ?") ? (location.reload()) : (_);
                 }
             }});
-            _item_has_changed(this.model, 1, $(e.target).parents("td"), 1);
+            _item_has_changed(this.model, $(e.target).parents("td"), 1);
         },
         initialize  : function() {
         }
@@ -105,7 +105,7 @@ $(document).ready(function() {
         takeOrUntakeGroupOfItem : function(e) {
             var actionOnGroup = $(e.target).attr("class").split('-')[0] + '/';
             this.model.set({actionURL : actionOnGroup});
-            this.model.fetch({
+            this.model.set({ajaxCallback : {
                 success : function(model, resp) {
                     if (actionOnGroup == "take/") {
                     _update_whole_group_add_owner(resp);
@@ -116,7 +116,8 @@ $(document).ready(function() {
                 error   : function(model, resp) {
                     confirm("An error happened. Would you like to refresh the page ?") ? (location.reload()) : (_);
                 }
-            });
+            }});
+            _item_has_changed(this.model, $(e.target).parents("table"), 2);
         },
         initialize   : function(options) {
         }

@@ -59,7 +59,12 @@ def check_state_before_change(request, item_id, category_id):
                 "validation" : item.validation_id == 1 and "OK" or item.validation_id == 2 and "KO" or "None",\
                 "item_id" : item_id}
     else:
-        return {"category_id" : category_id}
+        item_assignation_id = {}
+        instance_items = WorkflowInstanceItems.objects.filter(workflowinstance=33)
+        for item in instance_items:
+            if item.item.workflow_category_id == int(category_id):
+                item_assignation_id[item.id] = item.assigned_to_id or "None"
+        return {"owners_id" : item_assignation_id}
 
 def _fill_container(dict_to_fill, which_display):
     for category in dict_to_fill[which_display]:

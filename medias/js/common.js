@@ -1,15 +1,29 @@
 function _check_if_has_changed(data, model, el, toCheck) {
-    if (toCheck) {
+    if (toCheck == 1) {
         var itemOwner = $(el).attr("class").split(' ')[1].split('-')[1];
         return itemOwner == data["assigned_to"];
-    } else {
+    } else if (toCheck == 0) {
         var itemState = $(el).attr("class").split(' ')[0].split('-')[2];
         return itemState == data["validation"];
+    } else if (toCheck == 2) {
+        elementsToCheck = $(el).find("td.take-item, td.untake-item");
+        for (var i = 0; i < elementsToCheck.length ; i++) {
+            var elToCheckOwnerID = $(elementsToCheck[i]).attr("class").split(' ')[1].split('-')[1];
+            var elToCheckID = $(elementsToCheck[i]).attr("id").split('-')[2];
+            if (data["owners_id"][elToCheckID] != elToCheckOwnerID) {
+                return false;
+            }
+        }
+        return true;
     }
 }
 
-function _item_has_changed(model, itemOrGroupOf, elParent, toCheck) {
-    if (itemOrGroupOf) {
+function _item_has_changed(model, elParent, toCheck) {
+    // toCheck:
+    // 0 will check for owner
+    // 1 will check for state item
+    // 2 will check for state of a whole group
+    if (toCheck != 2) {
         var link = checkBaseURL + model.id + "/0/";
     } else {
         var link = checkBaseURL + "0/" + model.id + '/';

@@ -55,7 +55,7 @@ var gl_mine = {{ counter.Mine }};
 	{% ifequal forloop.counter 1 %}
 	<tr class="category-header">
 		<th> {{ category.name }} </th>
-		<td class="take_untake_group">
+        <td class="take_untake_group" id="category_group-{{category.id}}">
             <a class="take-group" title="Take all items of the category">take</a>&nbsp;/&nbsp;
 			<a class="untake-group" title="Untake all items of the category">untake</a>
 		</td>
