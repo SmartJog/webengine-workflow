@@ -4,13 +4,16 @@ $(document).ready(function() {
 	update_statistics_filters();
 
     workflowItem = Backbone.Model.extend({
-        url         : function () {
-            var targetURL = this.attributes.baseURL;
-            targetURL += this.attributes.actionURL + this.id + '/';
-            if (this.attributes.actionURL == "validate/") {
-                targetURL += this.attributes.state;
-            }
-            return targetURL;
+        url         : function (completeURL) {
+			if (completeURL == null) {
+				var targetURL = this.attributes.baseURL;
+				targetURL += this.attributes.actionURL + this.id + '/';
+				if (this.attributes.actionURL == "validate/") {
+					targetURL += this.attributes.state;
+				}
+				return targetURL;
+				}
+			return completeURL;
         },
         validate    : function (attrs) {
         },
@@ -20,6 +23,8 @@ $(document).ready(function() {
             this.attributes.baseURL = "/workflow/workflowinstance/item/";
             this.attributes.actionURL = null;
             this.attributes.ajaxCallback = null;
+            $("tr#detail-item-" + this.id).hide();
+            $("tr#detail-item-" + this.id).css("visibility", "hidden");
         }
     });
 
@@ -48,7 +53,8 @@ $(document).ready(function() {
             "click a.shortcut-disabled-OK"      :       "updateItemState",
             "click a.shortcut-disabled-KO"      :       "updateItemState",
             "click td.take-item"                :       "takeOrUntakeOneItem",
-            "click td.untake-item"              :       "takeOrUntakeOneItem"
+            "click td.untake-item"              :       "takeOrUntakeOneItem",
+            "click a.label_item"                :       "getDetailItem",
         },
         updateItemState : function(e) {
             this.model.set({actionURL : "validate/"});
@@ -94,6 +100,19 @@ $(document).ready(function() {
             }});
             _item_has_changed(this.model, $(e.target).parents("td"), 1);
         },
+        getDetailItem       : function(e) {
+			var prop = $("tr#detail-item-" + this.model.id).css("visibility");
+			if (prop == "visible") {
+				$("tr#detail-item-" + this.model.id).css("visibility", "hidden");
+                $("tr#detail-item-" + this.model.id).fadeOut();
+			} else {
+                $("tr#detail-item-" + this.model.id).css("visibility", "visible");
+                $("tr#detail-item-" + this.model.id).fadeIn();
+				var targetSection = $(e.target).parents("tr").next().find("div.title_detail_item a")[0];
+				_show_commentOrDetail(targetSection, 'detail');
+				_show_item_detail(this.model.url(this.model.get("detailURL")), $("tr#detail-item-" + this.model.id));
+			}
+        },
         initialize  : function() {
         }
     });
@@ -135,8 +154,9 @@ $(document).ready(function() {
         // Generate view/models for  items
         var allItemLines = $("tr.highlight");
         for (var i = 0 ; i < allItemLines.length ; i++) {
-            var labelItem = $(allItemLines[i]).find("a.item_workflow").html();
-            var detailItemURL = $(allItemLines[i]).find("a.item_workflow").attr("href");
+            var labelItem = $(allItemLines[i]).find("a.label_item").html();
+            var itemID = $(allItemLines[i]).find("td.label").attr("id").split('-')[2];
+            var detailItemURL = "/workflow/workflowinstance/item/show/" + itemID + '/';
             var ownerItem = $(allItemLines[i]).find("td.untake-item").contents()[0];
             var stateItem = $(allItemLines[i]).find("td.shortcut-cell").attr("class").split(' ')[0].split('-')[2];
             var modelToAdd = new workflowItem({label : labelItem, detailURL : detailItemURL, owner : ownerItem, state : stateItem});

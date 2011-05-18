@@ -47,9 +47,56 @@ function _item_has_changed(model, elParent, toCheck) {
 	});
 }
 
-function edit_details() {
-    $('div.details').attr('style', 'display: none;');
-    $('div.add_details').attr('style', 'display: block;');
+function _show_commentOrDetail(el, what) {
+	if (what == 'detail') {
+		$(el).parents("tr").find("div.all_for_detail").attr('style', 'display: block;');
+		$(el).parents("tr").find("div.all_for_comment").attr('style', 'display: none;');
+		$(el).html("<b>Details</b>");
+		$(el).parents("tr").find("div.title_detail_item a:last-child").html("Comments");
+	} else {
+		$(el).parents("tr").find("div.all_for_comment").attr('style', 'display: block;');
+		$(el).parents("tr").find("div.all_for_detail").attr('style', 'display: none;');
+		$(el).html("<b>Comments</b>");
+		$(el).parents("tr").find("div.title_detail_item a:first-child").html("Details");
+	}
+}
+
+function changeDetailsOrAddComment(what, el) {
+	var itemID = $(el).parents("tr").attr("id").split('-')[2];
+	if (what == "detail") {
+		var link = "/workflow/workflowinstance/changedetails/" + itemID + '/';
+	} else {
+		var link = "/workflow/workflowinstance/addcomment/" + itemID + '/';
+	}
+    $.ajax({
+	url: link,
+	type: "POST",
+	data: $(el).serialize(),
+	dataType: "json",
+	timeout: 3000,
+	success: function(data, textStatus, jqXHR) {
+		_show_item_detail("/workflow/workflowinstance/item/show/" + itemID + '/', $(el).parents("tr"));
+		if (what == 'detail') {
+			_show_detail(el);
+		} else {
+			$(el).find("textarea").attr('value', '');
+		}
+	},
+	error: function(XMLHttpRequest, textStatus, errorThrown) { alert(error_message); },
+	});
+}
+
+function _show_detail(el) {
+	$(el).parent().attr('style', 'display: none;');
+	$(el).parent().prev().attr('style', 'display: block;');
+	$(el).parent().prev().prev().attr('style', 'display: block;');
+}
+
+function edit_details(el) {
+    $(el).attr('style', 'display: none;');
+    $(el).next().attr('style', 'display: none;');
+    $(el).next().next().attr('style', 'display: block;');
+    $(el).next().next().find("textarea").attr('value', $(el).html());
 }
 
 var update_statistics_filters = function update_statistics_filters() {

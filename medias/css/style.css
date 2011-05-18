@@ -16,75 +16,16 @@ div.fullpage {
 
 /* **** */
 
-/* For detail page of items */
+/* For workflow instance page */
 
-.item_action {
-    margin-top: 10px;
-    margin-bottom: 25px;
+pre.details_item, pre.comments_item {
+	padding: 10px;
 }
 
-.item_action span.title_item {
-    position: relative;
-    left: 20px;
-}
-
-.item_action table.state-item {
-    float: right;
-    margin-right: 45px;
-    margin-top: -3px;
-}
-
-.item_action table.state-item td {
-    padding-left: 10px;
-}
-
-.item_action a#button_back_workflow {
-	text-decoration: underline;
-	color: #6D9EFF;
-}
-
-.details {
-    margin-bottom: 20px;
-}
-
-.details h2 {
-    font-size: larger;
-    border-top: 1px solid black;
-}
-
-.details h2 a {
-    color: #0066dd;
-    text-decoration: underline;
-}
-
-.details pre {
-    position: relative;
-    font-family: "Monospace", serif;
-    left: 10px; 
-    padding: 5px;
-    overflow: auto;
-}
-
-.all_comments h2 {
-    font-size: larger;
-    border-top: 1px solid black;
-}
-
-.all_comments h3 {
-    border-top: 1px solid black;
-    margin-bottom: 10px;
-}
-
-.one_comment {
+div.one_comment {
     margin: 10px;
     margin-bottom: 20px;
-}
-
-.one_comment pre {
-    font-family: "Monospace", serif;
-    position: relative;
-    left: 10px;
-    overflow: auto;
+	background-color: #ddd;
 }
 
 .one_comment span#ancre_comment a {
@@ -96,7 +37,7 @@ div.fullpage {
     display: none;
 }
 
-.add_details h2 {
+.add_details h2, .add_comment h2 {
     font-size: larger;
     border-top: 1px solid black;
     padding-top: 3px;
@@ -106,15 +47,13 @@ div.fullpage {
     margin-bottom: 20px;
 }
 
-.add_comment h2 {
-    font-size: larger;
-    border-top: 1px solid black;
-    padding-top: 3px;
+div.title_detail_item {
+	height: 20px;
+	width: auto;
+	position: relative;
+	text-align: center;
+	padding-top: 3px;
 }
-
-/* End for detail page of item */
-
-/* For workflow instance page */
 
 .progress_workflow {
     height: 75px;
@@ -229,6 +168,26 @@ table tr.odd_line {
 
 table tr.highlight:hover {
     background: #BFD4FF;
+}
+
+div.detail_on_item {
+	border: 1px solid grey;
+	padding: 10px;
+}
+
+pre.details_item, pre.comments_item {
+	border: 1px solid black;
+	padding: 10px;
+	margin-bottom: 10px;
+	overflow: auto;
+}
+
+pre.details_item {
+	background-color: #ddd;
+}
+
+textarea.textarea_edit_detail, textarea.textarea_add_comment {
+	margin-bottom: 10px;
 }
 
 /* End for workflow instance page */

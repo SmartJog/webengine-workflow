@@ -201,69 +201,49 @@ def workflowinstanceitem_no_state(request, workflowinstanceitem_id):
     workflowinstanceitem.save()
     return {"item_id" : workflowinstanceitem_id}
 
-@render(view='workflowinstanceitem_show')
+@render(output='json')
 def workflowinstanceitem_show(request, workflowinstanceitem_id):
-    """ Create form for comments
-        Create form for edit details
-        Get information about current item @workflowinstanceitem_id@
-
-        Return dictionnary with all of that
-    """
+    """ Return dictionnary with comments and detail for @workflowinstanceitem_id@ """
     return_d = {}
-    return_d.update(workflowinstanceitem_comments(request, workflowinstanceitem_id))
-    return_d.update(workflowinstanceitem_details(request, workflowinstanceitem_id))
     workflowinstanceitem = WorkflowInstanceItems.objects.filter(id=workflowinstanceitem_id)[0]
     if workflowinstanceitem.item.details:
         workflowinstanceitem.item.details = workflowinstanceitem.item.details
     else:
         workflowinstanceitem.item.details = []
     comments = CommentInstanceItem.objects.filter(item=workflowinstanceitem_id)
-    return_d.update({'workflowinstanceitem' : workflowinstanceitem, 'validations' : Validation.objects.all()})
-    return_d.update({'from_item_details' : 'from_item_details', 'comments' : comments, "all" : "all"})
+    commentsToSubmit = []
+    for comment in comments:
+        detailComment = {}
+        detailComment["date"] = str(comment.date)
+        detailComment["person_lastname"] = comment.person.lastname
+        detailComment["person_firstname"] = comment.person.firstname
+        detailComment["comment"] = comment.comments
+        commentsToSubmit.append(detailComment)
+    return_d.update({'detail' : workflowinstanceitem.item.details, "comments" : commentsToSubmit})
     return return_d
 
-def workflowinstanceitem_comments(request, workflowinstanceitem_id):
-    """ Return form for comments on specific item """
-    if request.method == 'POST':
+@render(output='json')
+def workflowinstanceitem_comments(request, item_id):
+    """ Add comment into db for @item_id@ and return appropriate status """
+    if request.method == 'POST' and request.POST["new_comment"]:
         person = Person.objects.filter(django_user=request.user.id)[0]
-        form = CommentItemNewForm(request, data=request.POST)
-        if form.is_valid():
-            comment = CommentInstanceItem(comments=form.cleaned_data['comments'], item_id=workflowinstanceitem_id, person=person)
-            comment.save()
-            form = CommentItemNewForm(request)
-            return {'status_comment' : 'OK', 'form_comment' : form}
-        else:
-            return {'status_comment' : 'KO', 'error' : str(form.errors), 'form_comment' : form}
-    else:
-        form = CommentItemNewForm(request)
-    return {'form_comment' : form}
+        all_comments = CommentInstanceItem.objects.all()
+        comment = CommentInstanceItem(id=int(all_comments.count() + 1), comments=request.POST["new_comment"], item_id=item_id, person=person)
+        comment.save()
+        return {'status' : 'OK'}
+    return {'status' : 'KO'}
 
-def workflowinstanceitem_details(request, workflowinstanceitem_id):
-    """ Return form for details on specific item """
-    workflowinstanceitem = WorkflowInstanceItems.objects.filter(id=workflowinstanceitem_id)[0]
-    initial_value = workflowinstanceitem.item.details
-    if request.method == 'POST' and "_post" in request.POST:
-        form = DetailItemForm(request, initialValue='', data=request.POST)
-        if form.is_valid():
-            workflowcategory = WorkflowCategory.objects.filter(id=workflowinstanceitem.item.workflow_category_id)[0]
-            detail = Item(id=workflowinstanceitem.item.id, workflow_category=workflowcategory, \
-                    label=workflowinstanceitem.item.label, details=form.cleaned_data['details'])
-            detail.save()
-            form = DetailItemForm(request, initialValue=form.cleaned_data['details'])
-            return {'status_detail' : 'OK', 'form_detail' : form}
-        else:
-            return {'status_detail' : 'KO', 'error' : str(form.errors), 'form_detail' : form}
-    elif "_reset" in request.POST:
-        workflowinstanceitem = WorkflowInstanceItems.objects.filter(id=workflowinstanceitem_id)[0]
+@render(output='json')
+def workflowinstanceitem_details(request, item_id):
+    """ Change detail of @item_id@ ans return appropriate status """
+    workflowinstanceitem = WorkflowInstanceItems.objects.filter(id=item_id)[0]
+    if request.method == 'POST':
         workflowcategory = WorkflowCategory.objects.filter(id=workflowinstanceitem.item.workflow_category_id)[0]
         detail = Item(id=workflowinstanceitem.item.id, workflow_category=workflowcategory, \
-                    label=workflowinstanceitem.item.label, details='')
+                    label=workflowinstanceitem.item.label, details=request.POST["new_details"])
         detail.save()
-        form = DetailItemForm(request, initialValue='')
-        return {'form_detail' : form}
-    else:
-        form = DetailItemForm(request, initial_value)
-    return {'form_detail' : form}
+        return {'status' : 'OK'}
+	return {'status' : 'KO'}
 
 def item_create(request, workflowinstanceitem_id):
     workflowinstanceitem = WorkflowInstanceItems.objects.filter(id=workflowinstanceitem_id)[0]

@@ -59,12 +59,12 @@ var gl_mine = {{ counter.Mine }};
 	</tr>
 {% for workflowinstanceitem in category.workflowinstanceitems %}
 	<tr class="highlight {% if forloop.counter|divisibleby:2 %}{% else %}odd_line{% endif %}">
-	<td>
+    <td id="label-item-{{ workflowinstanceitem.id }}" class="label">
 		<a class="label_item" title="Label item">{{ forloop.counter }} - {{ workflowinstanceitem.item.label }}</a>
 		{% for URL in workflowinstanceitem.item.label|link_ticket %}
 			{% ifequal forloop.counter 1 %}|&nbsp;{% endifequal %}
 			<a class="urls" href="{{ URL }}" alt="Ticket {{ URL }}">{{ URL|get_ticket_name }}</a>{% if not forloop.last %},{% endif %}
-		{% endfor %}
+        {% endfor %}
 	</td>
 
 	{% ifequal workflowinstanceitem.assigned_to None %}
@@ -109,7 +109,42 @@ var gl_mine = {{ counter.Mine }};
 
 	</td>
 	</tr>
-
+    <tr id="detail-item-{{workflowinstanceitem.id }}">
+        <td colspan="3">
+			<div class="detail_on_item">
+				<div class="title_detail_item">
+					<a title="Details" onclick="_show_commentOrDetail(this, 'detail'); return false;" href="."><b>Details</b></a>
+					&nbsp;/&nbsp;
+					<a title="Comments" onclick="_show_commentOrDetail(this, 'comment'); return false;" href=".">Comments</a>
+				</div>
+				<div class="all_for_detail">
+					<pre class="details_item" id="details_item-{{ workflowinstanceitem.id }}"></pre>
+					<form>
+						<input type="submit" value="Edit detail"
+						onclick="edit_details($('pre#details_item-{{ workflowinstanceitem.id }}')); return false;"
+						style="width:25%;"/>
+					</form>
+					<div class="add_details">
+					<h2>Edit details</h2>
+					<form onsubmit="changeDetailsOrAddComment('detail', this); return false;" method=POST>
+						<textarea class="textarea_edit_detail" rows="30" cols="125" name="new_details"></textarea>
+						<input type="submit" value="Post" name="_post" style="width: 25%;"/>
+					</form>
+					</div>
+				</div>
+				<div class="all_for_comment">
+					<pre class="comments_item" id="comments_item-{{ workflowinstanceitem.id }}"></pre>
+					<div class="add_comment">
+					<h2>Add comment</h2>
+						<form onsubmit="console.log('okokokokok'); changeDetailsOrAddComment('comment', this); return false;" method=POST>
+							<textarea class="textarea_add_comment" rows="15" cols="125" name="new_comment"></textarea>
+							<input type="submit" value="Post comment" style="width: 25%;"/>
+						</form>
+					</div>
+				</div>
+			</div>
+		</td>
+    </tr>
 {% endfor %}
 </table>
 {% endfor %}
