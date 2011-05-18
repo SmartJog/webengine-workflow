@@ -59,12 +59,9 @@ function  _update_item_shortcut(data, link, el) {
 	var no_state_shortcut = "<a class='shortcut-disabled-None shortcut'";
 	no_state_shortcut += "' title='Reset item validation'> ? </a>";
     }
-    if ($("span#action_shortcuts").html()) {
-	$("span#action_shortcuts").html(ok_shortcut + no_state_shortcut + ko_shortcut);
-    } else {
+	$(el).parent().attr('title', "State item was updated by " + data["person_lastname"] + " " + data["person_firstname"]);
 	$(el).parent().html(ok_shortcut + no_state_shortcut + ko_shortcut);
 	compute_total_items_state();
-    }
 }
 
 /* ***************** */

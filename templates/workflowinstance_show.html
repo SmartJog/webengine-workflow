@@ -136,7 +136,7 @@ var gl_mine = {{ counter.Mine }};
 					<pre class="comments_item" id="comments_item-{{ workflowinstanceitem.id }}"></pre>
 					<div class="add_comment">
 					<h2>Add comment</h2>
-						<form onsubmit="console.log('okokokokok'); changeDetailsOrAddComment('comment', this); return false;" method=POST>
+						<form onsubmit="changeDetailsOrAddComment('comment', this); return false;" method=POST>
 							<textarea class="textarea_add_comment" rows="15" cols="125" name="new_comment"></textarea>
 							<input type="submit" value="Post comment" style="width: 25%;"/>
 						</form>

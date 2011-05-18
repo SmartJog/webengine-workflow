@@ -187,9 +187,10 @@ def workflowinstanceitem_validate(request, workflowinstanceitem_id, validation_l
         Return @workflowinstanceitem_id@ which is the item id
     """
     workflowinstanceitem = WorkflowInstanceItems.objects.filter(id=workflowinstanceitem_id)[0]
+    person = Person.objects.filter(django_user=request.user.id)[0]
     workflowinstanceitem.validation_id = validation_label == "OK" and 1 or 2
     workflowinstanceitem.save()
-    return {"item_id" : workflowinstanceitem_id}
+    return {"item_id" : workflowinstanceitem_id, "person_lastname" : person.lastname, "person_firstname" : person.firstname}
 
 @render(output='json')
 def workflowinstanceitem_no_state(request, workflowinstanceitem_id):
@@ -197,9 +198,10 @@ def workflowinstanceitem_no_state(request, workflowinstanceitem_id):
         Return @item_id@
     """
     workflowinstanceitem = WorkflowInstanceItems.objects.filter(id=workflowinstanceitem_id)[0]
+    person = Person.objects.filter(django_user=request.user.id)[0]
     workflowinstanceitem.validation_id = None
     workflowinstanceitem.save()
-    return {"item_id" : workflowinstanceitem_id}
+    return {"item_id" : workflowinstanceitem_id, "person_lastname" : person.lastname, "person_firstname" : person.firstname}
 
 @render(output='json')
 def workflowinstanceitem_show(request, workflowinstanceitem_id):
