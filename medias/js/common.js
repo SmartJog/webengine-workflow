@@ -47,6 +47,33 @@ function _item_has_changed(model, elParent, toCheck) {
 	});
 }
 
+function updateCategoriesOrderInDb() {
+	// Update categories_order in db
+	var categories = $("table.category_workflow").find("td.take_untake_group");
+	var categoriesOrder = "";
+	for (var i = 0 ; i < categories.length ; i++) {
+		var ID = $(categories[i]).attr("id").split('-')[1];
+		categoriesOrder += ID;
+		if (i + 1 != categories.length) {
+			categoriesOrder += ", ";
+		}
+	}
+	var workflowinstance_id = $("div.categories_table_workflow").attr("id").split('-')[1] + '/';
+	$.ajax({
+	url: "/workflow/workflowinstance/set_categories_order/" + workflowinstance_id,
+	type: "POST",
+	data: {"categories_id" : categoriesOrder},
+	dataType: "json",
+	timeout: 3000,
+	success: function(data, textStatus, jqXHR) {
+		if (data["status"] == "KO") {
+			confirm("Errors unexpectedly happened. Would you like to refresh the page ?") ? (location.reload()) : (_);
+		}
+	},
+	error: function(XMLHttpRequest, textStatus, errorThrown) {}
+	});
+}
+
 function _show_commentOrDetail(el, what) {
 	if (what == 'detail') {
 		$(el).parents("tr").find("div.all_for_detail").attr('style', 'display: block;');
@@ -99,6 +126,14 @@ function edit_details(el) {
     $(el).next().next().find("textarea").attr('value', $(el).html());
 }
 
+function categoryNumerotation() {
+	var categoriesTitle = $("table.category_workflow").find("th");
+	for (var i = 0 ; i < categoriesTitle.length ; i++ ) {
+		var title = $(categoriesTitle[i]).html();
+		$(categoriesTitle[i]).html(i + 1 + " - "  + title.split('-')[1]);
+	}
+}
+
 var update_statistics_filters = function update_statistics_filters() {
     $("input[type=radio]#filters-all + span").html(" All items (" + gl_total + ")");
     $("input[type=radio]#filters-mine + span").html(" Mine items (" + gl_mine + ")");
@@ -108,6 +143,11 @@ var update_statistics_filters = function update_statistics_filters() {
     $("input[type=radio]#filters-failed + span").html(" Broken items (" + gl_failed + ")");
 
     $("#filters-" + location.pathname.split('/')[5]).attr("checked", "checked").parent().attr("style", "font-weight: bold;");
+	if (location.pathname.split('/')[5] != "all") {
+		$("div#sortable").removeAttr("id");
+	} else {
+		$("div#sortable").attr("id", "sortable");
+	}
 }
 
 function update_statistics_progressbar() {

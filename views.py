@@ -66,16 +66,18 @@ def check_state_before_change(request, item_id, category_id):
                 item_assignation_id[item.id] = item.assigned_to_id or "None"
         return {"owners_id" : item_assignation_id}
 
-def _fill_container(dict_to_fill, which_display):
-    for category in dict_to_fill[which_display]:
-        dict_to_fill[which_display][category]['workflowinstanceitems'] = dict_to_fill[which_display][category]['workflowinstanceitems'].values()
-    return {'categories' : len(dict_to_fill[which_display]) and dict_to_fill[which_display].values() or None}
+def _fill_container(dict_to_fill, which_display, categories_order):
+    for category in categories_order:
+        if dict_to_fill[which_display].has_key(int(category)):
+            dict_to_fill[which_display][int(category)]['workflowinstanceitems'] = dict_to_fill[which_display][int(category)]['workflowinstanceitems'].values()
+    categories_order = [int(x) for x in categories_order]
+    return {'categories' : len(dict_to_fill[which_display]) and dict_to_fill[which_display].values() or None, 'order' : categories_order}
 
 @render(view='workflowinstance_show')
 def workflowinstance_show(request, workflowinstance_id, which_display):
     workflowinstanceitems = WorkflowInstanceItems.objects.filter(workflowinstance=workflowinstance_id)
     person_id = Person.objects.filter(django_user=request.user.id)[0].id
-
+    categories_order = CategoriesOrder.objects.filter(id=workflowinstance_id)[0].categories_order.split(", ")
     display = { 'mine' : 'mine', 'all' : 'all', 'successful' : 'successful', 'failed' : 'failed', 'untaken' : 'untaken', 'taken' : 'taken' }
     counter = {'Total' : len(workflowinstanceitems), 'Success' : 0, 'Failed' : 0, 'Taken' : 0, 'Free' : 0, 'NotSolved' : 0, 'Mine' : 0}
     container = {'mine' : dict(),
@@ -120,7 +122,7 @@ def workflowinstance_show(request, workflowinstance_id, which_display):
     return_d.update({'validations' : Validation.objects.all(), 'categories' : container["all"].values(), \
             'workflowinstance' : WorkflowInstance.objects.filter(id=workflowinstance_id)[0]})
     return_d.update({'display' : display, 'counter' : counter})
-    return_d.update(_fill_container(container, which_display))
+    return_d.update(_fill_container(container, which_display, categories_order))
     return return_d
 
 def workflowinstance_delete(request, workflowinstance_id):
@@ -202,6 +204,16 @@ def workflowinstanceitem_no_state(request, workflowinstanceitem_id):
     workflowinstanceitem.validation_id = None
     workflowinstanceitem.save()
     return {"item_id" : workflowinstanceitem_id, "person_lastname" : person.lastname, "person_firstname" : person.firstname}
+
+@render(output='json')
+def	workflowinstance_set_categories_order(request, workflowinstance_id):
+    """ Set categories order in db for a particular instance of workflow """
+    workflowinstance_categoriesorder = CategoriesOrder.objects.filter(id=workflowinstance_id)[0]
+    if (len(request.POST["categories_id"])):
+        workflowinstance_categoriesorder.categories_order = request.POST["categories_id"]
+        workflowinstance_categoriesorder.save()
+        return {"status" : "OK"}
+    return {"status" : "KO"}
 
 @render(output='json')
 def workflowinstanceitem_show(request, workflowinstanceitem_id):

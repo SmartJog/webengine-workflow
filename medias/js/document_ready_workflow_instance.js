@@ -2,6 +2,16 @@ $(document).ready(function() {
 	$("#progress_bar").append(progressbar);
 	update_statistics_progressbar();
 	update_statistics_filters();
+	categoryNumerotation();
+
+	$(function() {
+		$( "#sortable" ).sortable();
+		$( "#sortable" ).disableSelection();
+	});
+	$( "div#sortable" ).bind( "sortstop", function(event, ui) {
+		categoryNumerotation();
+		updateCategoriesOrderInDb();
+	});
 
     workflowItem = Backbone.Model.extend({
         url         : function (completeURL) {
@@ -139,6 +149,7 @@ $(document).ready(function() {
             _item_has_changed(this.model, $(e.target).parents("table"), 2);
         },
         initialize   : function(options) {
+			this.viewCollection = new Array();
         }
     });
 
@@ -149,20 +160,19 @@ $(document).ready(function() {
             var categoryName = $(allCategoriesLines[i]).find("th").html();
             var categoryId = $(allCategoriesLines[i]).parents("table").attr("id").split('-')[1];
             var modelToAdd = new workflowCategory({label : categoryName, categoryId : categoryId});
-            new workflowCategoryView({el : $(allCategoriesLines[i]), model : modelToAdd});
-        }
-        // Generate view/models for  items
-        var allItemLines = $("tr.highlight");
-        for (var i = 0 ; i < allItemLines.length ; i++) {
-            var labelItem = $(allItemLines[i]).find("a.label_item").html();
-            var itemID = $(allItemLines[i]).find("td.label").attr("id").split('-')[2];
-            var detailItemURL = "/workflow/workflowinstance/item/show/" + itemID + '/';
-            var ownerItem = $(allItemLines[i]).find("td.untake-item").contents()[0];
-            var stateItem = $(allItemLines[i]).find("td.shortcut-cell").attr("class").split(' ')[0].split('-')[2];
-            var modelToAdd = new workflowItem({label : labelItem, detailURL : detailItemURL, owner : ownerItem, state : stateItem});
-            itemsCollection.add(modelToAdd, {silent : true});
-            new workflowItemView({el : $(allItemLines[i]), model : modelToAdd});
-        }
+            var currentCategory = new workflowCategoryView({el : $(allCategoriesLines[i]), model : modelToAdd});
+			var allItemLines = $(allCategoriesLines[i]).parents("table").find("tr.highlight");
+			for (var y = 0 ; y < allItemLines.length ; y++) {
+				var labelItem = $(allItemLines[y]).find("a.label_item").html();
+				var itemID = $(allItemLines[y]).find("td.label").attr("id").split('-')[2];
+				var detailItemURL = "/workflow/workflowinstance/item/show/" + itemID + '/';
+				var ownerItem = $(allItemLines[y]).find("td.untake-item").contents()[0];
+				var stateItem = $(allItemLines[y]).find("td.shortcut-cell").attr("class").split(' ')[0].split('-')[2];
+				var modelToAdd = new workflowItem({label : labelItem, detailURL : detailItemURL, owner : ownerItem, state : stateItem});
+				var viewToAdd = new workflowItemView({el : $(allItemLines[y]), model : modelToAdd});
+				currentCategory.viewCollection.push(viewToAdd);
+			}
+		}
     }
 
     itemsCollection = new workflowItemCollection();

@@ -64,3 +64,7 @@ class CommentInstanceItem(models.Model):
 
     def __unicode__(self):
         return self.comments
+
+class CategoriesOrder(models.Model):
+    id = models.AutoField(primary_key=True)
+    categories_order = models.CommaSeparatedIntegerField(max_length=200)

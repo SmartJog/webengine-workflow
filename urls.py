@@ -17,6 +17,8 @@ urlpatterns = patterns('workflow',
     url(r'^workflowinstance/check/(?P<item_id>\d+)/(?P<category_id>\d+)/$',                                   'views.check_state_before_change',          name='workflow-check-state'),
     url(r'^workflowinstance/changedetails/(?P<item_id>\d+)/$',                                   'views.workflowinstanceitem_details',          name='workflow-workflowinstanceitem-details'),
     url(r'^workflowinstance/addcomment/(?P<item_id>\d+)/$',                                   'views.workflowinstanceitem_comments',          name='workflow-workflowinstanceitem-comments'),
+    url(r'^workflowinstance/getall/(?P<workflowinstance_id>\d+)/$',                                   'views.workflowinstance_get_all',          name='workflow-workflowinstance-getall'),
+    url(r'^workflowinstance/set_categories_order/(?P<workflowinstance_id>\d+)/$',                                   'views.workflowinstance_set_categories_order',          name='workflow-workflowinstance-setcategoriesorder'),
 )
 
 menus = {

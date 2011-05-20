@@ -10,6 +10,7 @@
 
 <script src="/javascript/underscore/underscore.min.js" type="text/javascript"></script>
 <script src="/javascript/backbone/backbone.min.js" type="text/javascript"></script>
+<script src="/javascript/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>
 {% endblock %}
 
 {% block title %}{{ workflowinstance }}{% endblock %}
@@ -48,10 +49,13 @@ var gl_mine = {{ counter.Mine }};
 </div>
 
 <div class="categories_table_workflow" id="workflowinstance_id-{{ workflowinstance.id }}">
+<div id="sortable">
+{% for id_category in order %}
 {% for category in categories %}
+{% ifequal id_category category.id %}
 <table class="category_workflow" id="category_id-{{ category.id }}">
 	<tr class="category-header">
-        <th> {{ forloop.counter }} - {{ category.name }} </th>
+        <th> -{{ category.name }} </th>
         <td class="take_untake_group" id="category_group-{{category.id}}">
             <a class="take-group" title="Take all items of the category">take</a>&nbsp;/&nbsp;
 			<a class="untake-group" title="Untake all items of the category">untake</a>
@@ -147,8 +151,9 @@ var gl_mine = {{ counter.Mine }};
     </tr>
 {% endfor %}
 </table>
+{% endifequal %}
+{% endfor %}
 {% endfor %}
 </div>
-
 </div>
 {% endblock content %}
