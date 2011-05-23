@@ -131,7 +131,8 @@ var gl_mine = {{ counter.Mine }};
 					<div class="add_details">
 					<h2>Edit details</h2>
 					<form onsubmit="changeDetailsOrAddComment('detail', this); return false;" method=POST>
-						<textarea class="textarea_edit_detail" rows="30" cols="125" name="new_details"></textarea>
+						<textarea class="textarea_edit_detail" rows="7" cols="75" name="new_details"></textarea>
+						<br />
 						<input type="submit" value="Post" name="_post" style="width: 25%;"/>
 					</form>
 					</div>
@@ -141,7 +142,8 @@ var gl_mine = {{ counter.Mine }};
 					<div class="add_comment">
 					<h2>Add comment</h2>
 						<form onsubmit="changeDetailsOrAddComment('comment', this); return false;" method=POST>
-							<textarea class="textarea_add_comment" rows="15" cols="125" name="new_comment"></textarea>
+							<textarea class="textarea_add_comment" rows="7" cols="75" name="new_comment"></textarea>
+							<br />
 							<input type="submit" value="Post comment" style="width: 25%;"/>
 						</form>
 					</div>
