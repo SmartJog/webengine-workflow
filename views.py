@@ -50,7 +50,7 @@ def workflowinstance_list(request):
     return ret
 
 @render(output='json')
-def check_state_before_change(request, item_id, category_id):
+def check_state_before_change(request, item_id, category_id, workflowinstance_id):
     """ Check if @item_id@ or @category_id@ have changed before change anything
     """
     if int(item_id):
@@ -60,7 +60,7 @@ def check_state_before_change(request, item_id, category_id):
                 "item_id" : item_id}
     else:
         item_assignation_id = {}
-        instance_items = WorkflowInstanceItems.objects.filter(workflowinstance=33)
+        instance_items = WorkflowInstanceItems.objects.filter(workflowinstance=workflowinstance_id)
         for item in instance_items:
             if item.item.workflow_category_id == int(category_id):
                 item_assignation_id[item.id] = item.assigned_to_id or "None"
