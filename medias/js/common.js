@@ -41,7 +41,7 @@ function _item_has_changed(model, elParent, toCheck) {
                 error   : model.attributes.ajaxCallback.error
             });
         } else {
-            confirm("Your workflow is not up to date. Would you like to refresh the page ?") ? (location.reload()) : (_);
+            confirm("Your workflow is not up to date. Would you like to refresh the page ?") ? (intervalAjaxCall()) : (_);
         }
     },
 	error: function(XMLHttpRequest, textStatus, errorThrown) { alert(error_message); },
@@ -68,7 +68,7 @@ function updateCategoriesOrderInDb() {
 	timeout: 3000,
 	success: function(data, textStatus, jqXHR) {
 		if (data["status"] == "KO") {
-			confirm("Errors unexpectedly happened. Would you like to refresh the page ?") ? (location.reload()) : (_);
+			confirm("Errors unexpectedly happened. Would you like to refresh the page ?") ? (intervalAjaxCall()) : (_);
 		}
 	},
 	error: function(XMLHttpRequest, textStatus, errorThrown) {}
@@ -128,8 +128,11 @@ function edit_details(el) {
 }
 
 function intervalAjaxCall() {
+	if (requestIntervalAjaxCall) {
+		requestIntervalAjaxCall.abort();
+	}
 	var instanceID = $("div.categories_table_workflow").attr("id").split('-')[1];
-	$.ajax({
+	requestIntervalAjaxCall = $.ajax({
 	url: "/workflow/workflowinstance/getall/" + instanceID + '/',
 	type: "POST",
 	dataType: "json",

@@ -1,3 +1,4 @@
+var requestIntervalAjaxCall;
 $(document).ready(function() {
 	intervalAjaxCall();
 	$("#progress_bar").append(progressbar);
@@ -77,7 +78,7 @@ $(document).ready(function() {
                 },
                 error   : function(model, resp) {
                     model.set({state : model.get("state") == "OK" ? "KO" : "OK"});
-                    confirm("An error happened. Would you like to refresh the page ?") ? (location.reload()) : (_);
+                    confirm("An error happened. Would you like to update the page ?") ? (intervalAjaxCall()) : (_);
                 }
             }});
             _item_has_changed(this.model, $(e.target).parents("td"), 0);
@@ -90,7 +91,7 @@ $(document).ready(function() {
                     _update_item_shortcut(resp, model.url(), $(e.target));
                 },
                 error   : function(model, resp) {
-                    confirm("An error happened. Would you like to refresh the page ?") ? (location.reload()) : (_);
+                    confirm("An error happened. Would you like to update the page ?") ? (intervalAjaxCall()) : (_);
                 }
             }});
             _item_has_changed(this.model, $(e.target).parents("td"), 0);
@@ -107,7 +108,7 @@ $(document).ready(function() {
                    }
                 },
                 error   : function(model, resp) {
-                    confirm("An error happened. Would you like to refresh the page ?") ? (location.reload()) : (_);
+                    confirm("An error happened. Would you like to update the page ?") ? (intervalAjaxCall()) : (_);
                 }
             }});
             _item_has_changed(this.model, $(e.target).parents("td"), 1);
@@ -145,7 +146,7 @@ $(document).ready(function() {
                     }
                 },
                 error   : function(model, resp) {
-                    confirm("An error happened. Would you like to refresh the page ?") ? (location.reload()) : (_);
+                    confirm("An error happened. Would you like to update the page ?") ? (intervalAjaxCall()) : (_);
                 }
             }});
             _item_has_changed(this.model, $(e.target).parents("table"), 2);
