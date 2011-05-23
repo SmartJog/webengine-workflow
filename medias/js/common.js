@@ -41,10 +41,10 @@ function _item_has_changed(model, elParent, toCheck) {
                 error   : model.attributes.ajaxCallback.error
             });
         } else {
-            confirm("Your workflow is not up to date. Would you like to refresh the page ?") ? (intervalAjaxCall()) : (_);
+			displayError(titleErrorPageNotUpToDate, errorPageNotUpToDate);
         }
     },
-	error: function(XMLHttpRequest, textStatus, errorThrown) { alert(error_message); },
+	error: function(XMLHttpRequest, textStatus, errorThrown) { displayError(titleErrorHappened, errorHappened); },
 	});
 }
 
@@ -68,10 +68,10 @@ function updateCategoriesOrderInDb() {
 	timeout: 3000,
 	success: function(data, textStatus, jqXHR) {
 		if (data["status"] == "KO") {
-			confirm("Errors unexpectedly happened. Would you like to refresh the page ?") ? (intervalAjaxCall()) : (_);
+			displayError(titleErrorHappened, errorHappened);
 		}
 	},
-	error: function(XMLHttpRequest, textStatus, errorThrown) {}
+	error: function(XMLHttpRequest, textStatus, errorThrown) { displayError(titleErrorHappened, errorHappened); }
 	});
 }
 
@@ -110,7 +110,7 @@ function changeDetailsOrAddComment(what, el) {
 			$(el).find("textarea").attr('value', '');
 		}
 	},
-	error: function(XMLHttpRequest, textStatus, errorThrown) { alert(error_message); },
+	error: function(XMLHttpRequest, textStatus, errorThrown) { displayError(titleErrorHappened, errorHappened); },
 	});
 }
 
@@ -213,3 +213,30 @@ function update_statistics_progressbar() {
     $("span#stats-failed").parent().html("<span id='stats-failed'></span> Failed Miserably: " + gl_failed);
     $("span#stats-unsolved").parent().html("<span id='stats-unsolved'></span> Untested: " + gl_not_solved);
 }
+
+function displayError(title, errorMessage) {
+$("div#dialogError").attr("style", "visibility: visible;");
+$("div#dialogError").attr("title", title);
+$("div#dialogError p").html(errorMessage);
+$("div#dialogError").dialog({
+	modal	: true,
+	buttons	: {
+		Ok	: function() {
+			intervalAjaxCall();
+			$("div#dialogError").attr("style", "visibility: hidden;");
+			$(this).dialog("close");
+		}
+	}
+});
+}
+
+// Error messages
+var errorHappened = "An error unexpectedly happened. Would you like to update the page ?";
+var errorPageNotUpToDate = "Your workflow is not up to date. Would you like to update the page ?";
+
+// Title box
+var titleErrorPageNotUpToDate = "Page not up to date.";
+var titleErrorHappened = "Error unexpectedly happened.";
+
+// URLs
+var checkBaseURL = "/workflow/workflowinstance/check/";

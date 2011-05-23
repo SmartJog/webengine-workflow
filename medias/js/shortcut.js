@@ -101,7 +101,7 @@ function _show_item_detail(link, el) {
 	dataType: "json",
 	timeout: 3000,
 	success: function(data, textStatus, jqXHR) { _display_item_detailAndComment(data, el); },
-	error: function(XMLHttpRequest, textStatus, errorThrown) { alert(error_message); }
+	error: function(XMLHttpRequest, textStatus, errorThrown) { displayError(titleErrorHappened, errorHappened); }
 	});
 }
 
@@ -155,5 +155,3 @@ function _update_whole_group_add_owner(data) {
 }
 
 /* ***************** */
-var error_message = "Errors unexpectedly happened. Please refresh the page.";
-var checkBaseURL = "/workflow/workflowinstance/check/";
