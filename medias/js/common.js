@@ -126,6 +126,60 @@ function edit_details(el) {
     $(el).next().next().find("textarea").attr('value', $(el).html());
 }
 
+function intervalAjaxCall() {
+	var instanceID = $("div.categories_table_workflow").attr("id").split('-')[1];
+	$.ajax({
+	url: "/workflow/workflowinstance/getall/" + instanceID + '/',
+	type: "POST",
+	dataType: "json",
+	timeout: 3000,
+	success: function(data, textStatus, jqXHR) { _update_page(data); },
+	error: function(XMLHttpRequest, textStatus, errorThrown) {}
+	});
+setTimeout("intervalAjaxCall()", 10000);
+}
+
+function _update_page(resp) {
+	for (var i = 0 ; i < resp["allItems"].length ; i++) {
+		var takeCell = $("td#take-item-" + resp["allItems"][i]["id"]);
+		var untakeCell = $("td#untake-item-" + resp["allItems"][i]["id"]);
+		var stateCell = $("td#action-shortcuts-" + resp["allItems"][i]["id"]);
+		var stateItem = $(stateCell).attr("class").split(' ')[0].split('-')[2];
+		if (takeCell.length) {
+			var ownerItem = $(takeCell).attr("class").split(' ')[1].split('-')[1];
+		} else {
+			var ownerItem = $(untakeCell).attr("class").split(' ')[1].split('-')[1];
+		}
+		resp["allItems"][i]["state"] = (resp["allItems"][i]["state"] == "None") ? ("None") : ((resp["allItems"][i]["state"] == 1) ? ("OK") : ("KO"))
+		if (resp["allItems"][i]["state"] != stateItem) {
+			var link = "/workflow/workflowinstance/item/";
+			link += (resp["allItems"][i]["state"] == "None") ? ("no_state/") : ("validate/");
+			link += resp["allItems"][i]["id"];
+			link += (resp["allItems"][i]["state"] == "None") ? ("") : ((resp["allItems"][i]["state"] == 1) ? ("/OK/") : ("/KO/"));
+			var el = $("td#action-shortcuts-" + resp["allItems"][i]["id"]).find("a.shortcut-disabled-" + resp["allItems"][i]["state"]);
+			_update_item_shortcut(resp["allItems"][i], link, el);
+		}
+		if (resp["allItems"][i]["person"] != ownerItem) {
+			resp["allItems"][i]["item_id"] = resp["allItems"][i]["id"];
+			resp["allItems"][i]["assigned_to"] = resp["allItems"][i]["person"];
+			resp["allItems"][i]["assigned_to_lastname"] = resp["allItems"][i]["person_lastname"];
+			resp["allItems"][i]["assigned_to_firstname"] = resp["allItems"][i]["person_firstname"];
+			var link = "/workflow/workflowinstance/item/";
+			var el = $("td#untake-item-" + resp["allItems"][i]["id"]);
+			if (!(el.length)) {
+				el = $("td#take-item-" + resp["allItems"][i]["id"]);
+			}
+			if (resp["allItems"][i]["person"] == "None") {
+				link += "untake/" + resp["allItems"][i]["id"] + '/';
+				_update_item_reset_owner(resp["allItems"][i], link, el);
+			} else {
+				link += "take/" + resp["allItems"][i]["id"] + '/';
+				_update_item_add_owner(resp["allItems"][i], link, el);
+			}
+		}
+	}
+}
+
 function categoryNumerotation() {
 	var categoriesTitle = $("table.category_workflow").find("th");
 	for (var i = 0 ; i < categoriesTitle.length ; i++ ) {

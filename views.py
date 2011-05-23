@@ -206,6 +206,22 @@ def workflowinstanceitem_no_state(request, workflowinstanceitem_id):
     return {"item_id" : workflowinstanceitem_id, "person_lastname" : person.lastname, "person_firstname" : person.firstname}
 
 @render(output='json')
+def workflowinstance_get_all(request, workflowinstance_id):
+    """ Return information on all items in @workflowinstance_id@ """
+    items = WorkflowInstanceItems.objects.filter(workflowinstance=workflowinstance_id)
+    allItems = []
+    for item in items:
+        itemsInfos = {}
+        itemsInfos["id"] = item.id
+        itemsInfos["state"] = item.validation and item.validation.id or "None"
+        itemsInfos["person"] = item.assigned_to_id or "None"
+        person = item.assigned_to
+        itemsInfos["person_lastname"] = person and person.lastname or "None"
+        itemsInfos["person_firstname"] = person and person.firstname or "None"
+        allItems.append(itemsInfos)
+    return {"allItems" : allItems}
+
+@render(output='json')
 def	workflowinstance_set_categories_order(request, workflowinstance_id):
     """ Set categories order in db for a particular instance of workflow """
     workflowinstance_categoriesorder = CategoriesOrder.objects.filter(id=workflowinstance_id)[0]

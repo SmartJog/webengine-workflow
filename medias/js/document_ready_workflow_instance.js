@@ -1,4 +1,5 @@
 $(document).ready(function() {
+	intervalAjaxCall();
 	$("#progress_bar").append(progressbar);
 	update_statistics_progressbar();
 	update_statistics_filters();
@@ -12,6 +13,7 @@ $(document).ready(function() {
 		categoryNumerotation();
 		updateCategoriesOrderInDb();
 	});
+
 
     workflowItem = Backbone.Model.extend({
         url         : function (completeURL) {
