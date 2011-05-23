@@ -191,7 +191,7 @@ function categoryNumerotation() {
 
 var update_statistics_filters = function update_statistics_filters() {
     $("input[type=radio]#filters-all + span").html(" All items (" + gl_total + ")");
-    $("input[type=radio]#filters-mine + span").html(" Mine items (" + gl_mine + ")");
+    $("input[type=radio]#filters-mine + span").html(" My items (" + gl_mine + ")");
     $("input[type=radio]#filters-untaken + span").html(" Untaken (" + gl_untaken + ")");
     $("input[type=radio]#filters-taken + span").html(" Taken (" + gl_taken + ")");
     $("input[type=radio]#filters-successful + span").html(" Successful items (" + gl_success + ")");
