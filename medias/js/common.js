@@ -137,7 +137,7 @@ function intervalAjaxCall() {
 	success: function(data, textStatus, jqXHR) { _update_page(data); },
 	error: function(XMLHttpRequest, textStatus, errorThrown) {}
 	});
-setTimeout("intervalAjaxCall()", 10000);
+setTimeout("intervalAjaxCall()", 45000);
 }
 
 function _update_page(resp) {
