@@ -57,14 +57,14 @@ var gl_mine = {{ counter.Mine }};
 	<tr class="category-header">
         <th> -{{ category.name }} </th>
         <td class="take_untake_group" id="category_group-{{category.id}}">
-            <a class="take-group" title="Take all items of the category">take</a>&nbsp;/&nbsp;
-			<a class="untake-group" title="Untake all items of the category">untake</a>
+            <a class="take-group" title="Take all items of the category" href="" onclick="return false;">take</a>&nbsp;/&nbsp;
+			<a class="untake-group" title="Untake all items of the category" href="" onclick="return false;">untake</a>
 		</td>
 	</tr>
 {% for workflowinstanceitem in category.workflowinstanceitems %}
 	<tr class="highlight {% if forloop.counter|divisibleby:2 %}{% else %}odd_line{% endif %}">
     <td id="label-item-{{ workflowinstanceitem.id }}" class="label">
-		<a class="label_item" title="Label item">{{ forloop.counter }} - {{ workflowinstanceitem.item.label }}</a>
+		<a class="label_item" title="Label item" href="" onclick="return false;">{{ forloop.counter }} - {{ workflowinstanceitem.item.label }}</a>
 		{% for URL in workflowinstanceitem.item.label|link_ticket %}
 			{% ifequal forloop.counter 1 %}|&nbsp;{% endifequal %}
 			<a class="urls" href="{{ URL }}" alt="Ticket {{ URL }}">{{ URL|get_ticket_name }}</a>{% if not forloop.last %},{% endif %}
@@ -73,12 +73,12 @@ var gl_mine = {{ counter.Mine }};
 
 	{% ifequal workflowinstanceitem.assigned_to None %}
 		<td class="take-item owner-{{ workflowinstanceitem.assigned_to_id }}" id="take-item-{{ workflowinstanceitem.id }}">
-			<a title="Take item">take</a>
+			<a title="Take item" href="" onclick="return false;">take</a>
 		</td>
 	{% else %}
 		<td class="untake-item owner-{{ workflowinstanceitem.assigned_to_id }}" id="untake-item-{{ workflowinstanceitem.id }}">
 			{{ workflowinstanceitem.assigned_to }}
-			<a title="Reset owner of item">
+			<a title="Reset owner of item" href="" onclick="return false;">
 			<img src="/medias/workflow/img/untake.png" />
 			</a>
 		</td>
@@ -90,7 +90,7 @@ var gl_mine = {{ counter.Mine }};
 			<img src="/medias/workflow/img/validation_OK.png" alt="enabled" />
 			</a>
 		{% else %}
-            <a class="shortcut-disabled-OK shortcut" title="Click to validate">
+            <a class="shortcut-disabled-OK shortcut" title="Click to validate" href="" onclick="return false;">
 			<img src="/medias/workflow/img/validation_OK_disabled.png" alt="enabled" />
 			</a>
 		{% endifequal %}
@@ -98,7 +98,7 @@ var gl_mine = {{ counter.Mine }};
 		{% if validations.1.label == workflowinstanceitem.validation.label or validations.2.label == workflowinstanceitem.validation.label%}
 			<a title="Item is untested"> ? </a>
 		{% else %}
-			<a class="shortcut-disabled-None shortcut" title="Reset item validation"> ? </a>
+			<a class="shortcut-disabled-None shortcut" title="Reset item validation" href="" onclick="return false;"> ? </a>
 		{% endif %}
 
 		{% ifequal validations.1 workflowinstanceitem.validation %}
@@ -106,7 +106,7 @@ var gl_mine = {{ counter.Mine }};
 			<img src="/medias/workflow/img/validation_KO.png" alt="enabled" />
 			</a>
 		{% else %}
-            <a class="shortcut-disabled-KO shortcut" title="Click to mark as broken">
+            <a class="shortcut-disabled-KO shortcut" title="Click to mark as broken" href="" onclick="return false;">
 			<img src="/medias/workflow/img/validation_KO_disabled.png" alt="enabled" />
 			</a>
 		{% endifequal %}
