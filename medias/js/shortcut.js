@@ -30,6 +30,9 @@ function compute_taken_untaken_items() {
 /* Update actions shortcut items */
 
 function  _update_item_shortcut(data, link, el) {
+    if ($(el).is("td")) {
+		return false;
+	}
     link = link.split('/');
     if ($(el).hasClass("shortcut-disabled-None")) {
 	link[link.length - 1] = "OK/";
