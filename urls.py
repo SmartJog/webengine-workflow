@@ -20,10 +20,3 @@ urlpatterns = patterns('workflow',
     url(r'^workflowinstance/getall/(?P<workflowinstance_id>\d+)/$',                                   'views.workflowinstance_get_all',          name='workflow-workflowinstance-getall'),
     url(r'^workflowinstance/set_categories_order/(?P<workflowinstance_id>\d+)/$',                                   'views.workflowinstance_set_categories_order',          name='workflow-workflowinstance-setcategoriesorder'),
 )
-
-menus = {
-    'title' : 'Workflow',
-    'url': '/workflow/',
-    'position': 1
-}
-
