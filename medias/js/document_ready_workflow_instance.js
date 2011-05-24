@@ -1,4 +1,5 @@
 var requestIntervalAjaxCall;
+var myID;
 $(document).ready(function() {
 	intervalAjaxCall();
 	$("#progress_bar").append(progressbar);

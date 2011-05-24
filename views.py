@@ -123,6 +123,7 @@ def workflowinstance_show(request, workflowinstance_id, which_display):
             'workflowinstance' : WorkflowInstance.objects.filter(id=workflowinstance_id)[0]})
     return_d.update({'display' : display, 'counter' : counter})
     return_d.update(_fill_container(container, which_display, categories_order))
+    logger.debug(request)
     return return_d
 
 def workflowinstance_delete(request, workflowinstance_id):
@@ -152,9 +153,11 @@ def workflowinstanceitem_untake(request, workflowinstanceitem_id):
         Return @workflowinstanceitem_id@
     """
     workflowinstanceitem = WorkflowInstanceItems.objects.filter(id=workflowinstanceitem_id)[0]
+    person = Person.objects.filter(django_user=request.user.id)[0]
     workflowinstanceitem.assigned_to = None
     workflowinstanceitem.save()
-    return {"item_id" : workflowinstanceitem_id, "assigned_to" : workflowinstanceitem.assigned_to_id or "None"}
+    return {"item_id" : workflowinstanceitem_id, "assigned_to" : workflowinstanceitem.assigned_to_id or "None",\
+            "assigned_to" : person.id or "None"}
 
 @render(output='json')
 def workflowinstance_take_category(request, workflowinstance_id, category_id):

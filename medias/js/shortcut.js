@@ -18,8 +18,10 @@ function compute_total_items_state() {
 function compute_taken_untaken_items() {
     var untaken_item_cel = $("div.categories_table_workflow").find(".category_workflow td.take-item");
     var taken_item_cel = $("div.categories_table_workflow").find(".category_workflow td.untake-item");
+	var mine_item_cel = $("div.categories_table_workflow").find("td.owner-" + myID);
     gl_taken = taken_item_cel.length;
     gl_untaken = untaken_item_cel.length;
+	gl_mine = mine_item_cel.length;
     update_statistics_filters();
 }
 
@@ -110,6 +112,7 @@ function _show_item_detail(link, el) {
 /* Take one item */
 
 function _update_item_add_owner(data, link, el) {
+	myID = data["assigned_to"];
     var content = data["assigned_to_firstname"] + " " + data["assigned_to_lastname"].toUpperCase();
     content += " <a title='Untake item' href='' onclick='return false;'><img src='/medias/workflow/img/untake.png' /></a>";
     $(el).attr("class", "untake-item owner-" + data["assigned_to"]).html(content);
@@ -122,6 +125,7 @@ function _update_item_add_owner(data, link, el) {
 /* Untake one item */
 
 function _update_item_reset_owner(data, link, el) {
+	myID = data["assigned_to"];
     var content = "<a title='Take item' href='' onclick='return false;'>take</a>";
     $(el).attr("class", "take-item owner-None").html(content);
     $(el).attr("id", "take-item-" + data["item_id"]);
