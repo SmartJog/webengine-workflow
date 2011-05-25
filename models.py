@@ -21,7 +21,7 @@ class WorkflowInstance(models.Model):
     def __unicode__(self):
         return "%s - %s" % ( self.workflow, self.version )
 
-class WorkflowCategory(models.Model):
+class Category(models.Model):
     id = models.AutoField(primary_key = True)
     workflow = models.ForeignKey(Workflow, null=False)
     name = models.CharField(max_length=64, null=False)
@@ -31,7 +31,7 @@ class WorkflowCategory(models.Model):
 
 class Item(models.Model):
     id = models.AutoField(primary_key = True)
-    workflow_category = models.ForeignKey(WorkflowCategory, null=False)
+    workflow_category = models.ForeignKey(Category, null=False)
     label = models.CharField(max_length=512, null=False)
     details = models.TextField(max_length=1000, blank=True, null=True)
 

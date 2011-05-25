@@ -23,7 +23,7 @@ def workflowinstance_new(request):
             if len(Workflow.objects.filter(id=workflow_id)[0].leaders.filter(id=persons[0].id)):
                 new_workflowinstance=WorkflowInstance(workflow_id=form.cleaned_data['workflow'], version = form.cleaned_data['version'])
                 new_workflowinstance.save()
-                categories = WorkflowCategory.objects.filter(workflow=workflow_id)
+                categories = Category.objects.filter(workflow=workflow_id)
                 for category in categories:
                     items = Item.objects.filter(workflow_category=category.id)
                     for item in items:
@@ -271,7 +271,7 @@ def workflowinstanceitem_details(request, item_id):
     """ Change detail of @item_id@ ans return appropriate status """
     workflowinstanceitem = WorkflowInstanceItems.objects.filter(id=item_id)[0]
     if request.method == 'POST':
-        workflowcategory = WorkflowCategory.objects.filter(id=workflowinstanceitem.item.workflow_category_id)[0]
+        workflowcategory = Category.objects.filter(id=workflowinstanceitem.item.workflow_category_id)[0]
         detail = Item(id=workflowinstanceitem.item.id, workflow_category=workflowcategory, \
                     label=workflowinstanceitem.item.label, details=request.POST["new_details"])
         detail.save()
@@ -289,7 +289,7 @@ def item_new(request):
         form = ItemNewForm(request, data=request.POST)
         if form.is_valid():
             workflowcategory_id = int(form.cleaned_data['category'])
-            workflowcategory = WorkflowCategory.objects.filter(id=workflowcategory_id)[0]
+            workflowcategory = Category.objects.filter(id=workflowcategory_id)[0]
             workflow = workflowcategory.workflow
 
             persons = Person.objects.filter(django_user=request.user.id)

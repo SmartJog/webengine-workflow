@@ -5,9 +5,9 @@ class WorkflowAdmin(admin.ModelAdmin):
     pass
 admin.site.register(models.Workflow, WorkflowAdmin)
 
-class WorkflowCategoryAdmin(admin.ModelAdmin):
+class CategoryAdmin(admin.ModelAdmin):
     pass
-admin.site.register(models.WorkflowCategory, WorkflowCategoryAdmin)
+admin.site.register(models.Category, CategoryAdmin)
 
 class WorkflowInstanceAdmin(admin.ModelAdmin):
     pass
@@ -20,8 +20,3 @@ admin.site.register(models.Item, ItemAdmin)
 class ValidationAdmin(admin.ModelAdmin):
     pass
 admin.site.register(models.Validation, ValidationAdmin)
-
-class WorkflowInstanceItemsAdmin(admin.ModelAdmin):
-    pass
-admin.site.register(models.WorkflowInstanceItems, WorkflowInstanceItemsAdmin)
-
