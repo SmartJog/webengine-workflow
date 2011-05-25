@@ -7,7 +7,7 @@ import re
 from workflow.models import *
 
 def get_workflows():
-    return reduce(lambda all_workflows, workflow: all_workflows + [[workflow.id, workflow]], Workflow.objects.all(), [])
+    return reduce(lambda all_workflows, workflow: all_workflows + [[workflow.id, workflow]], WorkflowSection.objects.all(), [])
 
 def get_categories():
     return reduce(lambda all_categories, category: all_categories + [[category.id, category]], Category.objects.all(), [])

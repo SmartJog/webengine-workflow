@@ -1,9 +1,9 @@
 from django.contrib import admin
 from workflow import models
 
-class WorkflowAdmin(admin.ModelAdmin):
+class WorkflowSectionAdmin(admin.ModelAdmin):
     pass
-admin.site.register(models.Workflow, WorkflowAdmin)
+admin.site.register(models.WorkflowSection, WorkflowSectionAdmin)
 
 class CategoryAdmin(admin.ModelAdmin):
     pass

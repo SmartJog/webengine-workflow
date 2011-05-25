@@ -3,7 +3,7 @@ from django.contrib.auth import models as AuthModels
 from team import models as teammodels
 import datetime
 
-class Workflow(models.Model):
+class WorkflowSection(models.Model):
     id = models.AutoField(primary_key = True)
     name = models.CharField(max_length=32, null=False)
     teams = models.ManyToManyField(teammodels.Team, null=False, blank=False)
@@ -14,7 +14,7 @@ class Workflow(models.Model):
 
 class WorkflowInstance(models.Model):
     id = models.AutoField(primary_key = True)
-    workflow = models.ForeignKey(Workflow, null=False)
+    workflow = models.ForeignKey(WorkflowSection, null=False)
     creation_date = models.DateField(null=False, auto_now=True)
     version = models.CharField(max_length=128, null=False)
     
@@ -23,7 +23,7 @@ class WorkflowInstance(models.Model):
 
 class Category(models.Model):
     id = models.AutoField(primary_key = True)
-    workflow = models.ForeignKey(Workflow, null=False)
+    workflow = models.ForeignKey(WorkflowSection, null=False)
     name = models.CharField(max_length=64, null=False)
 
     def __unicode__(self):

@@ -20,7 +20,7 @@ def workflowinstance_new(request):
             persons = Person.objects.filter(django_user=request.user.id)
             if not len(persons):
                 return {"form" : form, "status" : "KO", "error" : "Your django user is not attached to a Team person"}
-            if len(Workflow.objects.filter(id=workflow_id)[0].leaders.filter(id=persons[0].id)):
+            if len(WorkflowSection.objects.filter(id=workflow_id)[0].leaders.filter(id=persons[0].id)):
                 new_workflowinstance=WorkflowInstance(workflow_id=form.cleaned_data['workflow'], version = form.cleaned_data['version'])
                 new_workflowinstance.save()
                 categories = Category.objects.filter(workflow=workflow_id)
@@ -41,7 +41,7 @@ def workflowinstance_new(request):
 
 @render(view='workflowinstance_list')
 def workflowinstance_list(request):
-    workflows = Workflow.objects.all()
+    workflows = WorkflowSection.objects.all()
     ret = {'workflows' : []}
     display = { 'mine' : 'mine', 'all' : 'all', 'successful' : 'successful', 'failed' : 'failed', 'untaken' : 'untaken', 'taken' : 'taken' }
     for workflow in workflows:
@@ -296,7 +296,7 @@ def item_new(request):
             if not len(persons):
                 return {"form" : form, "status" : "KO", "error" : "Your django user is not attached to a Team person"}
 
-            if len(Workflow.objects.filter(id=workflow.id)[0].leaders.filter(id=persons[0].id)):
+            if len(WorkflowSection.objects.filter(id=workflow.id)[0].leaders.filter(id=persons[0].id)):
 
                 for label in form.cleaned_data['items'].splitlines():
                     label = label.strip()
