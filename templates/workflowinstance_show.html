@@ -64,8 +64,8 @@ var gl_mine = {{ counter.Mine }};
 {% for workflowinstanceitem in category.workflowinstanceitems %}
 	<tr class="highlight {% if forloop.counter|divisibleby:2 %}{% else %}odd_line{% endif %}">
     <td id="label-item-{{ workflowinstanceitem.id }}" class="label">
-		<a class="label_item" title="Label item" href="" onclick="return false;">{{ forloop.counter }} - {{ workflowinstanceitem.item.label }}</a>
-		{% for URL in workflowinstanceitem.item.label|link_ticket %}
+		<a class="label_item" title="Label item" href="" onclick="return false;">{{ forloop.counter }} - {{ workflowinstanceitem.item_template.label }}</a>
+		{% for URL in workflowinstanceitem.item_template.label|link_ticket %}
 			{% ifequal forloop.counter 1 %}|&nbsp;{% endifequal %}
 			<a class="urls" href="{{ URL }}" alt="Ticket {{ URL }}">{{ URL|get_ticket_name }}</a>{% if not forloop.last %},{% endif %}
         {% endfor %}

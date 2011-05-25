@@ -9,10 +9,10 @@
     <div class="idcard idtitle">Workflows list</div>
     <ul>
     {% for workflow in workflows %}
-        <h2> {{ workflow.name }} </h2>
+        <h2> {{ workflow.label }} </h2>
         {% for workflowinstance in workflow.workflowinstances %}
             <li>
-            <a href={% url workflow-workflowinstance-show workflowinstance.id display.all %}>{{ workflowinstance.version }} </a> <a href={% url workflow-workflowinstance-delete workflowinstance.id %}> <img src="/medias/workflow/img/untake.png" class="untake"/> </a> 
+            <a href={% url workflow-workflowinstance-show workflowinstance.id display.all %}>{{ workflowinstance.label }} </a> <a href={% url workflow-workflowinstance-delete workflowinstance.id %}> <img src="/medias/workflow/img/untake.png" class="untake"/> </a> 
 
             </li>
         {% endfor %}

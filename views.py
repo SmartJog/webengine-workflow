@@ -25,7 +25,7 @@ def workflowinstance_new(request):
                 new_workflowinstance.save()
                 categories = Category.objects.filter(workflow=workflow_id)
                 for category in categories:
-                    items = ItemTemplate.objects.filter(workflow_category=category.id)
+                    items = ItemTemplate.objects.filter(category=category.id)
                     for item in items:
                         rt = Item(validation=None, item_id = item.id, workflowinstance_id=new_workflowinstance.id)
                         rt.save()
@@ -45,7 +45,7 @@ def workflowinstance_list(request):
     ret = {'workflows' : []}
     display = { 'mine' : 'mine', 'all' : 'all', 'successful' : 'successful', 'failed' : 'failed', 'untaken' : 'untaken', 'taken' : 'taken' }
     for workflow in workflows:
-        ret['workflows'] += [{'name' : workflow, 'workflowinstances' : Workflow.objects.filter(workflow=workflow)}]
+        ret['workflows'] += [{'name' : workflow, 'workflowinstances' : Workflow.objects.filter(workflow_section=workflow)}]
         ret.update({'display' : display})
     return ret
 
@@ -60,9 +60,9 @@ def check_state_before_change(request, item_id, category_id, workflowinstance_id
                 "item_id" : item_id}
     else:
         item_assignation_id = {}
-        instance_items = Item.objects.filter(workflowinstance=workflowinstance_id)
+        instance_items = Item.objects.filter(workflow=workflowinstance_id)
         for item in instance_items:
-            if item.item.workflow_category_id == int(category_id):
+            if item.item_template.category_id == int(category_id):
                 item_assignation_id[item.id] = item.assigned_to_id or "None"
         return {"owners_id" : item_assignation_id}
 
@@ -75,7 +75,7 @@ def _fill_container(dict_to_fill, which_display, categories_order):
 
 @render(view='workflowinstance_show')
 def workflowinstance_show(request, workflowinstance_id, which_display):
-    workflowinstanceitems = Item.objects.filter(workflowinstance=workflowinstance_id)
+    workflowinstanceitems = Item.objects.filter(workflow=workflowinstance_id)
     person_id = Person.objects.filter(django_user=request.user.id)[0].id
     categories_order = CategoriesOrder.objects.filter(id=workflowinstance_id)[0].categories_order.split(", ")
     display = { 'mine' : 'mine', 'all' : 'all', 'successful' : 'successful', 'failed' : 'failed', 'untaken' : 'untaken', 'taken' : 'taken' }
@@ -91,30 +91,30 @@ def workflowinstance_show(request, workflowinstance_id, which_display):
     if not which_display in container.keys():
         which_display = "all"
     for workflowinstanceitem in workflowinstanceitems:
-        category_id=workflowinstanceitem.item.workflow_category.id
-        container["all"].setdefault(category_id, {'id' : category_id, 'name' : workflowinstanceitem.item.workflow_category.name, 'workflowinstanceitems' : {}})
+        category_id=workflowinstanceitem.item_template.category.id
+        container["all"].setdefault(category_id, {'id' : category_id, 'name' : workflowinstanceitem.item_template.category.label, 'workflowinstanceitems' : {}})
         container["all"][category_id]['workflowinstanceitems'][workflowinstanceitem.id] = workflowinstanceitem
         if workflowinstanceitem.assigned_to_id == person_id:
-            container["mine"].setdefault(category_id, {'id' : category_id, 'name' : workflowinstanceitem.item.workflow_category.name, 'workflowinstanceitems' : {}})
+            container["mine"].setdefault(category_id, {'id' : category_id, 'name' : workflowinstanceitem.item_template.category.label, 'workflowinstanceitems' : {}})
             container["mine"][category_id]['workflowinstanceitems'][workflowinstanceitem.id] = workflowinstanceitem
             counter['Mine'] += 1
         if not workflowinstanceitem.validation_id == None:
             if workflowinstanceitem.validation_id == 1:
-                container["successful"].setdefault(category_id, {'id' : category_id, 'name' : workflowinstanceitem.item.workflow_category.name, 'workflowinstanceitems' : {}})
+                container["successful"].setdefault(category_id, {'id' : category_id, 'name' : workflowinstanceitem.item_template.category.label, 'workflowinstanceitems' : {}})
                 container["successful"][category_id]['workflowinstanceitems'][workflowinstanceitem.id] = workflowinstanceitem
                 counter['Success'] += 1
             elif workflowinstanceitem.validation_id == 2:
-                container["failed"].setdefault(category_id, {'id' : category_id, 'name' : workflowinstanceitem.item.workflow_category.name, 'workflowinstanceitems' : {}})
+                container["failed"].setdefault(category_id, {'id' : category_id, 'name' : workflowinstanceitem.item_template.category.label, 'workflowinstanceitems' : {}})
                 container["failed"][category_id]['workflowinstanceitems'][workflowinstanceitem.id] = workflowinstanceitem
                 counter['Failed'] += 1
         else:
             counter['NotSolved'] += 1
         if workflowinstanceitem.assigned_to == None:
-            container["untaken"].setdefault(category_id, {'id' : category_id, 'name' : workflowinstanceitem.item.workflow_category.name, 'workflowinstanceitems' : {}})
+            container["untaken"].setdefault(category_id, {'id' : category_id, 'name' : workflowinstanceitem.item_template.category.label, 'workflowinstanceitems' : {}})
             container["untaken"][category_id]['workflowinstanceitems'][workflowinstanceitem.id] = workflowinstanceitem
             counter['Free'] += 1
         if not workflowinstanceitem.assigned_to == None:
-            container["taken"].setdefault(category_id, {'id' : category_id, 'name' : workflowinstanceitem.item.workflow_category.name, 'workflowinstanceitems' : {}})
+            container["taken"].setdefault(category_id, {'id' : category_id, 'name' : workflowinstanceitem.item_template.category.label, 'workflowinstanceitems' : {}})
             container["taken"][category_id]['workflowinstanceitems'][workflowinstanceitem.id] = workflowinstanceitem
             counter['Taken'] += 1
 
@@ -165,10 +165,10 @@ def workflowinstance_take_category(request, workflowinstance_id, category_id):
         Set owner on concerned items
         Return the category_id of item concerned and owner's lastname and firstname
     """
-    items = Item.objects.filter(workflowinstance__id=workflowinstance_id)
+    items = Item.objects.filter(workflow__id=workflowinstance_id)
     person = Person.objects.filter(django_user=request.user.id)[0]
     for item in items:
-        if item.item.workflow_category.id == int(category_id) and not item.assigned_to_id:
+        if item.item_template.category.id == int(category_id) and not item.assigned_to_id:
             workflowinstanceitem_assign_to_person(item, person)
     return {"category_id" : category_id, "assigned_to_firstname" : str(person.firstname), "assigned_to_lastname" : str(person.lastname), "assigned_to" : person.id}
 
@@ -178,10 +178,10 @@ def workflowinstance_untake_category(request, workflowinstance_id, category_id):
         Reset owner on concerned items
         Return the category_id of item
     """
-    items = Item.objects.filter(workflowinstance__id=workflowinstance_id)
+    items = Item.objects.filter(workflow__id=workflowinstance_id)
     person = Person.objects.filter(django_user=request.user.id)[0]
     for item in items:
-        if item.item.workflow_category.id == int(category_id) and item.assigned_to_id == person.id:
+        if item.item_template.category.id == int(category_id) and item.assigned_to_id == person.id:
             workflowinstanceitem_assign_to_person(item, None)
     return {"category_id" : category_id, "person_id" : person.id}
 
@@ -211,7 +211,7 @@ def workflowinstanceitem_no_state(request, workflowinstanceitem_id):
 @render(output='json')
 def workflowinstance_get_all(request, workflowinstance_id):
     """ Return information on all items in @workflowinstance_id@ """
-    items = Item.objects.filter(workflowinstance=workflowinstance_id)
+    items = Item.objects.filter(workflow=workflowinstance_id)
     allItems = []
     for item in items:
         itemsInfos = {}
@@ -239,10 +239,10 @@ def workflowinstanceitem_show(request, workflowinstanceitem_id):
     """ Return dictionnary with comments and detail for @workflowinstanceitem_id@ """
     return_d = {}
     workflowinstanceitem = Item.objects.filter(id=workflowinstanceitem_id)[0]
-    if workflowinstanceitem.item.details:
-        workflowinstanceitem.item.details = workflowinstanceitem.item.details
+    if workflowinstanceitem.item_template.details:
+        workflowinstanceitem.item_template.details = workflowinstanceitem.item_template.details
     else:
-        workflowinstanceitem.item.details = []
+        workflowinstanceitem.item_template.details = []
     comments = Comment.objects.filter(item=workflowinstanceitem_id)
     commentsToSubmit = []
     for comment in comments:
@@ -252,7 +252,7 @@ def workflowinstanceitem_show(request, workflowinstanceitem_id):
         detailComment["person_firstname"] = comment.person.firstname
         detailComment["comment"] = comment.comments
         commentsToSubmit.append(detailComment)
-    return_d.update({'detail' : workflowinstanceitem.item.details, "comments" : commentsToSubmit})
+    return_d.update({'detail' : workflowinstanceitem.item_template.details, "comments" : commentsToSubmit})
     return return_d
 
 @render(output='json')
@@ -271,9 +271,9 @@ def workflowinstanceitem_details(request, item_id):
     """ Change detail of @item_id@ ans return appropriate status """
     workflowinstanceitem = Item.objects.filter(id=item_id)[0]
     if request.method == 'POST':
-        workflowcategory = Category.objects.filter(id=workflowinstanceitem.item.workflow_category_id)[0]
-        detail = ItemTemplate(id=workflowinstanceitem.item.id, workflow_category=workflowcategory, \
-                    label=workflowinstanceitem.item.label, details=request.POST["new_details"])
+        workflowcategory = Category.objects.filter(id=workflowinstanceitem.item_template.category_id)[0]
+        detail = ItemTemplate(id=workflowinstanceitem.item_template.id, category=workflowcategory, \
+                    label=workflowinstanceitem.item_template.label, details=request.POST["new_details"])
         detail.save()
         return {'status' : 'OK'}
 	return {'status' : 'KO'}
@@ -302,7 +302,7 @@ def item_new(request):
                     label = label.strip()
                     if not label:
                         continue
-                    item=ItemTemplate(workflow_category_id=workflowcategory_id, label=label)
+                    item=ItemTemplate(category_id=workflowcategory_id, label=label)
                     item.save()
                 return {"status" : "OK"}
             else:
