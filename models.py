@@ -55,7 +55,7 @@ class WorkflowInstanceItems(models.Model):
     def __unicode__(self):
         return "%s - %s - %s" %(self.workflowinstance, self.item.workflow_category.name, self.item.label)
 
-class CommentInstanceItem(models.Model):
+class Comment(models.Model):
     id = models.AutoField(primary_key=True)
     item = models.ForeignKey(WorkflowInstanceItems, null=False)
     person = models.ForeignKey(teammodels.Person, null=True, blank=True)

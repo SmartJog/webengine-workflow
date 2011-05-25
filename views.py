@@ -243,7 +243,7 @@ def workflowinstanceitem_show(request, workflowinstanceitem_id):
         workflowinstanceitem.item.details = workflowinstanceitem.item.details
     else:
         workflowinstanceitem.item.details = []
-    comments = CommentInstanceItem.objects.filter(item=workflowinstanceitem_id)
+    comments = Comment.objects.filter(item=workflowinstanceitem_id)
     commentsToSubmit = []
     for comment in comments:
         detailComment = {}
@@ -260,8 +260,8 @@ def workflowinstanceitem_comments(request, item_id):
     """ Add comment into db for @item_id@ and return appropriate status """
     if request.method == 'POST' and request.POST["new_comment"]:
         person = Person.objects.filter(django_user=request.user.id)[0]
-        all_comments = CommentInstanceItem.objects.all()
-        comment = CommentInstanceItem(id=int(all_comments.count() + 1), comments=request.POST["new_comment"], item_id=item_id, person=person)
+        all_comments = Comment.objects.all()
+        comment = Comment(id=int(all_comments.count() + 1), comments=request.POST["new_comment"], item_id=item_id, person=person)
         comment.save()
         return {'status' : 'OK'}
     return {'status' : 'KO'}
