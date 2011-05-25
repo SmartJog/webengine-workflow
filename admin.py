@@ -13,9 +13,9 @@ class WorkflowInstanceAdmin(admin.ModelAdmin):
     pass
 admin.site.register(models.WorkflowInstance, WorkflowInstanceAdmin)
 
-class ItemAdmin(admin.ModelAdmin):
+class ItemTemplateAdmin(admin.ModelAdmin):
     pass
-admin.site.register(models.Item, ItemAdmin)
+admin.site.register(models.ItemTemplate, ItemTemplateAdmin)
 
 class ValidationAdmin(admin.ModelAdmin):
     pass

@@ -25,7 +25,7 @@ def workflowinstance_new(request):
                 new_workflowinstance.save()
                 categories = Category.objects.filter(workflow=workflow_id)
                 for category in categories:
-                    items = Item.objects.filter(workflow_category=category.id)
+                    items = ItemTemplate.objects.filter(workflow_category=category.id)
                     for item in items:
                         rt = WorkflowInstanceItems(validation=None, item_id = item.id, workflowinstance_id=new_workflowinstance.id)
                         rt.save()
@@ -272,7 +272,7 @@ def workflowinstanceitem_details(request, item_id):
     workflowinstanceitem = WorkflowInstanceItems.objects.filter(id=item_id)[0]
     if request.method == 'POST':
         workflowcategory = Category.objects.filter(id=workflowinstanceitem.item.workflow_category_id)[0]
-        detail = Item(id=workflowinstanceitem.item.id, workflow_category=workflowcategory, \
+        detail = ItemTemplate(id=workflowinstanceitem.item.id, workflow_category=workflowcategory, \
                     label=workflowinstanceitem.item.label, details=request.POST["new_details"])
         detail.save()
         return {'status' : 'OK'}
@@ -302,7 +302,7 @@ def item_new(request):
                     label = label.strip()
                     if not label:
                         continue
-                    item=Item(workflow_category_id=workflowcategory_id, label=label)
+                    item=ItemTemplate(workflow_category_id=workflowcategory_id, label=label)
                     item.save()
                 return {"status" : "OK"}
             else:

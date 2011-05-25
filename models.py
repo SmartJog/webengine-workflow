@@ -29,7 +29,7 @@ class Category(models.Model):
     def __unicode__(self):
         return "%s - %s" % ( self.workflow, self.name)
 
-class Item(models.Model):
+class ItemTemplate(models.Model):
     id = models.AutoField(primary_key = True)
     workflow_category = models.ForeignKey(Category, null=False)
     label = models.CharField(max_length=512, null=False)
@@ -48,7 +48,7 @@ class Validation(models.Model):
 class WorkflowInstanceItems(models.Model):
     id = models.AutoField(primary_key = True)
     workflowinstance = models.ForeignKey(WorkflowInstance, null=False)
-    item = models.ForeignKey(Item, null=False)
+    item = models.ForeignKey(ItemTemplate, null=False)
     validation = models.ForeignKey(Validation, null=True)
     assigned_to = models.ForeignKey(teammodels.Person, null=True, blank=True)
 
