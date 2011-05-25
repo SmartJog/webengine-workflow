@@ -45,7 +45,7 @@ class Validation(models.Model):
     def __unicode__(self):
         return self.label
 
-class WorkflowInstanceItems(models.Model):
+class Item(models.Model):
     id = models.AutoField(primary_key = True)
     workflowinstance = models.ForeignKey(Workflow, null=False)
     item = models.ForeignKey(ItemTemplate, null=False)
@@ -57,7 +57,7 @@ class WorkflowInstanceItems(models.Model):
 
 class Comment(models.Model):
     id = models.AutoField(primary_key=True)
-    item = models.ForeignKey(WorkflowInstanceItems, null=False)
+    item = models.ForeignKey(Item, null=False)
     person = models.ForeignKey(teammodels.Person, null=True, blank=True)
     date = models.DateField(default=datetime.datetime.now())
     comments = models.TextField(max_length=1000, null=True, blank=True)
