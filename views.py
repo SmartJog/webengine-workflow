@@ -21,7 +21,7 @@ def workflowinstance_new(request):
             if not len(persons):
                 return {"form" : form, "status" : "KO", "error" : "Your django user is not attached to a Team person"}
             if len(WorkflowSection.objects.filter(id=workflow_id)[0].leaders.filter(id=persons[0].id)):
-                new_workflowinstance=WorkflowInstance(workflow_id=form.cleaned_data['workflow'], version = form.cleaned_data['version'])
+                new_workflowinstance=Workflow(workflow_id=form.cleaned_data['workflow'], version = form.cleaned_data['version'])
                 new_workflowinstance.save()
                 categories = Category.objects.filter(workflow=workflow_id)
                 for category in categories:
@@ -45,7 +45,7 @@ def workflowinstance_list(request):
     ret = {'workflows' : []}
     display = { 'mine' : 'mine', 'all' : 'all', 'successful' : 'successful', 'failed' : 'failed', 'untaken' : 'untaken', 'taken' : 'taken' }
     for workflow in workflows:
-        ret['workflows'] += [{'name' : workflow, 'workflowinstances' : WorkflowInstance.objects.filter(workflow=workflow)}]
+        ret['workflows'] += [{'name' : workflow, 'workflowinstances' : Workflow.objects.filter(workflow=workflow)}]
         ret.update({'display' : display})
     return ret
 
@@ -120,14 +120,14 @@ def workflowinstance_show(request, workflowinstance_id, which_display):
 
     return_d = {}
     return_d.update({'validations' : Validation.objects.all(), 'categories' : container["all"].values(), \
-            'workflowinstance' : WorkflowInstance.objects.filter(id=workflowinstance_id)[0]})
+            'workflowinstance' : Workflow.objects.filter(id=workflowinstance_id)[0]})
     return_d.update({'display' : display, 'counter' : counter})
     return_d.update(_fill_container(container, which_display, categories_order))
     logger.debug(request)
     return return_d
 
 def workflowinstance_delete(request, workflowinstance_id):
-    WorkflowInstance.objects.filter(id=workflowinstance_id).delete()
+    Workflow.objects.filter(id=workflowinstance_id).delete()
     return HttpResponseRedirect(reverse('workflow-workflowinstance-list'))
 
 def workflowinstanceitem_assign_to_person(workflowinstanceitem, person):

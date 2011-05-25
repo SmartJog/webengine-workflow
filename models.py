@@ -12,7 +12,7 @@ class WorkflowSection(models.Model):
     def __unicode__(self):
         return self.name
 
-class WorkflowInstance(models.Model):
+class Workflow(models.Model):
     id = models.AutoField(primary_key = True)
     workflow = models.ForeignKey(WorkflowSection, null=False)
     creation_date = models.DateField(null=False, auto_now=True)
@@ -47,7 +47,7 @@ class Validation(models.Model):
 
 class WorkflowInstanceItems(models.Model):
     id = models.AutoField(primary_key = True)
-    workflowinstance = models.ForeignKey(WorkflowInstance, null=False)
+    workflowinstance = models.ForeignKey(Workflow, null=False)
     item = models.ForeignKey(ItemTemplate, null=False)
     validation = models.ForeignKey(Validation, null=True)
     assigned_to = models.ForeignKey(teammodels.Person, null=True, blank=True)

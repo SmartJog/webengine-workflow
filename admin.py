@@ -9,9 +9,9 @@ class CategoryAdmin(admin.ModelAdmin):
     pass
 admin.site.register(models.Category, CategoryAdmin)
 
-class WorkflowInstanceAdmin(admin.ModelAdmin):
+class WorkflowAdmin(admin.ModelAdmin):
     pass
-admin.site.register(models.WorkflowInstance, WorkflowInstanceAdmin)
+admin.site.register(models.Workflow, WorkflowAdmin)
 
 class ItemTemplateAdmin(admin.ModelAdmin):
     pass
