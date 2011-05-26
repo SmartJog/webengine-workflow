@@ -45,7 +45,7 @@ $(document).ready(function() {
     workflowCategory = Backbone.Model.extend({
         url         : function() {
             var targetURL = this.attributes.baseURL;
-            targetURL += this.attributes.actionURL + this.attributes.workflowId + '/'
+            targetURL += this.attributes.actionURL
             targetURL += this.id + '/';
             return targetURL;
         },

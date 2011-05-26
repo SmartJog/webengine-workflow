@@ -165,28 +165,28 @@ def workflowinstanceitem_untake(request, item_id):
             "assigned_to" : person.id or "None"}
 
 @render(output='json')
-def workflowinstance_take_category(request, workflowinstance_id, category_id):
+def workflowinstance_take_category(request, category_id):
     """ Output JSON for AJAX interaction
         Set owner on concerned items
         Return the category_id of item concerned and owner's lastname and firstname
     """
-    items = Item.objects.filter(workflow__id=workflowinstance_id)
+    items = Item.objects.filter(category=category_id)
     person = Person.objects.filter(django_user=request.user.id)[0]
     for item in items:
-        if item.item_template.category.id == int(category_id) and not item.assigned_to_id:
+        if item.category_id == int(category_id) and not item.assigned_to_id:
             _assign_item(item, person)
     return {"category_id" : category_id, "assigned_to_firstname" : str(person.firstname), "assigned_to_lastname" : str(person.lastname), "assigned_to" : person.id}
 
 @render(output='json')
-def workflowinstance_untake_category(request, workflowinstance_id, category_id):
+def workflowinstance_untake_category(request, category_id):
     """ Output JSON for AJAX interaction
         Reset owner on concerned items
         Return the category_id of item
     """
-    items = Item.objects.filter(workflow__id=workflowinstance_id)
+    items = Item.objects.filter(category=category_id)
     person = Person.objects.filter(django_user=request.user.id)[0]
     for item in items:
-        if item.item_template.category.id == int(category_id) and item.assigned_to_id == person.id:
+        if item.category_id == int(category_id) and item.assigned_to_id == person.id:
             _assign_item(item, None)
     return {"category_id" : category_id, "person_id" : person.id}
 
