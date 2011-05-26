@@ -52,10 +52,10 @@ var gl_mine = {{ counter.Mine }};
 <div id="sortable">
 {% for id_category in order %}
 {% for category in categories %}
-{% ifequal id_category category.id %}
+{% ifequal id_category category.order %}
 <table class="category_workflow" id="category_id-{{ category.id }}">
 	<tr class="category-header">
-        <th> -{{ category.name }} </th>
+	<th> -{{ category.name }} </th>
         <td class="take_untake_group" id="category_group-{{category.id}}">
             <a class="take-group" title="Take all items of the category" href="" onclick="return false;">take</a>&nbsp;/&nbsp;
 			<a class="untake-group" title="Untake all items of the category" href="" onclick="return false;">untake</a>
@@ -64,8 +64,8 @@ var gl_mine = {{ counter.Mine }};
 {% for workflowinstanceitem in category.workflowinstanceitems %}
 	<tr class="highlight {% if forloop.counter|divisibleby:2 %}{% else %}odd_line{% endif %}">
     <td id="label-item-{{ workflowinstanceitem.id }}" class="label">
-		<a class="label_item" title="Label item" href="" onclick="return false;">{{ forloop.counter }} - {{ workflowinstanceitem.item_template.label }}</a>
-		{% for URL in workflowinstanceitem.item_template.label|link_ticket %}
+		<a class="label_item" title="Label item" href="" onclick="return false;">{{ forloop.counter }} - {{ workflowinstanceitem.label }}</a>
+		{% for URL in workflowinstanceitem.label|link_ticket %}
 			{% ifequal forloop.counter 1 %}|&nbsp;{% endifequal %}
 			<a class="urls" href="{{ URL }}" alt="Ticket {{ URL }}">{{ URL|get_ticket_name }}</a>{% if not forloop.last %},{% endif %}
         {% endfor %}
