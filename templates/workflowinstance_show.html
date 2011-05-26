@@ -40,15 +40,15 @@ var gl_mine = {{ counter.Mine }};
 </div>
 
 <div class="filters_workflow">
-    <label><input type="radio" id="filters-all" onClick="$(location).attr('href','{% url workflow-workflowinstance-show workflowinstance.id display.all %}');" /><span></span></label>
-    <label><input type="radio" id="filters-mine" onClick="$(location).attr('href','{% url workflow-workflowinstance-show workflowinstance.id display.mine %}');" /><span></span></label>
-    <label><input type="radio" id="filters-untaken" onClick="$(location).attr('href','{% url workflow-workflowinstance-show workflowinstance.id display.untaken %}');" /><span></span></label>
-    <label><input type="radio" id="filters-taken" onClick="$(location).attr('href','{% url workflow-workflowinstance-show workflowinstance.id display.taken %}');" /><span></span></label>
-    <label><input type="radio" id="filters-successful" onClick="$(location).attr('href','{% url workflow-workflowinstance-show workflowinstance.id display.successful %}');" /><span></span></label>
-    <label><input type="radio" id="filters-failed" onClick="$(location).attr('href','{% url workflow-workflowinstance-show workflowinstance.id display.failed %}');" /><span></span></label>
+    <label><input type="radio" id="filters-all" onClick="$(location).attr('href','{% url workflow-workflowinstance-show workflow_id display.all %}');" /><span></span></label>
+    <label><input type="radio" id="filters-mine" onClick="$(location).attr('href','{% url workflow-workflowinstance-show workflow_id display.mine %}');" /><span></span></label>
+    <label><input type="radio" id="filters-untaken" onClick="$(location).attr('href','{% url workflow-workflowinstance-show workflow_id display.untaken %}');" /><span></span></label>
+    <label><input type="radio" id="filters-taken" onClick="$(location).attr('href','{% url workflow-workflowinstance-show workflow_id display.taken %}');" /><span></span></label>
+    <label><input type="radio" id="filters-successful" onClick="$(location).attr('href','{% url workflow-workflowinstance-show workflow_id display.successful %}');" /><span></span></label>
+    <label><input type="radio" id="filters-failed" onClick="$(location).attr('href','{% url workflow-workflowinstance-show workflow_id display.failed %}');" /><span></span></label>
 </div>
 
-<div class="categories_table_workflow" id="workflowinstance_id-{{ workflowinstance.id }}">
+<div class="categories_table_workflow" id="workflowinstance_id-{{ workflow_id }}">
 <div id="sortable">
 {% for id_category in order %}
 {% for category in categories %}
@@ -61,7 +61,7 @@ var gl_mine = {{ counter.Mine }};
 			<a class="untake-group" title="Untake all items of the category" href="" onclick="return false;">untake</a>
 		</td>
 	</tr>
-{% for workflowinstanceitem in category.workflowinstanceitems %}
+{% for workflowinstanceitem in category.items %}
 	<tr class="highlight {% if forloop.counter|divisibleby:2 %}{% else %}odd_line{% endif %}">
     <td id="label-item-{{ workflowinstanceitem.id }}" class="label">
 		<a class="label_item" title="Label item" href="" onclick="return false;">{{ forloop.counter }} - {{ workflowinstanceitem.label }}</a>

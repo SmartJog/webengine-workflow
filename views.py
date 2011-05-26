@@ -65,64 +65,67 @@ def check_state_before_change(request, item_id, category_id, workflowinstance_id
         return {"owners_id" : item_assignation_id}
 
 def _fill_container(dict_to_fill, which_display, categories_order):
-    for category in categories_order:
-        if dict_to_fill[which_display].has_key(int(category)):
-            dict_to_fill[which_display][category]['workflowinstanceitems'] = dict_to_fill[which_display][category]['workflowinstanceitems'].values()
-    return {'categories' : len(dict_to_fill[which_display]) and dict_to_fill[which_display].values() or None, 'order' : categories_order}
+    for order in categories_order:
+        if dict_to_fill[which_display].has_key(int(order)):
+            dict_to_fill[which_display][order]['items'] = dict_to_fill[which_display][order]['items'].values()
+    return {'categories' : len(dict_to_fill[which_display]) and dict_to_fill[which_display].values()\
+            or None, 'order' : categories_order}
+
+def _compute_statistics_items(category, person_id):
+    """ Compute the number of items in each categories """
+    counter = {}
+    counter['Success'] = Item.objects.filter(category=category, validation=1).count()
+    counter['Failed'] = Item.objects.filter(category=category, validation=2).count()
+    counter['NotSolved'] = Item.objects.filter(category=category, validation=None).count()
+    counter['Taken'] = Item.objects.filter(category=category).exclude(assigned_to=None).count()
+    counter['Free'] = Item.objects.filter(category=category, assigned_to=None).count()
+    counter['Mine'] = Item.objects.filter(category=category, assigned_to=person_id).count()
+    return counter
+
+def _get_all_item_for_specific_condition(category, person_id, which_display):
+    """ Return list of items on demand """
+    if which_display == "all":
+        return Item.objects.filter(category=category)
+    elif which_display == "successful":
+        return Item.objects.filter(category=category, validation=1)
+    elif which_display == "failed":
+        return Item.objects.filter(category=category, validation=2)
+    elif which_display == "untaken":
+        return Item.objects.filter(category=category, assigned_to=None)
+    elif which_display == "taken":
+        return Item.objects.filter(category=category).exclude(assigned_to=None)
+    elif which_display == "mine":
+        return Item.objects.filter(category=category, assigned_to=person_id)
 
 @render(view='workflowinstance_show')
-def workflowinstance_show(request, workflowinstance_id, which_display):
-    categories = Category.objects.filter(workflow=workflowinstance_id).order_by("order")
+def workflowinstance_show(request, workflow_id, which_display):
+    categories = Category.objects.filter(workflow=workflow_id).order_by("order")
     person_id = Person.objects.filter(django_user=request.user.id)[0].id
-    workflowinstanceitems = []
-    for category in categories:
-        workflowinstanceitems += Item.objects.filter(category=category.id)
-    categories_order = Category.objects.filter(workflow=33).order_by("order").values_list("order")
-    categories_order  = [x[0] for x in categories_order]
-
-    display = { 'mine' : 'mine', 'all' : 'all', 'successful' : 'successful', 'failed' : 'failed', 'untaken' : 'untaken', 'taken' : 'taken' }
-    counter = {'Total' : len(workflowinstanceitems), 'Success' : 0, 'Failed' : 0, 'Taken' : 0, 'Free' : 0, 'NotSolved' : 0, 'Mine' : 0}
-    container = {'mine' : dict(),
-                'successful' : dict(),
-                'failed' : dict(),
-                'untaken' : dict(),
-                'taken' : dict(),
-                'all' : dict()
-                }
-
+    container = {}
+    container[which_display] = {}
     if not which_display in container.keys():
         which_display = "all"
-    for workflowinstanceitem in workflowinstanceitems:
-        category_id=workflowinstanceitem.category_id
-        container["all"].setdefault(category_id, {'id' : category_id, 'order' : workflowinstanceitem.category.order, 'name' : workflowinstanceitem.category.label, 'workflowinstanceitems' : {}})
-        container["all"][category_id]['workflowinstanceitems'][workflowinstanceitem.id] = workflowinstanceitem
-        if workflowinstanceitem.assigned_to_id == person_id:
-            container["mine"].setdefault(category_id, {'id' : category_id, 'order' : workflowinstanceitem.category.order, 'name' : workflowinstanceitem.category.label, 'workflowinstanceitems' : {}})
-            container["mine"][category_id]['workflowinstanceitems'][workflowinstanceitem.id] = workflowinstanceitem
-            counter['Mine'] += 1
-        if not workflowinstanceitem.validation_id == None:
-            if workflowinstanceitem.validation_id == 1:
-                container["successful"].setdefault(category_id, {'id' : category_id, 'order' : workflowinstanceitem.category.order, 'name' : workflowinstanceitem.category.label, 'workflowinstanceitems' : {}})
-                container["successful"][category_id]['workflowinstanceitems'][workflowinstanceitem.id] = workflowinstanceitem
-                counter['Success'] += 1
-            elif workflowinstanceitem.validation_id == 2:
-                container["failed"].setdefault(category_id, {'id' : category_id, 'order' : workflowinstanceitem.category.order, 'name' : workflowinstanceitem.category.label, 'workflowinstanceitems' : {}})
-                container["failed"][category_id]['workflowinstanceitems'][workflowinstanceitem.id] = workflowinstanceitem
-                counter['Failed'] += 1
-        else:
-            counter['NotSolved'] += 1
-        if workflowinstanceitem.assigned_to == None:
-            container["untaken"].setdefault(category_id, {'id' : category_id, 'order' : workflowinstanceitem.category.order, 'name' : workflowinstanceitem.category.label, 'workflowinstanceitems' : {}})
-            container["untaken"][category_id]['workflowinstanceitems'][workflowinstanceitem.id] = workflowinstanceitem
-            counter['Free'] += 1
-        if not workflowinstanceitem.assigned_to == None:
-            container["taken"].setdefault(category_id, {'id' : category_id, 'order' : workflowinstanceitem.category.order, 'name' : workflowinstanceitem.category.label, 'workflowinstanceitems' : {}})
-            container["taken"][category_id]['workflowinstanceitems'][workflowinstanceitem.id] = workflowinstanceitem
-            counter['Taken'] += 1
+    items = []
+    counter = {'Success' : 0, 'Failed' : 0, 'NotSolved' : 0, 'Taken' : 0, 'Free' : 0, 'Mine' : 0}
+    for category in categories:
+        items += _get_all_item_for_specific_condition(category, person_id, which_display)
+        for key, value in _compute_statistics_items(category, person_id).items():
+            counter[key] += value
+    counter['Total'] = counter['Failed'] + counter['Success'] + counter['NotSolved']
+    categories_order = Category.objects.filter(workflow=workflow_id).order_by("order").values_list("order")
+    display = { 'mine' : 'mine', 'all' : 'all', 'successful' : 'successful',\
+            'failed' : 'failed', 'untaken' : 'untaken', 'taken' : 'taken' }
+    categories_order  = [x[0] for x in categories_order]
+
+    for cur_item in items:
+        category_id=cur_item.category_id
+        container[which_display].setdefault(category_id,\
+                {'id' : category_id, 'order' : cur_item.category.order, 'name' : cur_item.category.label,\
+                'items' : {}})
+        container[which_display][category_id]['items'][cur_item.id] = cur_item
 
     return_d = {}
-    return_d.update({'validations' : Validation.objects.all(), 'categories' : container["all"].values(), \
-            'workflowinstance' : Workflow.objects.filter(id=workflowinstance_id)[0]})
+    return_d.update({'validations' : Validation.objects.all(), 'workflow_id' : workflow_id})
     return_d.update({'display' : display, 'counter' : counter})
     return_d.update(_fill_container(container, which_display, categories_order))
     return return_d
