@@ -134,33 +134,34 @@ def workflowinstance_delete(request, workflowinstance_id):
     Workflow.objects.filter(id=workflowinstance_id).delete()
     return HttpResponseRedirect(reverse('workflow-workflowinstance-list'))
 
-def workflowinstanceitem_assign_to_person(workflowinstanceitem, person):
+def _assign_item(item, person):
     """ Change item assignation and save into db """
-    workflowinstanceitem.assigned_to = person
-    workflowinstanceitem.save()
+    item.assigned_to = person
+    item.save()
 
 @render(output='json')
-def workflowinstanceitem_take(request, workflowinstanceitem_id):
+def workflowinstanceitem_take(request, item_id):
     """ Output JSON for AJAX interaction
-        Set owner on @workflowinstanceitem_id@
-        Return @workflowinstanceitem_id@
+        Set owner on @item_id@
+        Return @item_id@
     """
-    workflowinstanceitem = Item.objects.filter(id=workflowinstanceitem_id)[0]
+    item = Item.objects.filter(id=item_id)[0]
     person = Person.objects.filter(django_user=request.user.id)[0]
-    workflowinstanceitem_assign_to_person(workflowinstanceitem, person)
-    return {"item_id" : workflowinstanceitem_id, "assigned_to_firstname" : str(person.firstname), "assigned_to_lastname" : str(person.lastname), "assigned_to" : person.id or "None"}
+    _assign_item(item, person)
+    return {"item_id" : item_id, "assigned_to_firstname" : str(person.firstname),\
+            "assigned_to_lastname" : str(person.lastname), "assigned_to" : person.id or "None"}
 
 @render(output='json')
-def workflowinstanceitem_untake(request, workflowinstanceitem_id):
+def workflowinstanceitem_untake(request, item_id):
     """ Output JSON for AJAX interaction
-        Reset owner one @workflowinstanceitem_id@
-        Return @workflowinstanceitem_id@
+        Reset owner one @item_id@
+        Return @item_id@
     """
-    workflowinstanceitem = Item.objects.filter(id=workflowinstanceitem_id)[0]
+    item = Item.objects.filter(id=item_id)[0]
     person = Person.objects.filter(django_user=request.user.id)[0]
-    workflowinstanceitem.assigned_to = None
-    workflowinstanceitem.save()
-    return {"item_id" : workflowinstanceitem_id, "assigned_to" : workflowinstanceitem.assigned_to_id or "None",\
+    item.assigned_to = None
+    item.save()
+    return {"item_id" : item_id, "assigned_to" : item.assigned_to_id or "None",\
             "assigned_to" : person.id or "None"}
 
 @render(output='json')
@@ -173,7 +174,7 @@ def workflowinstance_take_category(request, workflowinstance_id, category_id):
     person = Person.objects.filter(django_user=request.user.id)[0]
     for item in items:
         if item.item_template.category.id == int(category_id) and not item.assigned_to_id:
-            workflowinstanceitem_assign_to_person(item, person)
+            _assign_item(item, person)
     return {"category_id" : category_id, "assigned_to_firstname" : str(person.firstname), "assigned_to_lastname" : str(person.lastname), "assigned_to" : person.id}
 
 @render(output='json')
@@ -186,7 +187,7 @@ def workflowinstance_untake_category(request, workflowinstance_id, category_id):
     person = Person.objects.filter(django_user=request.user.id)[0]
     for item in items:
         if item.item_template.category.id == int(category_id) and item.assigned_to_id == person.id:
-            workflowinstanceitem_assign_to_person(item, None)
+            _assign_item(item, None)
     return {"category_id" : category_id, "person_id" : person.id}
 
 @render(output='json')
