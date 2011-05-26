@@ -214,14 +214,17 @@ def workflowinstanceitem_no_state(request, item_id):
     return {"item_id" : item_id, "person_lastname" : person.lastname, "person_firstname" : person.firstname}
 
 @render(output='json')
-def workflowinstance_get_all(request, workflowinstance_id):
+def workflowinstance_get_all(request, workflow_id):
     """ Return information on all items in @workflowinstance_id@ """
-    items = Item.objects.filter(workflow=workflowinstance_id)
+    categories = Category.objects.filter(workflow=workflow_id)
+    items = []
+    for category in categories:
+        items += Item.objects.filter(category=category)
     allItems = []
     for item in items:
         itemsInfos = {}
         itemsInfos["id"] = item.id
-        itemsInfos["state"] = item.validation and item.validation.id or "None"
+        itemsInfos["state"] = item.validation and item.validation_id or "None"
         itemsInfos["person"] = item.assigned_to_id or "None"
         person = item.assigned_to
         itemsInfos["person_lastname"] = person and person.lastname or "None"
