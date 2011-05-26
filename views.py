@@ -191,27 +191,27 @@ def workflowinstance_untake_category(request, category_id):
     return {"category_id" : category_id, "person_id" : person.id}
 
 @render(output='json')
-def workflowinstanceitem_validate(request, workflowinstanceitem_id, validation_label):
+def workflowinstanceitem_validate(request, item_id, validation_label):
     """ Output JSON for AJAX interaction
         Change item state: Validate/Invalidate
-        Return @workflowinstanceitem_id@ which is the item id
+        Return @item_id@ which is the item id with user lastname and firstname
     """
-    workflowinstanceitem = Item.objects.filter(id=workflowinstanceitem_id)[0]
+    item = Item.objects.filter(id=item_id)[0]
     person = Person.objects.filter(django_user=request.user.id)[0]
-    workflowinstanceitem.validation_id = validation_label == "OK" and 1 or 2
-    workflowinstanceitem.save()
-    return {"item_id" : workflowinstanceitem_id, "person_lastname" : person.lastname, "person_firstname" : person.firstname}
+    item.validation_id = validation_label == "OK" and 1 or 2
+    item.save()
+    return {"item_id" : item_id, "person_lastname" : person.lastname, "person_firstname" : person.firstname}
 
 @render(output='json')
-def workflowinstanceitem_no_state(request, workflowinstanceitem_id):
+def workflowinstanceitem_no_state(request, item_id):
     """ Reset item state
-        Return @item_id@
+        Return @item_id@ with user lastname and firstname
     """
-    workflowinstanceitem = Item.objects.filter(id=workflowinstanceitem_id)[0]
+    item = Item.objects.filter(id=item_id)[0]
     person = Person.objects.filter(django_user=request.user.id)[0]
-    workflowinstanceitem.validation_id = None
-    workflowinstanceitem.save()
-    return {"item_id" : workflowinstanceitem_id, "person_lastname" : person.lastname, "person_firstname" : person.firstname}
+    item.validation_id = None
+    item.save()
+    return {"item_id" : item_id, "person_lastname" : person.lastname, "person_firstname" : person.firstname}
 
 @render(output='json')
 def workflowinstance_get_all(request, workflowinstance_id):
