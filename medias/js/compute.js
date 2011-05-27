@@ -6,7 +6,7 @@ function compute_total_items_state() {
     gl_failed = $("div.categories_table_workflow td.state-item-KO").length;
     gl_total = gl_success + gl_failed + gl_not_solved;
     update_statistics_progressbar();
-    $("#progress_bar").html(progressbar);
+    $("#progress_bar").html(progressBar);
     gl_total = gl_taken + gl_untaken;
     update_statistics_filters();
 }

@@ -2,7 +2,7 @@ var requestIntervalAjaxCall;
 var myID;
 $(document).ready(function () {
     intervalAjaxCall();
-    $("#progress_bar").append(progressbar);
+    $("#progress_bar").append(progressBar);
     update_statistics_progressbar();
     update_statistics_filters();
     categoryNumerotation();
