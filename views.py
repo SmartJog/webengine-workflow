@@ -253,15 +253,15 @@ def	workflowinstance_set_categories_order(request, workflow_id):
     return {"status" : "KO"}
 
 @render(output='json')
-def workflowinstanceitem_show(request, workflowinstanceitem_id):
-    """ Return dictionnary with comments and detail for @workflowinstanceitem_id@ """
+def workflowinstanceitem_show(request, item_id):
+    """ Return dictionnary with comments and detail for @item_id@ """
     return_d = {}
-    workflowinstanceitem = Item.objects.filter(id=workflowinstanceitem_id)[0]
-    if workflowinstanceitem.item_template.details:
-        workflowinstanceitem.item_template.details = workflowinstanceitem.item_template.details
+    item = Item.objects.filter(id=item_id)[0]
+    if item.details:
+        item.details = item.details
     else:
-        workflowinstanceitem.item_template.details = []
-    comments = Comment.objects.filter(item=workflowinstanceitem_id)
+        item.details = []
+    comments = Comment.objects.filter(item=item_id)
     commentsToSubmit = []
     for comment in comments:
         detailComment = {}
@@ -270,7 +270,7 @@ def workflowinstanceitem_show(request, workflowinstanceitem_id):
         detailComment["person_firstname"] = comment.person.firstname
         detailComment["comment"] = comment.comments
         commentsToSubmit.append(detailComment)
-    return_d.update({'detail' : workflowinstanceitem.item_template.details, "comments" : commentsToSubmit})
+    return_d.update({'detail' : item.details, "comments" : commentsToSubmit})
     return return_d
 
 @render(output='json')
@@ -287,12 +287,11 @@ def workflowinstanceitem_comments(request, item_id):
 @render(output='json')
 def workflowinstanceitem_details(request, item_id):
     """ Change detail of @item_id@ ans return appropriate status """
-    workflowinstanceitem = Item.objects.filter(id=item_id)[0]
+    item = Item.objects.filter(id=item_id)[0]
     if request.method == 'POST':
-        workflowcategory = Category.objects.filter(id=workflowinstanceitem.item_template.category_id)[0]
-        detail = ItemTemplate(id=workflowinstanceitem.item_template.id, category=workflowcategory, \
-                    label=workflowinstanceitem.item_template.label, details=request.POST["new_details"])
-        detail.save()
+        category = Category.objects.filter(id=item.category_id)[0]
+        item.details = request.POST["new_details"]
+        item.save()
         return {'status' : 'OK'}
 	return {'status' : 'KO'}
 
