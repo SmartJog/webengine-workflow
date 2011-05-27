@@ -11,7 +11,7 @@ from workflow.models import *
 def index(request):
     return {}
 
-@render(view='workflowinstance_new')
+@render(view='new_workflow')
 def new_workflow(request):
     if request.method == 'POST':
         form = WorkflowInstanceNewForm(request, data=request.POST)
@@ -39,7 +39,7 @@ def new_workflow(request):
 
     return {'form' : form, "status" : "NEW"}
 
-@render(view='workflowinstance_list')
+@render(view='workflow_listing')
 def workflow_listing(request):
     workflows = WorkflowSection.objects.all()
     ret = {'workflows' : []}
@@ -97,7 +97,7 @@ def _get_all_item_for_specific_condition(category, person_id, which_display):
     elif which_display == "mine":
         return Item.objects.filter(category=category, assigned_to=person_id)
 
-@render(view='workflowinstance_show')
+@render(view='show_workflow')
 def show_workflow(request, workflow_id, which_display):
     categories = Category.objects.filter(workflow=workflow_id).order_by("order")
     person_id = Person.objects.filter(django_user=request.user.id)[0].id
@@ -300,7 +300,7 @@ def item_create(request, workflowinstanceitem_id):
     workflowinstanceitem.save()
     return HttpResponseRedirect(reverse('workflow-show', args=[workflowinstanceitem.workflowinstance.id]))
 
-@render(view='item_new')
+@render(view='new_item')
 def new_item(request):
     if request.method == 'POST':
         form = ItemNewForm(request, data=request.POST)

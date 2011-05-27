@@ -2,7 +2,7 @@ SUBDIRS =
 dist_templates_DATA =	\
 	base.html			\
 	index.html			\
-	item_new.html			\
-	workflowinstance_list.html	\
-	workflowinstance_new.html	\
-	workflowinstance_show.html
+	new_item.html			\
+	new_workflow.html		\
+	show_workflow.html		\
+	workflow_listing.html
