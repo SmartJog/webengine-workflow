@@ -1,37 +1,36 @@
 var requestIntervalAjaxCall;
 var myID;
-$(document).ready(function() {
-	intervalAjaxCall();
-	$("#progress_bar").append(progressbar);
-	update_statistics_progressbar();
-	update_statistics_filters();
-	categoryNumerotation();
+$(document).ready(function () {
+    intervalAjaxCall();
+    $("#progress_bar").append(progressbar);
+    update_statistics_progressbar();
+    update_statistics_filters();
+    categoryNumerotation();
 
-	$(function() {
-		$( "#sortable" ).sortable();
-		$( "#sortable" ).disableSelection();
-	});
-	$( "div#sortable" ).bind( "sortstop", function(event, ui) {
-		categoryNumerotation();
-		updateCategoriesOrderInDb();
-	});
-
+    $(function () {
+        $("#sortable").sortable();
+        $("#sortable").disableSelection();
+    });
+    $("div#sortable").bind("sortstop", function () {
+        categoryNumerotation();
+        updateCategoriesOrderInDb();
+    });
 
     workflowItem = Backbone.Model.extend({
         url         : function (completeURL) {
-			if (completeURL == null) {
-				var targetURL = this.attributes.baseURL;
-				targetURL += this.attributes.actionURL + this.id + '/';
-				if (this.attributes.actionURL == "validate/") {
-					targetURL += this.attributes.state;
-				}
-				return targetURL;
-				}
-			return completeURL;
+            if (completeURL == null) {
+                var targetURL = this.attributes.baseURL;
+                targetURL += this.attributes.actionURL + this.id + '/';
+                if (this.attributes.actionURL == "validate/") {
+                    targetURL += this.attributes.state;
+                }
+                return targetURL;
+            }
+            return completeURL;
         },
-        validate    : function (attrs) {
+        validate    : function () {
         },
-        initialize  : function(options) {
+        initialize  : function (options) {
             this.attributes.owner = options.owner ? options.owner.data.trim() : null;
             this.id = this.attributes.detailURL.split('/')[this.attributes.detailURL.split('/').length - 2];
             this.attributes.baseURL = "/workflow/item/";
@@ -43,13 +42,13 @@ $(document).ready(function() {
     });
 
     workflowCategory = Backbone.Model.extend({
-        url         : function() {
+        url         : function () {
             var targetURL = this.attributes.baseURL;
-            targetURL += this.attributes.actionURL
+            targetURL += this.attributes.actionURL;
             targetURL += this.id + '/';
             return targetURL;
         },
-        initialize  : function(otpions) {
+        initialize  : function () {
             this.attributes.baseURL = "/workflow/category/";
             this.attributes.actionURL = null;
             this.attributes.workflowId = $("div.categories_table_workflow").attr("id").split('-')[1];
@@ -58,7 +57,7 @@ $(document).ready(function() {
     });
 
     workflowItemCollection = Backbone.Collection.extend({
-        model   :   workflowItem,
+        model   :   workflowItem
     });
 
     workflowItemView = Backbone.View.extend({
@@ -68,66 +67,66 @@ $(document).ready(function() {
             "click a.shortcut-disabled-KO"      :       "updateItemState",
             "click td.take-item"                :       "takeOrUntakeOneItem",
             "click td.untake-item"              :       "takeOrUntakeOneItem",
-            "click a.label_item"                :       "getDetailItem",
+            "click a.label_item"                :       "getDetailItem"
         },
-        updateItemState : function(e) {
+        updateItemState : function (e) {
             this.model.set({actionURL : "validate/"});
             this.model.set({state : $(e.target).parent().attr("class").split(' ')[0].split('-')[2]});
             this.model.set({ajaxCallback : {
-                success : function(model, resp) {
+                success : function (model, resp) {
                     _update_item_shortcut(resp, model.url(), $(e.target).parent());
                 },
-                error   : function(model, resp) {
+                error   : function (model) {
                     model.set({state : model.get("state") == "OK" ? "KO" : "OK"});
-					displayError(titleErrorHappened, errorHappened);
+                    displayError(titleErrorHappened, errorHappened);
                 }
             }});
             _item_has_changed(this.model, $(e.target).parents("td"), 0);
         },
-        resetItemState  : function(e) {
+        resetItemState  : function (e) {
             this.model.set({actionURL : "no_state/"});
-            this.model.set({ajaxCallback :{
-                success : function(model, resp) {
+            this.model.set({ajaxCallback : {
+                success : function (model, resp) {
                     model.set({state : "None"});
                     _update_item_shortcut(resp, model.url(), $(e.target));
                 },
-                error   : function(model, resp) {
-					displayError(titleErrorHappened, errorHappened);
+                error   : function () {
+                    displayError(titleErrorHappened, errorHappened);
                 }
             }});
             _item_has_changed(this.model, $(e.target).parents("td"), 0);
         },
-        takeOrUntakeOneItem    : function(e) {
+        takeOrUntakeOneItem    : function (e) {
             var actionOnItem = $(e.target).parents("td").attr("class").split('-')[0] + '/';
             this.model.set({actionURL : actionOnItem});
             this.model.set({ajaxCallback : {
-                success : function(model, resp) {
-                   if (actionOnItem == "take/") {
-                    _update_item_add_owner(resp, model.url(), $(e.target).parents("td"));
-                   } else {
-                   _update_item_reset_owner(resp, model.url(), $(e.target).parents("td"));
-                   }
+                success : function (model, resp) {
+                    if (actionOnItem == "take/") {
+                        _update_item_add_owner(resp, model.url(), $(e.target).parents("td"));
+                    } else {
+                        _update_item_reset_owner(resp, model.url(), $(e.target).parents("td"));
+                    }
                 },
-                error   : function(model, resp) {
-					displayError(titleErrorHappened, errorHappened);
+                error   : function () {
+                    displayError(titleErrorHappened, errorHappened);
                 }
             }});
             _item_has_changed(this.model, $(e.target).parents("td"), 1);
         },
-        getDetailItem       : function(e) {
-			var prop = $("tr#detail-item-" + this.model.id).css("visibility");
-			if (prop == "visible") {
-				$("tr#detail-item-" + this.model.id).css("visibility", "hidden");
+        getDetailItem       : function (e) {
+            var prop = $("tr#detail-item-" + this.model.id).css("visibility");
+            if (prop == "visible") {
+                $("tr#detail-item-" + this.model.id).css("visibility", "hidden");
                 $("tr#detail-item-" + this.model.id).fadeOut();
-			} else {
+            } else {
                 $("tr#detail-item-" + this.model.id).css("visibility", "visible");
                 $("tr#detail-item-" + this.model.id).fadeIn();
-				var targetSection = $(e.target).parents("tr").next().find("div.title_detail_item a")[0];
-				_show_commentOrDetail(targetSection, 'detail');
-				_show_item_detail(this.model.url(this.model.get("detailURL")), $("tr#detail-item-" + this.model.id));
-			}
+                var targetSection = $(e.target).parents("tr").next().find("div.title_detail_item a")[0];
+                _show_commentOrDetail(targetSection, 'detail');
+                _show_item_detail(this.model.url(this.model.get("detailURL")), $("tr#detail-item-" + this.model.id));
+            }
         },
-        initialize  : function() {
+        initialize  : function () {
         }
     });
 
@@ -135,48 +134,48 @@ $(document).ready(function() {
         events      : {
             "click td.take_untake_group"    :   "takeOrUntakeGroupOfItem"
         },
-        takeOrUntakeGroupOfItem : function(e) {
+        takeOrUntakeGroupOfItem : function (e) {
             var actionOnGroup = $(e.target).attr("class").split('-')[0] + '/';
             this.model.set({actionURL : actionOnGroup});
             this.model.set({ajaxCallback : {
-                success : function(model, resp) {
+                success : function (model, resp) {
                     if (actionOnGroup == "take/") {
-                    _update_whole_group_add_owner(resp);
+                        _update_whole_group_add_owner(resp);
                     } else {
-                    _update_whole_group_reset_owner(resp);
+                        _update_whole_group_reset_owner(resp);
                     }
                 },
-                error   : function(model, resp) {
-					displayError(titleErrorHappened, errorHappened);
+                error   : function () {
+                    displayError(titleErrorHappened, errorHappened);
                 }
             }});
             _item_has_changed(this.model, $(e.target).parents("table"), 2);
         },
-        initialize   : function(options) {
-			this.viewCollection = new Array();
+        initialize   : function () {
+            this.viewCollection = [];
         }
     });
 
     function generateBackboneModelsCollection() {
         // Generate view/models for categories
         var allCategoriesLines = $("tr.category-header");
-        for (var i = 0 ; i < allCategoriesLines.length ; i++) {
+        for (i = 0; i < allCategoriesLines.length; i++) {
             var categoryName = $(allCategoriesLines[i]).find("th").html();
             var categoryId = $(allCategoriesLines[i]).parents("table").attr("id").split('-')[1];
             var modelToAdd = new workflowCategory({label : categoryName, categoryId : categoryId});
             var currentCategory = new workflowCategoryView({el : $(allCategoriesLines[i]), model : modelToAdd});
-			var allItemLines = $(allCategoriesLines[i]).parents("table").find("tr.highlight");
-			for (var y = 0 ; y < allItemLines.length ; y++) {
-				var labelItem = $(allItemLines[y]).find("a.label_item").html();
-				var itemID = $(allItemLines[y]).find("td.label").attr("id").split('-')[2];
-				var detailItemURL = "/workflow/item/show/" + itemID + '/';
-				var ownerItem = $(allItemLines[y]).find("td.untake-item").contents()[0];
-				var stateItem = $(allItemLines[y]).find("td.shortcut-cell").attr("class").split(' ')[0].split('-')[2];
-				var modelToAdd = new workflowItem({label : labelItem, detailURL : detailItemURL, owner : ownerItem, state : stateItem});
-				var viewToAdd = new workflowItemView({el : $(allItemLines[y]), model : modelToAdd});
-				currentCategory.viewCollection.push(viewToAdd);
-			}
-		}
+            var allItemLines = $(allCategoriesLines[i]).parents("table").find("tr.highlight");
+            for (y = 0; y < allItemLines.length; y++) {
+                var labelItem = $(allItemLines[y]).find("a.label_item").html();
+                var itemID = $(allItemLines[y]).find("td.label").attr("id").split('-')[2];
+                var detailItemURL = "/workflow/item/show/" + itemID + '/';
+                var ownerItem = $(allItemLines[y]).find("td.untake-item").contents()[0];
+                var stateItem = $(allItemLines[y]).find("td.shortcut-cell").attr("class").split(' ')[0].split('-')[2];
+                var modelToAddItem = new workflowItem({label : labelItem, detailURL : detailItemURL, owner : ownerItem, state : stateItem});
+                var viewToAdd = new workflowItemView({el : $(allItemLines[y]), model : modelToAddItem});
+                currentCategory.viewCollection.push(viewToAdd);
+            }
+        }
     }
 
     itemsCollection = new workflowItemCollection();
