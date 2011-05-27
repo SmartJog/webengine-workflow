@@ -29,7 +29,7 @@ def new_workflow(request):
                     for item in items:
                         rt = Item(validation=None, item_id = item.id, workflowinstance_id=new_workflowinstance.id)
                         rt.save()
-                return HttpResponseRedirect(reverse('workflow-workflowinstance-show', args=[new_workflowinstance.id]))
+                return HttpResponseRedirect(reverse('workflow-show', args=[new_workflowinstance.id]))
             else:
                 return {"status" : "KO", "error" : "You are not leader on this workflow"}
         else:
@@ -132,7 +132,7 @@ def show_workflow(request, workflow_id, which_display):
 
 def delete_workflow(request, workflowinstance_id):
     Workflow.objects.filter(id=workflowinstance_id).delete()
-    return HttpResponseRedirect(reverse('workflow-workflowinstance-list'))
+    return HttpResponseRedirect(reverse('workflow-listing'))
 
 def _assign_item(item, person):
     """ Change item assignation and save into db """
@@ -215,7 +215,7 @@ def reset_item_state(request, item_id):
 
 @render(output='json')
 def get_all_items(request, workflow_id):
-    """ Return information on all items in @workflowinstance_id@ """
+    """ Return information on all items in @workflow_id@ """
     categories = Category.objects.filter(workflow=workflow_id)
     items = []
     for category in categories:
@@ -298,7 +298,7 @@ def item_details(request, item_id):
 def item_create(request, workflowinstanceitem_id):
     workflowinstanceitem = Item.objects.filter(id=workflowinstanceitem_id)[0]
     workflowinstanceitem.save()
-    return HttpResponseRedirect(reverse('workflow-workflowinstance-show', args=[workflowinstanceitem.workflowinstance.id]))
+    return HttpResponseRedirect(reverse('workflow-show', args=[workflowinstanceitem.workflowinstance.id]))
 
 @render(view='item_new')
 def new_item(request):

@@ -34,7 +34,7 @@ $(document).ready(function() {
         initialize  : function(options) {
             this.attributes.owner = options.owner ? options.owner.data.trim() : null;
             this.id = this.attributes.detailURL.split('/')[this.attributes.detailURL.split('/').length - 2];
-            this.attributes.baseURL = "/workflow/workflowinstance/item/";
+            this.attributes.baseURL = "/workflow/item/";
             this.attributes.actionURL = null;
             this.attributes.ajaxCallback = null;
             $("tr#detail-item-" + this.id).hide();
@@ -50,7 +50,7 @@ $(document).ready(function() {
             return targetURL;
         },
         initialize  : function(otpions) {
-            this.attributes.baseURL = "/workflow/workflowinstance/category/";
+            this.attributes.baseURL = "/workflow/category/";
             this.attributes.actionURL = null;
             this.attributes.workflowId = $("div.categories_table_workflow").attr("id").split('-')[1];
             this.id = this.attributes.categoryId;
@@ -169,7 +169,7 @@ $(document).ready(function() {
 			for (var y = 0 ; y < allItemLines.length ; y++) {
 				var labelItem = $(allItemLines[y]).find("a.label_item").html();
 				var itemID = $(allItemLines[y]).find("td.label").attr("id").split('-')[2];
-				var detailItemURL = "/workflow/workflowinstance/item/show/" + itemID + '/';
+				var detailItemURL = "/workflow/item/show/" + itemID + '/';
 				var ownerItem = $(allItemLines[y]).find("td.untake-item").contents()[0];
 				var stateItem = $(allItemLines[y]).find("td.shortcut-cell").attr("class").split(' ')[0].split('-')[2];
 				var modelToAdd = new workflowItem({label : labelItem, detailURL : detailItemURL, owner : ownerItem, state : stateItem});

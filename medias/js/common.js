@@ -61,7 +61,7 @@ function updateCategoriesOrderInDb() {
 	}
 	var workflowinstance_id = $("div.categories_table_workflow").attr("id").split('-')[1] + '/';
 	$.ajax({
-	url: "/workflow/workflowinstance/set_categories_order/" + workflowinstance_id,
+	url: "/workflow/set_categories_order/" + workflowinstance_id,
 	type: "POST",
 	data: {"categories_id" : categoriesOrder},
 	dataType: "json",
@@ -92,9 +92,9 @@ function _show_commentOrDetail(el, what) {
 function changeDetailsOrAddComment(what, el) {
 	var itemID = $(el).parents("tr").attr("id").split('-')[2];
 	if (what == "detail") {
-		var link = "/workflow/workflowinstance/changedetails/" + itemID + '/';
+		var link = "/workflow/changedetails/" + itemID + '/';
 	} else {
-		var link = "/workflow/workflowinstance/addcomment/" + itemID + '/';
+		var link = "/workflow/addcomment/" + itemID + '/';
 	}
     $.ajax({
 	url: link,
@@ -103,7 +103,7 @@ function changeDetailsOrAddComment(what, el) {
 	dataType: "json",
 	timeout: 3000,
 	success: function(data, textStatus, jqXHR) {
-		_show_item_detail("/workflow/workflowinstance/item/show/" + itemID + '/', $(el).parents("tr"));
+		_show_item_detail("/workflow/item/show/" + itemID + '/', $(el).parents("tr"));
 		if (what == 'detail') {
 			_show_detail(el);
 		} else {
@@ -133,7 +133,7 @@ function intervalAjaxCall() {
 	}
 	var instanceID = $("div.categories_table_workflow").attr("id").split('-')[1];
 	requestIntervalAjaxCall = $.ajax({
-	url: "/workflow/workflowinstance/getall/" + instanceID + '/',
+	url: "/workflow/getall/" + instanceID + '/',
 	type: "POST",
 	dataType: "json",
 	timeout: 3000,
@@ -156,7 +156,7 @@ function _update_page(resp) {
 		}
 		resp["allItems"][i]["state"] = (resp["allItems"][i]["state"] == "None") ? ("None") : ((resp["allItems"][i]["state"] == 1) ? ("OK") : ("KO"))
 		if (resp["allItems"][i]["state"] != stateItem) {
-			var link = "/workflow/workflowinstance/item/";
+			var link = "/workflow/item/";
 			link += (resp["allItems"][i]["state"] == "None") ? ("no_state/") : ("validate/");
 			link += resp["allItems"][i]["id"];
 			link += (resp["allItems"][i]["state"] == "None") ? ("") : ((resp["allItems"][i]["state"] == 1) ? ("/OK/") : ("/KO/"));
@@ -168,7 +168,7 @@ function _update_page(resp) {
 			resp["allItems"][i]["assigned_to"] = resp["allItems"][i]["person"];
 			resp["allItems"][i]["assigned_to_lastname"] = resp["allItems"][i]["person_lastname"];
 			resp["allItems"][i]["assigned_to_firstname"] = resp["allItems"][i]["person_firstname"];
-			var link = "/workflow/workflowinstance/item/";
+			var link = "/workflow/item/";
 			var el = $("td#untake-item-" + resp["allItems"][i]["id"]);
 			if (!(el.length)) {
 				el = $("td#take-item-" + resp["allItems"][i]["id"]);
@@ -200,8 +200,8 @@ var update_statistics_filters = function update_statistics_filters() {
     $("input[type=radio]#filters-successful + span").html(" Successful items (" + gl_success + ")");
     $("input[type=radio]#filters-failed + span").html(" Broken items (" + gl_failed + ")");
 
-    $("#filters-" + location.pathname.split('/')[5]).attr("checked", "checked").parent().attr("style", "font-weight: bold;");
-	if (location.pathname.split('/')[5] != "all") {
+    $("#filters-" + location.pathname.split('/')[4]).attr("checked", "checked").parent().attr("style", "font-weight: bold;");
+	if (location.pathname.split('/')[4] != "all") {
 		$("div#sortable").removeAttr("id");
 	} else {
 		$("div#sortable").attr("id", "sortable");
@@ -239,4 +239,4 @@ var titleErrorPageNotUpToDate = "Page not up to date.";
 var titleErrorHappened = "Error unexpectedly happened.";
 
 // URLs
-var checkBaseURL = "/workflow/workflowinstance/check/";
+var checkBaseURL = "/workflow/check/";
