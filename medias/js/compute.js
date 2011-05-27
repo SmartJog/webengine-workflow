@@ -18,10 +18,10 @@ function compute_total_items_state() {
 function compute_taken_untaken_items() {
     var untaken_item_cel = $("div.categories_table_workflow").find(".category_workflow td.take-item");
     var taken_item_cel = $("div.categories_table_workflow").find(".category_workflow td.untake-item");
-	var mine_item_cel = $("div.categories_table_workflow").find("td.owner-" + myID);
+    var mine_item_cel = $("div.categories_table_workflow").find("td.owner-" + myID);
     gl_taken = taken_item_cel.length;
     gl_untaken = untaken_item_cel.length;
-	gl_mine = mine_item_cel.length;
+    gl_mine = mine_item_cel.length;
     update_statistics_filters();
 }
 
