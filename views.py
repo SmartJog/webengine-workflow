@@ -50,7 +50,7 @@ def workflow_listing(request):
     return ret
 
 @render(output='json')
-def check_states_before_change(request, item_id, category_id, workflowinstance_id):
+def check_states_before_change(request, item_id, category_id):
     """ Check if @item_id@ or @category_id@ have changed before change anything"""
     if int(item_id):
         item = Item.objects.filter(id=item_id)[0]
@@ -130,8 +130,8 @@ def show_workflow(request, workflow_id, which_display):
     return_d.update(_fill_container(container, which_display, categories_order))
     return return_d
 
-def delete_workflow(request, workflowinstance_id):
-    Workflow.objects.filter(id=workflowinstance_id).delete()
+def delete_workflow(request, workflow_id):
+    Workflow.objects.filter(id=workflow_id).delete()
     return HttpResponseRedirect(reverse('workflow-listing'))
 
 def _assign_item(item, person):

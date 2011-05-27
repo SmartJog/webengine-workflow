@@ -23,11 +23,10 @@ function _item_has_changed(model, elParent, toCheck) {
     // 0 will check for owner
     // 1 will check for state item
     // 2 will check for state of a whole group
-	var instanceID = $("div.categories_table_workflow").attr("id").split('-')[1];
     if (toCheck != 2) {
-        var link = checkBaseURL + model.id + "/0/" + instanceID + '/';
+        var link = checkBaseURL + model.id + "/0/";
     } else {
-        var link = checkBaseURL + "0/" + model.id + '/' + instanceID + '/';
+        var link = checkBaseURL + "0/" + model.id + '/';
     }
     $.ajax({
 	url: link,
