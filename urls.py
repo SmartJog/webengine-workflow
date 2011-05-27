@@ -18,5 +18,5 @@ urlpatterns = patterns('workflow',
     url(r'^workflowinstance/changedetails/(?P<item_id>\d+)/$',                                   'views.workflowinstanceitem_details',          name='workflow-workflowinstanceitem-details'),
     url(r'^workflowinstance/addcomment/(?P<item_id>\d+)/$',                                   'views.workflowinstanceitem_comments',          name='workflow-workflowinstanceitem-comments'),
     url(r'^workflowinstance/getall/(?P<workflow_id>\d+)/$',                                   'views.workflowinstance_get_all',          name='workflow-workflowinstance-getall'),
-    url(r'^workflowinstance/set_categories_order/(?P<workflowinstance_id>\d+)/$',                                   'views.workflowinstance_set_categories_order',          name='workflow-workflowinstance-setcategoriesorder'),
+    url(r'^workflowinstance/set_categories_order/(?P<workflow_id>\d+)/$',                                   'views.workflowinstance_set_categories_order',          name='workflow-workflowinstance-setcategoriesorder'),
 )

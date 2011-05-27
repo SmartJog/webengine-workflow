@@ -233,12 +233,22 @@ def workflowinstance_get_all(request, workflow_id):
     return {"allItems" : allItems}
 
 @render(output='json')
-def	workflowinstance_set_categories_order(request, workflowinstance_id):
+def	workflowinstance_set_categories_order(request, workflow_id):
     """ Set categories order in db for a particular instance of workflow """
-    workflowinstance_categoriesorder = CategoriesOrder.objects.filter(id=workflowinstance_id)[0]
+    categories = Category.objects.filter(workflow=workflow_id)
+    position = 0
     if (len(request.POST["categories_id"])):
-        workflowinstance_categoriesorder.categories_order = request.POST["categories_id"]
-        workflowinstance_categoriesorder.save()
+        order_list = request.POST["categories_id"].split(', ')
+        order_list.reverse()
+        while len(order_list) > 0:
+            for category in categories:
+                if category.id == int(order_list[-1]):
+                    category.order = position
+                    category.save()
+                    order_list.pop()
+                    if len(order_list) == 0:
+                        break
+                    position += 1
         return {"status" : "OK"}
     return {"status" : "KO"}
 
