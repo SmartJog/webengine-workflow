@@ -40,12 +40,12 @@ var gl_mine = {{ counter.Mine }};
 </div>
 
 <div class="filters_workflow">
-    <label><input type="radio" id="filters-all" onClick="$(location).attr('href','{% url workflow-workflowinstance-show workflow_id display.all %}');" /><span></span></label>
-    <label><input type="radio" id="filters-mine" onClick="$(location).attr('href','{% url workflow-workflowinstance-show workflow_id display.mine %}');" /><span></span></label>
-    <label><input type="radio" id="filters-untaken" onClick="$(location).attr('href','{% url workflow-workflowinstance-show workflow_id display.untaken %}');" /><span></span></label>
-    <label><input type="radio" id="filters-taken" onClick="$(location).attr('href','{% url workflow-workflowinstance-show workflow_id display.taken %}');" /><span></span></label>
-    <label><input type="radio" id="filters-successful" onClick="$(location).attr('href','{% url workflow-workflowinstance-show workflow_id display.successful %}');" /><span></span></label>
-    <label><input type="radio" id="filters-failed" onClick="$(location).attr('href','{% url workflow-workflowinstance-show workflow_id display.failed %}');" /><span></span></label>
+    <label><input type="radio" id="filters-all" onClick="$(location).attr('href','{% url workflow-show workflow_id display.all %}');" /><span></span></label>
+    <label><input type="radio" id="filters-mine" onClick="$(location).attr('href','{% url workflow-show workflow_id display.mine %}');" /><span></span></label>
+    <label><input type="radio" id="filters-untaken" onClick="$(location).attr('href','{% url workflow-show workflow_id display.untaken %}');" /><span></span></label>
+    <label><input type="radio" id="filters-taken" onClick="$(location).attr('href','{% url workflow-show workflow_id display.taken %}');" /><span></span></label>
+    <label><input type="radio" id="filters-successful" onClick="$(location).attr('href','{% url workflow-show workflow_id display.successful %}');" /><span></span></label>
+    <label><input type="radio" id="filters-failed" onClick="$(location).attr('href','{% url workflow-show workflow_id display.failed %}');" /><span></span></label>
 </div>
 
 <div class="categories_table_workflow" id="workflowinstance_id-{{ workflow_id }}">

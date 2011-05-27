@@ -9,7 +9,7 @@
 
     {% ifequal status "NEW" %}
         <div>
-            <form action={% url workflow-item-new %} method=POST>
+            <form action={% url new-item %} method=POST>
 
             <table>
                 <tr><td> {{ form.category.label }} </td><td> {{ form.category }} </td></tr>

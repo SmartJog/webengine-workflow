@@ -12,7 +12,7 @@ def index(request):
     return {}
 
 @render(view='workflowinstance_new')
-def workflowinstance_new(request):
+def new_workflow(request):
     if request.method == 'POST':
         form = WorkflowInstanceNewForm(request, data=request.POST)
         if form.is_valid():
@@ -40,7 +40,7 @@ def workflowinstance_new(request):
     return {'form' : form, "status" : "NEW"}
 
 @render(view='workflowinstance_list')
-def workflowinstance_list(request):
+def workflow_listing(request):
     workflows = WorkflowSection.objects.all()
     ret = {'workflows' : []}
     display = { 'mine' : 'mine', 'all' : 'all', 'successful' : 'successful', 'failed' : 'failed', 'untaken' : 'untaken', 'taken' : 'taken' }
@@ -50,7 +50,7 @@ def workflowinstance_list(request):
     return ret
 
 @render(output='json')
-def check_state_before_change(request, item_id, category_id, workflowinstance_id):
+def check_states_before_change(request, item_id, category_id, workflowinstance_id):
     """ Check if @item_id@ or @category_id@ have changed before change anything"""
     if int(item_id):
         item = Item.objects.filter(id=item_id)[0]
@@ -98,7 +98,7 @@ def _get_all_item_for_specific_condition(category, person_id, which_display):
         return Item.objects.filter(category=category, assigned_to=person_id)
 
 @render(view='workflowinstance_show')
-def workflowinstance_show(request, workflow_id, which_display):
+def show_workflow(request, workflow_id, which_display):
     categories = Category.objects.filter(workflow=workflow_id).order_by("order")
     person_id = Person.objects.filter(django_user=request.user.id)[0].id
     container = {}
@@ -130,7 +130,7 @@ def workflowinstance_show(request, workflow_id, which_display):
     return_d.update(_fill_container(container, which_display, categories_order))
     return return_d
 
-def workflowinstance_delete(request, workflowinstance_id):
+def delete_workflow(request, workflowinstance_id):
     Workflow.objects.filter(id=workflowinstance_id).delete()
     return HttpResponseRedirect(reverse('workflow-workflowinstance-list'))
 
@@ -140,7 +140,7 @@ def _assign_item(item, person):
     item.save()
 
 @render(output='json')
-def workflowinstanceitem_take(request, item_id):
+def take_item(request, item_id):
     """ Output JSON for AJAX interaction
         Set owner on @item_id@
         Return @item_id@
@@ -152,7 +152,7 @@ def workflowinstanceitem_take(request, item_id):
             "assigned_to_lastname" : str(person.lastname), "assigned_to" : person.id or "None"}
 
 @render(output='json')
-def workflowinstanceitem_untake(request, item_id):
+def untake_item(request, item_id):
     """ Output JSON for AJAX interaction
         Reset owner one @item_id@
         Return @item_id@
@@ -165,7 +165,7 @@ def workflowinstanceitem_untake(request, item_id):
             "assigned_to" : person.id or "None"}
 
 @render(output='json')
-def workflowinstance_take_category(request, category_id):
+def take_category(request, category_id):
     """ Output JSON for AJAX interaction
         Set owner on concerned items
         Return the category_id of item concerned and owner's lastname and firstname
@@ -178,7 +178,7 @@ def workflowinstance_take_category(request, category_id):
     return {"category_id" : category_id, "assigned_to_firstname" : str(person.firstname), "assigned_to_lastname" : str(person.lastname), "assigned_to" : person.id}
 
 @render(output='json')
-def workflowinstance_untake_category(request, category_id):
+def untake_category(request, category_id):
     """ Output JSON for AJAX interaction
         Reset owner on concerned items
         Return the category_id of item
@@ -191,7 +191,7 @@ def workflowinstance_untake_category(request, category_id):
     return {"category_id" : category_id, "person_id" : person.id}
 
 @render(output='json')
-def workflowinstanceitem_validate(request, item_id, validation_label):
+def validate_item(request, item_id, validation_label):
     """ Output JSON for AJAX interaction
         Change item state: Validate/Invalidate
         Return @item_id@ which is the item id with user lastname and firstname
@@ -203,7 +203,7 @@ def workflowinstanceitem_validate(request, item_id, validation_label):
     return {"item_id" : item_id, "person_lastname" : person.lastname, "person_firstname" : person.firstname}
 
 @render(output='json')
-def workflowinstanceitem_no_state(request, item_id):
+def reset_item_state(request, item_id):
     """ Reset item state
         Return @item_id@ with user lastname and firstname
     """
@@ -214,7 +214,7 @@ def workflowinstanceitem_no_state(request, item_id):
     return {"item_id" : item_id, "person_lastname" : person.lastname, "person_firstname" : person.firstname}
 
 @render(output='json')
-def workflowinstance_get_all(request, workflow_id):
+def get_all_items(request, workflow_id):
     """ Return information on all items in @workflowinstance_id@ """
     categories = Category.objects.filter(workflow=workflow_id)
     items = []
@@ -233,7 +233,7 @@ def workflowinstance_get_all(request, workflow_id):
     return {"allItems" : allItems}
 
 @render(output='json')
-def	workflowinstance_set_categories_order(request, workflow_id):
+def	set_workflow_categories_order(request, workflow_id):
     """ Set categories order in db for a particular instance of workflow """
     categories = Category.objects.filter(workflow=workflow_id)
     position = 0
@@ -253,7 +253,7 @@ def	workflowinstance_set_categories_order(request, workflow_id):
     return {"status" : "KO"}
 
 @render(output='json')
-def workflowinstanceitem_show(request, item_id):
+def show_item(request, item_id):
     """ Return dictionnary with comments and detail for @item_id@ """
     return_d = {}
     item = Item.objects.filter(id=item_id)[0]
@@ -274,7 +274,7 @@ def workflowinstanceitem_show(request, item_id):
     return return_d
 
 @render(output='json')
-def workflowinstanceitem_comments(request, item_id):
+def item_comments(request, item_id):
     """ Add comment into db for @item_id@ and return appropriate status """
     if request.method == 'POST' and request.POST["new_comment"]:
         person = Person.objects.filter(django_user=request.user.id)[0]
@@ -285,7 +285,7 @@ def workflowinstanceitem_comments(request, item_id):
     return {'status' : 'KO'}
 
 @render(output='json')
-def workflowinstanceitem_details(request, item_id):
+def item_details(request, item_id):
     """ Change detail of @item_id@ ans return appropriate status """
     item = Item.objects.filter(id=item_id)[0]
     if request.method == 'POST':
@@ -301,7 +301,7 @@ def item_create(request, workflowinstanceitem_id):
     return HttpResponseRedirect(reverse('workflow-workflowinstance-show', args=[workflowinstanceitem.workflowinstance.id]))
 
 @render(view='item_new')
-def item_new(request):
+def new_item(request):
     if request.method == 'POST':
         form = ItemNewForm(request, data=request.POST)
         if form.is_valid():

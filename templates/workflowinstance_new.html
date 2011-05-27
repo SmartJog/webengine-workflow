@@ -8,7 +8,7 @@
 
     {% ifequal status "NEW" %}
         <div>
-            <form action={% url workflow-workflowinstance-new %} method=POST>
+            <form action={% url workflow-new %} method=POST>
                 {{ form.workflow.label }} : {{ form.workflow }}
                 {{ form.version.label }} : {{ form.version }}
                 <input type=submit title="Create"></input>
