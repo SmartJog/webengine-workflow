@@ -1,3 +1,7 @@
+Version 0.3.0~dev
+
+	* Adapt javascript to real MVC pattern.
+
 Version 0.2.0 Released on 2011/06/01
 
 	* Release under the LGPL 2.1.
