@@ -1,4 +1,4 @@
-webengine-workflow (0.2.0~dev-1) unstable; urgency=low
+webengine-workflow (0.2.0-1) unstable; urgency=low
 
   [ Rémi Cardona ]
   * New upstream release.
@@ -9,7 +9,7 @@ webengine-workflow (0.2.0~dev-1) unstable; urgency=low
   * Add libjs-backbone dependency.
   * Add libjs-jquery-ui dependency.
 
- -- Bryann Lamour <bryann.lamour@smartjog.com>  Tue, 31 May 2011 17:40:18 +0200
+ -- Rémi Cardona <remi.cardona@smartjog.com>  Wed, 01 Jun 2011 11:19:17 +0200
 
 webengine-workflow (0.1.0-1) unstable; urgency=low
 
