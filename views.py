@@ -19,7 +19,11 @@ def new_workflow(request):
             workflow_id = form.cleaned_data['workflow']
             persons = Person.objects.filter(django_user=request.user.id)
             if not len(persons):
-                return {"form" : form, "status" : "KO", "error" : "Your django user is not attached to a Team person"}
+                return {
+                    'form'   : form,
+                    'status' : 'KO',
+                    'error'  : 'Your django user is not attached to a Team person',
+                }
             if len(WorkflowSection.objects.filter(id=workflow_id)[0].leaders.filter(id=persons[0].id)):
                 new_workflowinstance=Workflow(workflow_id=form.cleaned_data['workflow'], version = form.cleaned_data['version'])
                 new_workflowinstance.save()
@@ -31,19 +35,35 @@ def new_workflow(request):
                         rt.save()
                 return HttpResponseRedirect(reverse('workflow-show', args=[new_workflowinstance.id]))
             else:
-                return {"status" : "KO", "error" : "You are not leader on this workflow"}
+                return {
+                    'status' : 'KO',
+                    'error'  : 'You are not leader on this workflow',
+                }
         else:
-            return {"status" : "KO", "error" : str(form.errors)}
+            return {
+                'status' : 'KO',
+                'error'  : str(form.errors),
+            }
     else:
         form = WorkflowInstanceNewForm(request)
 
-    return {'form' : form, "status" : "NEW"}
+    return {
+        'form'   : form,
+        'status' : 'NEW',
+    }
 
 @render(view='workflow_listing')
 def workflow_listing(request):
     workflows = WorkflowSection.objects.all()
     ret = {'workflows' : []}
-    display = { 'mine' : 'mine', 'all' : 'all', 'successful' : 'successful', 'failed' : 'failed', 'untaken' : 'untaken', 'taken' : 'taken' }
+    display = {
+        'mine'       : 'mine',
+        'all'        : 'all',
+        'successful' : 'successful',
+        'failed'     : 'failed',
+        'untaken'    : 'untaken',
+        'taken'      : 'taken',
+    }
     for workflow in workflows:
         ret['workflows'] += [{'name' : workflow, 'workflowinstances' : Workflow.objects.filter(workflow_section=workflow)}]
         ret.update({'display' : display})
@@ -68,18 +88,22 @@ def _fill_container(dict_to_fill, which_display, categories_order):
     for order in categories_order:
         if dict_to_fill[which_display].has_key(int(order)):
             dict_to_fill[which_display][order]['items'] = dict_to_fill[which_display][order]['items'].values()
-    return {'categories' : len(dict_to_fill[which_display]) and dict_to_fill[which_display].values()\
-            or None, 'order' : categories_order}
+    ret = {
+        'categories' : len(dict_to_fill[which_display]) and dict_to_fill[which_display].values() or None,
+        'order'      : categories_order,
+    }
+    return ret
 
 def _compute_statistics_items(category, person_id):
     """ Compute the number of items in each categories """
-    counter = {}
-    counter['Success'] = Item.objects.filter(category=category, validation=1).count()
-    counter['Failed'] = Item.objects.filter(category=category, validation=2).count()
-    counter['NotSolved'] = Item.objects.filter(category=category, validation=None).count()
-    counter['Taken'] = Item.objects.filter(category=category).exclude(assigned_to=None).count()
-    counter['Free'] = Item.objects.filter(category=category, assigned_to=None).count()
-    counter['Mine'] = Item.objects.filter(category=category, assigned_to=person_id).count()
+    counter = {
+        'Success'   : Item.objects.filter(category=category, validation=1).count(),
+        'Failed'    : Item.objects.filter(category=category, validation=2).count(),
+        'NotSolved' : Item.objects.filter(category=category, validation=None).count(),
+        'Taken'     : Item.objects.filter(category=category).exclude(assigned_to=None).count(),
+        'Free'      : Item.objects.filter(category=category, assigned_to=None).count(),
+        'Mine'      : Item.objects.filter(category=category, assigned_to=person_id).count(),
+    }
     return counter
 
 def _get_all_item_for_specific_condition(category, person_id, which_display):
@@ -113,20 +137,30 @@ def show_workflow(request, workflow_id, which_display):
             counter[key] += value
     counter['Total'] = counter['Failed'] + counter['Success'] + counter['NotSolved']
     categories_order = Category.objects.filter(workflow=workflow_id).order_by("order").values_list("order")
-    display = { 'mine' : 'mine', 'all' : 'all', 'successful' : 'successful',\
-            'failed' : 'failed', 'untaken' : 'untaken', 'taken' : 'taken' }
+    display = {
+        'mine'       : 'mine',
+        'all'        : 'all',
+        'successful' : 'successful',
+        'failed'     : 'failed',
+        'untaken'    : 'untaken',
+        'taken'      : 'taken',
+    }
     categories_order  = [x[0] for x in categories_order]
 
     for cur_item in items:
         category_id=cur_item.category_id
-        container[which_display].setdefault(category_id,\
-                {'id' : category_id, 'order' : cur_item.category.order, 'name' : cur_item.category.label,\
-                'items' : {}})
+        container[which_display].setdefault(category_id, {'id'    : category_id,
+                                                          'order' : cur_item.category.order,
+                                                          'name'  : cur_item.category.label,
+                                                          'items' : {},})
         container[which_display][category_id]['items'][cur_item.id] = cur_item
 
-    return_d = {}
-    return_d.update({'validations' : Validation.objects.all(), 'workflow_id' : workflow_id})
-    return_d.update({'display' : display, 'counter' : counter})
+    return_d = {
+        'validations' : Validation.objects.all(),
+        'workflow_id' : workflow_id,
+        'display'     : display,
+        'counter'     : counter,
+    }
     return_d.update(_fill_container(container, which_display, categories_order))
     return return_d
 
@@ -148,8 +182,13 @@ def take_item(request, item_id):
     item = Item.objects.filter(id=item_id)[0]
     person = Person.objects.filter(django_user=request.user.id)[0]
     _assign_item(item, person)
-    return {"item_id" : item_id, "assigned_to_firstname" : str(person.firstname),\
-            "assigned_to_lastname" : str(person.lastname), "assigned_to" : person.id or "None"}
+    ret = {
+        'item_id' : item_id,
+        'assigned_to_firstname' : str(person.firstname),
+        'assigned_to_lastname' : str(person.lastname),
+        'assigned_to' : person.id or 'None',
+    }
+    return ret
 
 @render(output='json')
 def untake_item(request, item_id):
@@ -161,8 +200,12 @@ def untake_item(request, item_id):
     person = Person.objects.filter(django_user=request.user.id)[0]
     item.assigned_to = None
     item.save()
-    return {"item_id" : item_id, "assigned_to" : item.assigned_to_id or "None",\
-            "assigned_to" : person.id or "None"}
+    ret = {
+        'item_id'     : item_id,
+        'assigned_to' : item.assigned_to_id or 'None',
+        'assigned_to' : person.id or 'None',
+    }
+    return ret
 
 @render(output='json')
 def take_category(request, category_id):
@@ -200,7 +243,12 @@ def validate_item(request, item_id, validation_label):
     person = Person.objects.filter(django_user=request.user.id)[0]
     item.validation_id = validation_label == "OK" and 1 or 2
     item.save()
-    return {"item_id" : item_id, "person_lastname" : person.lastname, "person_firstname" : person.firstname}
+    ret = {
+        'item_id' : item_id,
+        'person_lastname' : person.lastname,
+        'person_firstname' : person.firstname,
+    }
+    return ret
 
 @render(output='json')
 def reset_item_state(request, item_id):
@@ -211,7 +259,12 @@ def reset_item_state(request, item_id):
     person = Person.objects.filter(django_user=request.user.id)[0]
     item.validation_id = None
     item.save()
-    return {"item_id" : item_id, "person_lastname" : person.lastname, "person_firstname" : person.firstname}
+    ret = {
+        'item_id' : item_id,
+        'person_lastname' : person.lastname,
+        'person_firstname' : person.firstname,
+    }
+    return ret
 
 @render(output='json')
 def get_all_items(request, workflow_id):
@@ -222,15 +275,19 @@ def get_all_items(request, workflow_id):
         items += Item.objects.filter(category=category)
     allItems = []
     for item in items:
-        itemsInfos = {}
-        itemsInfos["id"] = item.id
-        itemsInfos["state"] = item.validation and item.validation_id or "None"
-        itemsInfos["person"] = item.assigned_to_id or "None"
         person = item.assigned_to
-        itemsInfos["person_lastname"] = person and person.lastname or "None"
-        itemsInfos["person_firstname"] = person and person.firstname or "None"
-        allItems.append(itemsInfos)
-    return {"allItems" : allItems}
+        itemInfos = {
+            'itemId'           : item.id,
+            'state'            : item.validation and item.validation.label or 'None',
+            'person'           : item.assigned_to_id or "None",
+            'person_lastname'  : person and person.lastname or "None",
+            'person_firstname' : person and person.firstname or "None",
+        }
+        allItems.append(itemInfos)
+    ret = {
+        'allItems' : allItems,
+    }
+    return ret
 
 @render(output='json')
 def	set_workflow_categories_order(request, workflow_id):
@@ -249,8 +306,8 @@ def	set_workflow_categories_order(request, workflow_id):
                     if len(order_list) == 0:
                         break
                     position += 1
-        return {"status" : "OK"}
-    return {"status" : "KO"}
+        return {'HTTPStatusCode' : '200',}
+    return {'HTTPStatusCode' : '400',}
 
 @render(output='json')
 def show_item(request, item_id):
@@ -264,13 +321,19 @@ def show_item(request, item_id):
     comments = Comment.objects.filter(item=item_id)
     commentsToSubmit = []
     for comment in comments:
-        detailComment = {}
-        detailComment["date"] = str(comment.date)
-        detailComment["person_lastname"] = comment.person.lastname
-        detailComment["person_firstname"] = comment.person.firstname
-        detailComment["comment"] = comment.comments
+        assigned_to = Person.objects.filter(id=comment.person_id)[0]
+        owner = assigned_to and ' '.join([assigned_to.firstname, assigned_to.lastname.upper()]) or 'Unknow'
+        detailComment = {
+            'date'    : str(comment.date),
+            'owner'   : owner,
+            'comment' : comment.comments,
+        }
         commentsToSubmit.append(detailComment)
-    return_d.update({'detail' : item.details, "comments" : commentsToSubmit})
+    return_d = {}
+    return_d.update({'details'    : item.details,\
+                     'comments'   : commentsToSubmit,\
+                     'categoryId' : item.category_id,\
+                     'itemId'     : item.id})
     return return_d
 
 @render(output='json')
@@ -311,7 +374,11 @@ def new_item(request):
 
             persons = Person.objects.filter(django_user=request.user.id)
             if not len(persons):
-                return {"form" : form, "status" : "KO", "error" : "Your django user is not attached to a Team person"}
+                return {
+                    'form'   : form,
+                    'status' : 'KO',
+                    'error'  : 'Your django user is not attached to a Team person',
+                }
 
             if len(WorkflowSection.objects.filter(id=workflow.id)[0].leaders.filter(id=persons[0].id)):
 
@@ -321,13 +388,22 @@ def new_item(request):
                         continue
                     item=ItemTemplate(category_id=workflowcategory_id, label=label)
                     item.save()
-                return {"status" : "OK"}
+                return {'status' : 'OK',}
             else:
-                return {"status" : "KO", "error" : "You are not leader on this workflow"}
+                return {
+                    'status' : 'KO',
+                    'error' : 'You are not leader on this workflow',
+                }
 
         else:
-            return {"status" : "KO", "error" : str(form.errors)}
+            return {
+                'status' : 'KO',
+                'error' : str(form.errors),
+            }
     else:
         form = ItemNewForm(request)
 
-    return {'form' : form, "status" : "NEW"}
+    return {
+        'form' : form,
+        'status' : 'NEW',
+    }
