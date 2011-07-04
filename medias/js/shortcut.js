@@ -1,43 +1,44 @@
-/* Update actions shortcut items */
-
-function  _update_item_shortcut(data, link, el) {
-    if ($(el).is("td")) {
-        return false;
-    }
-    link = link.split('/');
-    if ($(el).hasClass("shortcut-disabled-None")) {
-        link[link.length - 1] = "OK/";
-        var ok_shortcut = "<a class='shortcut-disabled-OK shortcut' href='' onclick='return false;'";
-        ok_shortcut += " title='Click to validate'><img src='/medias/workflow/img/validation_OK_disabled.png'/></a>";
-        var no_state_shortcut = "<a title='Item is untested'> ? </a>";
-        link[link.length - 1] = "KO/";
-        var ko_shortcut = "<a class='shortcut-disabled-KO shortcut' href='' onclick='return false;'";
-        ko_shortcut += "' title='Click to mark as broken'><img src='/medias/workflow/img/validation_KO_disabled.png'/></a>";
-        $(el).parent().attr("class", "state-item-None shortcut-cell");
+/* Update one item line */
+function _update_item_line(el, model) {
+    // Update state of item contained in @el@
+    _update_item_validation(model, $(el).find('td.validation-cell a.validation-disabled-' + model.get('state')));
+    if (model.get('owner') != 'None') {
+        // Add an owner to the item
+        _update_item_add_owner(model, model.url(), $(el).find('td')[1]);
     } else {
-        if ($(el).hasClass("shortcut-disabled-KO")) {
-            link[link.length - 2] = "OK";
-            var ok_shortcut = "<a class='shortcut-disabled-OK shortcut' href='' onclick='return false;'";
-            ok_shortcut += "' title='Click to validate'><img src='/medias/workflow/img/validation_OK_disabled.png'/></a>";
-            var ko_shortcut = "<a class='shortcut-enabled-KO' title='Item is broken' href='' onclick='return false;'>";
-            ko_shortcut += "<img src='/medias/workflow/img/validation_KO.png'/></a>";
-            $(el).parent().attr("class", "state-item-KO shortcut-cell");
-        } else {
-            link[link.length - 2] = "KO";
-            var ko_shortcut = "<a class='shortcut-disabled-KO shortcut' href='' onclick='return false;'";
-            ko_shortcut += "' title='Click to mark as broken'><img src='/medias/workflow/img/validation_KO_disabled.png'/></a>";
-            var ok_shortcut = "<a class='shortcut-enabled-KO shortcut' title='Item is validated' href='' onclick='return false;'>";
-            ok_shortcut += "<img src='/medias/workflow/img/validation_OK.png'/></a>";
-            $(el).parent().attr("class", "state-item-OK shortcut-cell");
-        }
-        link[link.length - 2] = '';
-        link[link.length - 1] = '';
-        var no_state_shortcut = "<a class='shortcut-disabled-None shortcut' href='' onclick='return false;'";
-        no_state_shortcut += "' title='Reset item validation'> ? </a>";
+        //Reset the owner of the item
+        _update_item_reset_owner(model, model.url(), $(el).find('td')[1]);
     }
-    $(el).parent().attr('title', "State item was updated by " + data.person_lastname + " " + data.person_firstname);
-    $(el).parent().html(ok_shortcut + no_state_shortcut + ko_shortcut);
-    compute_total_items_state();
+}
+
+/* Update validation items */
+function  _update_item_validation(data, el) {
+    if ($(el).hasClass("validation-disabled-None")) {
+        var ok_validation = "<a class='validation-disabled-OK validation' href='' onclick='return false;'";
+        ok_validation += " title='Click to validate'><img src='/medias/workflow/img/validation_OK_disabled.png'/></a>";
+        var no_state_validation = "<a title='Item is untested'><span> ? </span></a>";
+        var ko_validation = "<a class='validation-disabled-KO validation' href='' onclick='return false;'";
+        ko_validation += "' title='Click to mark as broken'><img src='/medias/workflow/img/validation_KO_disabled.png'/></a>";
+        $(el).parent().attr("class", "state-item-None validation-cell");
+    } else {
+        if ($(el).hasClass("validation-disabled-KO")) {
+            var ok_validation = "<a class='validation-disabled-OK validation' href='' onclick='return false;'";
+            ok_validation += "' title='Click to validate'><img src='/medias/workflow/img/validation_OK_disabled.png'/></a>";
+            var ko_validation = "<a class='validation-enabled-KO' title='Item is broken' href='' onclick='return false;'>";
+            ko_validation += "<img src='/medias/workflow/img/validation_KO.png'/></a>";
+            $(el).parent().attr("class", "state-item-KO validation-cell");
+        } else {
+            var ko_validation = "<a class='validation-disabled-KO validation' href='' onclick='return false;'";
+            ko_validation += "' title='Click to mark as broken'><img src='/medias/workflow/img/validation_KO_disabled.png'/></a>";
+            var ok_validation = "<a class='validation-enabled-KO validation' title='Item is validated' href='' onclick='return false;'>";
+            ok_validation += "<img src='/medias/workflow/img/validation_OK.png'/></a>";
+            $(el).parent().attr("class", "state-item-OK validation-cell");
+        }
+        var no_state_validation = "<a class='validation-disabled-None validation' href='' onclick='return false;'";
+        no_state_validation += "' title='Reset item validation'><span> ? </span></a>";
+    }
+    $(el).parent().attr('title', "State item was updated by " + data.get('owner'));
+    $(el).parent().html(ok_validation + no_state_validation + ko_validation);
 }
 
 /* ***************** */

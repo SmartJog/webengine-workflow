@@ -47,9 +47,9 @@ workflowItemCollection = Backbone.Collection.extend({
 
 workflowItemView = Backbone.View.extend({
     events  : {
-	"click a.shortcut-disabled-None"    :       "resetItemState",
-	"click a.shortcut-disabled-OK"      :       "updateItemState",
-	"click a.shortcut-disabled-KO"      :       "updateItemState",
+	"click a.validation-disabled-None"  :       "resetItemState",
+	"click a.validation-disabled-OK"    :       "updateItemState",
+	"click a.validation-disabled-KO"    :       "updateItemState",
 	"click td.take-item"                :       "takeOrUntakeOneItem",
 	"click td.untake-item"              :       "takeOrUntakeOneItem",
 	"click a.label_item"                :       "getDetailItem"

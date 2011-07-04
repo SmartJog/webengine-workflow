@@ -133,18 +133,18 @@ div.title_detail_item {
     text-align: center;
 }
 
-.category_workflow td.shortcut-cell {
+table.item_table td.validation-cell {
     width: 10%;
     text-align: center;
 }
 
-td.shortcut-cell a {
+table.item_table td.validation-cell a span {
     font-weight: bold;
     font-size: 20px;
     color: black;
 }
 
-td.shortcut-cell a.shortcut-disabled-None {
+table.item_table td.validation-cell a.validation-disabled-None span {
     color: #babdb6;
 }
 

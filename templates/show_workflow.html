@@ -95,22 +95,22 @@ var gl_mine = {{ counter.Mine }};
 	{% endifequal %}
 	<!-- ** -->
 
-	<!-- Cell containing validation shortcuts of the item -->
-	<td id="action-shortcuts-{{ item.id }}" class="state-item-{{ item.validation }} shortcut-cell">
+	<!-- Cell containing validation of the item -->
+	<td id="action-validation-{{ item.id }}" class="state-item-{{ item.validation }} validation-cell">
 		{% ifequal validations.0 item.validation %}
 			<a title="Item is validated">
 			<img src="/medias/workflow/img/validation_OK.png" alt="enabled" />
 			</a>
 		{% else %}
-			<a class="shortcut-disabled-OK shortcut" title="Click to validate" href="" onclick="return false;">
+			<a class="validation-disabled-OK validation" title="Click to validate" href="" onclick="return false;">
 			<img src="/medias/workflow/img/validation_OK_disabled.png" alt="enabled" />
 			</a>
 		{% endifequal %}
 
 		{% if validations.1.label == item.validation.label or validations.2.label == item.validation.label%}
-			<a title="Item is untested"> ? </a>
+			<a title="Item is untested"><span> ? </span></a>
 		{% else %}
-			<a class="shortcut-disabled-None shortcut" title="Reset item validation" href="" onclick="return false;"> ? </a>
+			<a class="validation-disabled-None validation" title="Reset item validation" href="" onclick="return false;"><span> ? </span></a>
 		{% endif %}
 
 		{% ifequal validations.1 item.validation %}
@@ -118,7 +118,7 @@ var gl_mine = {{ counter.Mine }};
 			<img src="/medias/workflow/img/validation_KO.png" alt="enabled" />
 			</a>
 		{% else %}
-			<a class="shortcut-disabled-KO shortcut" title="Click to mark as broken" href="" onclick="return false;">
+			<a class="validation-disabled-KO validation" title="Click to mark as broken" href="" onclick="return false;">
 			<img src="/medias/workflow/img/validation_KO_disabled.png" alt="enabled" />
 			</a>
 		{% endifequal %}
