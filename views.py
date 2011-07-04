@@ -4,8 +4,8 @@ from django.core.urlresolvers import reverse
 from webengine.utils.log import logger
 
 from team.models import Person
-from workflow.forms import *
-from workflow.models import *
+from workflow.forms import WorkflowInstanceNewForm, ItemNewForm
+from workflow.models import WorkflowSection, Workflow, Category, Item, Validation, Comment, ItemTemplate
 
 @render(view='index')
 def index(request):
