@@ -1,11 +1,5 @@
 var requestIntervalAjaxCall;
 var myID;
-$(document).ready(function () {
-    intervalAjaxCall();
-    $("#progress_bar").append(progressBar);
-    update_statistics_progressbar();
-    update_statistics_filters();
-    categoryNumerotation();
 
     workflowItem = Backbone.Model.extend({
         url         : function (completeURL) {
@@ -171,4 +165,13 @@ $(document).ready(function () {
 
     itemsCollection = new workflowItemCollection();
     generateBackboneModelsCollection();
+
+$(document).ready(function () {
+    Backbone.emulateHTTP = true;
+
+    $('#progress_bar').append(progressBar);
+    update_statistics_progressbar();
+    update_statistics_filters();
+
+    intervalAjaxCall();
 });
