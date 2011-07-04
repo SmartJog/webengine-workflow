@@ -41,9 +41,10 @@ workflowCategory = Backbone.Model.extend({
     }
 });
 
-workflowItemCollection = Backbone.Collection.extend({
-    model   :   workflowItem
+/* Unused for now
+workflowCollection = Backbone.Collection.extend({
 });
+*/
 
 workflowItemView = Backbone.View.extend({
     events  : {
@@ -163,7 +164,6 @@ function generateBackboneModelsCollection() {
     }
 }
 
-itemsCollection = new workflowItemCollection();
 generateBackboneModelsCollection();
 
 $(document).ready(function () {
