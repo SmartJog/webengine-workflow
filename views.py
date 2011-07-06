@@ -7,6 +7,8 @@ from team.models import Person
 from workflow.forms import WorkflowInstanceNewForm, ItemNewForm
 from workflow.models import WorkflowSection, Workflow, Category, Item, Validation, Comment, ItemTemplate
 
+import simplejson as json
+
 @render(view='index')
 def index(request):
     return {}
@@ -168,6 +170,84 @@ def delete_workflow(request, workflow_id):
     Workflow.objects.filter(id=workflow_id).delete()
     return HttpResponseRedirect(reverse('workflow-listing'))
 
+def _get_comments(item_id):
+    comments = Comment.objects.filter(item=item_id)
+    commentsToSubmit = []
+    for comment in comments:
+        assigned_to = Person.objects.filter(id=comment.person_id)[0]
+        owner = assigned_to and ' '.join([assigned_to.firstname, assigned_to.lastname.upper()]) or 'Unknow'
+        detailComment = {
+            'date'    : str(comment.date),
+            'owner'   : owner,
+            'comment' : comment.comments,
+        }
+        commentsToSubmit.append(detailComment)
+    return commentsToSubmit
+
+@render(output='json')
+def item_update(request, item_id):
+    """ Update item which have for item @item_id@
+        if remote_item is up to date else
+        return up to date item values
+    """
+    item = Item.objects.filter(id=item_id)[0]
+
+    if request.META['REQUEST_METHOD'] == 'GET':
+        ret = {
+            'details'  : item.details,
+            'comments' : _get_comments(item_id),
+        }
+        return ret
+
+    remote_item = {}
+    if request.META['REQUEST_METHOD'] == 'POST':
+        for el in request.POST:
+            remote_item.update(json.loads(el))
+
+    local_item = {
+        'assigned_to' : item.assigned_to_id,
+        'validation'  : item.validation_id,
+    }
+
+    for key in local_item.keys():
+        if not local_item[key] == remote_item['previousAttributes'][key]:
+            owner = item.assigned_to and ' '.join([item.assigned_to.firstname, item.assigned_to.lastname.upper()]) or 'None'
+            ret = {
+                'HTTPStatusCode' : '409',
+                'label'          : item.label,
+                'assigned_to'    : item.assigned_to_id,
+                'validation'     : item.validation_id,
+                'state'          : item.validation.label,
+                'owner'          : owner,
+                'comments'       : _get_comments(item_id),
+                'details'        : item.details,
+            }
+            return ret
+
+    item.assigned_to_id = remote_item['assigned_to']
+    item.validation_id = remote_item['validation']
+    item.details = remote_item['details']
+    item.save()
+    if not isinstance(remote_item['comments'], list):
+        person = Person.objects.filter(django_user=request.user.id)[0]
+        id_comment = int(Comment.objects.all().count() + 1)
+        comment = Comment(id=id_comment, item_id=item_id, person=person, comments=remote_item['comments'])
+        comment.save()
+
+    item = Item.objects.filter(id=item_id)[0]
+    owner = item.assigned_to and ' '.join([item.assigned_to.firstname, item.assigned_to.lastname.upper()]) or 'None'
+    ret = {
+        'HTTPStatusCode' : '200',
+        'label'          : item.label,
+        'assigned_to'    : item.assigned_to_id,
+        'validation'     : item.validation_id,
+        'state'          : item.validation.label,
+        'owner'          : owner,
+        'comments'       : _get_comments(item_id),
+        'details'        : item.details,
+    }
+    return ret
+
 def _assign_item(item, person):
     """ Change item assignation and save into db """
     item.assigned_to = person
@@ -277,11 +357,13 @@ def get_all_items(request, workflow_id):
     for item in items:
         person = item.assigned_to
         itemInfos = {
-            'itemId'           : item.id,
-            'state'            : item.validation and item.validation.label or 'None',
-            'person'           : item.assigned_to_id or "None",
-            'person_lastname'  : person and person.lastname or "None",
-            'person_firstname' : person and person.firstname or "None",
+            'itemId'      : item.id,
+            'HTTPStatusCode' : '200',
+            'categoryId'  : item.category_id,
+            'state'       : item.validation and item.validation.label or 'None',
+            'validation'  : item.validation and item.validation_id or 'None',
+            'assigned_to' : item.assigned_to and item.assigned_to_id or "None",
+            'owner'       : item.assigned_to and ' '.join([item.assigned_to.firstname, item.assigned_to.lastname.upper()]) or 'None',
         }
         allItems.append(itemInfos)
     ret = {
