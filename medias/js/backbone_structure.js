@@ -227,6 +227,20 @@ workflowMainView = Backbone.View.extend({
             }
         }
     },
+    // Function which display up to date information on the page
+    _updatePage : function (resp) {
+        _.each(resp.allItems, function (item) {
+            if (!(mainView.modelItemsCollection.get(item.itemId) == undefined)) {
+                var itemModel = mainView.modelItemsCollection.get(item.itemId);
+                if (!(itemModel == undefined)) {
+                    var currentHTTPStatus = itemModel.get('HTTPStatusCode');
+                    if (currentHTTPStatus !== '409') {
+                        itemModel.set(item)
+                    }
+                }
+            }
+        });
+    },
     // Make a ajax call to retrieve up to date information
     _refreshPage : function () {
         if (this.requestRefreshPage) {
@@ -238,7 +252,7 @@ workflowMainView = Backbone.View.extend({
             type: 'POST',
             dataType: 'json',
             timeout: 3000,
-            success: _update_page,
+            success: mainView._updatePage,
         });
         setTimeout('mainView._refreshPage()', 45000);
     }

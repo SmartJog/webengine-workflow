@@ -234,23 +234,29 @@ def item_update(request, item_id):
     return ret
 
 @render(output='json')
-def get_all_items(request, workflow_id):
-    """ Return information on all items in @workflow_id@ """
-    categories = Category.objects.filter(workflow=workflow_id)
+def item(request):
+    """ Output JSON
+        Return informations about all items contained in @workflow_id@
+    """
+    infos = {}
+    for el in request.POST:
+        infos.update(json.loads(el))
+    categories = Category.objects.filter(workflow=infos['workflowId'])
     items = []
     for category in categories:
         items += Item.objects.filter(category=category)
     allItems = []
     for item in items:
-        person = item.assigned_to
         itemInfos = {
-            'itemId'      : item.id,
             'HTTPStatusCode' : '200',
-            'categoryId'  : item.category_id,
-            'state'       : item.validation and item.validation.label or 'None',
-            'validation'  : item.validation and item.validation_id or 'None',
-            'assigned_to' : item.assigned_to and item.assigned_to_id or "None",
-            'owner'       : item.assigned_to and ' '.join([item.assigned_to.firstname, item.assigned_to.lastname.upper()]) or 'None',
+            'itemId'         : item.id,
+            'categoryId'     : item.category_id,
+            'state'          : item.validation.label,
+            'validation'     : item.validation and item.validation_id or None,
+            'assigned_to'    : item.assigned_to and item.assigned_to_id or None,
+            'owner'          : item.assigned_to and ' '.join([item.assigned_to.firstname, item.assigned_to.lastname.upper()]) or 'None',
+            'details'        : item.details,
+            'comments'       : _get_comments(item.id),
         }
         allItems.append(itemInfos)
     ret = {
