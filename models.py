@@ -43,7 +43,7 @@ class Item(models.Model):
     label = models.CharField(max_length=512, null=False)
     details = models.TextField(max_length=1000, blank=True, null=True)
     assigned_to = models.ForeignKey(teammodels.Person, null=True, blank=True)
-    validation = models.ForeignKey(Validation, null=True)
+    validation = models.ForeignKey(Validation, null=False)
     category = models.ForeignKey(Category, null=False)
 
     def __unicode__(self):

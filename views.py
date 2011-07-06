@@ -101,7 +101,7 @@ def _compute_statistics_items(category, person_id):
     counter = {
         'Success'   : Item.objects.filter(category=category, validation=1).count(),
         'Failed'    : Item.objects.filter(category=category, validation=2).count(),
-        'NotSolved' : Item.objects.filter(category=category, validation=None).count(),
+        'NotSolved' : Item.objects.filter(category=category, validation=3).count(),
         'Taken'     : Item.objects.filter(category=category).exclude(assigned_to=None).count(),
         'Free'      : Item.objects.filter(category=category, assigned_to=None).count(),
         'Mine'      : Item.objects.filter(category=category, assigned_to=person_id).count(),
