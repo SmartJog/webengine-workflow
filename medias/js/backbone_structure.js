@@ -2,42 +2,19 @@ var requestIntervalAjaxCall;
 var myID;
 
 workflowItem = Backbone.Model.extend({
-    url         : function (completeURL) {
-	if (completeURL == null) {
-	    var targetURL = this.attributes.baseURL;
-	    targetURL += this.attributes.actionURL + this.id + '/';
-	    if (this.attributes.actionURL == "validate/") {
-		targetURL += this.attributes.state;
-	    }
-	    return targetURL;
-	}
-	return completeURL;
-    },
-    validate    : function () {
-    },
-    initialize  : function (options) {
-	this.attributes.owner = options.owner ? options.owner.data.trim() : null;
-	this.id = this.attributes.detailURL.split('/')[this.attributes.detailURL.split('/').length - 2];
-	this.attributes.baseURL = "/workflow/item/";
-	this.attributes.actionURL = null;
-	this.attributes.ajaxCallback = null;
-	$("tr#detail-item-" + this.id).hide();
-	$("tr#detail-item-" + this.id).css("visibility", "hidden");
+    initialize : function () {
+        this.url = '/workflow/item/' + this.id + '/';
     }
 });
 
 workflowCategory = Backbone.Model.extend({
-    url         : function () {
-	var targetURL = this.attributes.baseURL;
-	targetURL += this.attributes.actionURL;
-	targetURL += this.id + '/';
-	return targetURL;
+    url : function () {
+	return this.get('targetURL');
     },
-    initialize  : function () {
-	this.attributes.baseURL = "/workflow/category/";
-	this.attributes.actionURL = null;
-	this.attributes.workflowId = $("div.categories_table_workflow").attr("id").split('-')[1];
-	this.id = this.attributes.categoryId;
+    defaults : {
+	'targetURL' : 'None'
+    },
+    initialize : function () {
     }
 });
 
@@ -47,6 +24,8 @@ workflowCollection = Backbone.Collection.extend({
 */
 
 workflowItemView = Backbone.View.extend({
+    initialize  : function () {
+    },
     events  : {
 	"click a.validation-disabled-None"  :       "resetItemState",
 	"click a.validation-disabled-OK"    :       "updateItemState",
@@ -111,14 +90,15 @@ workflowItemView = Backbone.View.extend({
 	    _show_commentOrDetail(targetSection, 'detail');
 	    _show_item_detail(this.model.url(this.model.get("detailURL")), $("tr#detail-item-" + this.model.id));
 	}
-    },
-    initialize  : function () {
     }
 });
 
 workflowCategoryView = Backbone.View.extend({
     events      : {
 	"click td.take_untake_group"    :   "takeOrUntakeGroupOfItem"
+    },
+    initialize : function () {
+	this.model.itemsView = {};
     },
     takeOrUntakeGroupOfItem : function (e) {
 	var actionOnGroup = $(e.target).attr("class").split('-')[0] + '/';
@@ -136,30 +116,22 @@ workflowCategoryView = Backbone.View.extend({
 	    }
 	}});
 	_item_has_changed(this.model, $(e.target).parents("table"), 2);
-    },
-    initialize   : function () {
-	this.viewCollection = [];
     }
 });
 
 function generateBackboneModelsCollection() {
     // Generate view/models for categories
-    var allCategoriesLines = $("tr.category-header");
+    var allCategoriesLines = $('tr.category-header');
     for (i = 0; i < allCategoriesLines.length; i++) {
-	var categoryName = $(allCategoriesLines[i]).find("th").html();
-	var categoryId = $(allCategoriesLines[i]).parents("table").attr("id").split('-')[1];
-	var modelToAdd = new workflowCategory({label : categoryName, categoryId : categoryId});
+        var categoryID = $(allCategoriesLines[i]).parents('table').attr('id').match('\\d+$');
+	var modelToAdd = new workflowCategory({categoryId : categoryID});
 	var currentCategory = new workflowCategoryView({el : $(allCategoriesLines[i]), model : modelToAdd});
-	var allItemLines = $(allCategoriesLines[i]).parents("table").find("tr.highlight");
+	var allItemLines = $(allCategoriesLines[i]).parents('table').find('tr.highlight');
 	for (y = 0; y < allItemLines.length; y++) {
-	    var labelItem = $(allItemLines[y]).find("a.label_item").html();
-	    var itemID = $(allItemLines[y]).find("td.label").attr("id").split('-')[2];
-	    var detailItemURL = "/workflow/item/show/" + itemID + '/';
-	    var ownerItem = $(allItemLines[y]).find("td.untake-item").contents()[0];
-	    var stateItem = $(allItemLines[y]).find("td.shortcut-cell").attr("class").split(' ')[0].split('-')[2];
-	    var modelToAddItem = new workflowItem({label : labelItem, detailURL : detailItemURL, owner : ownerItem, state : stateItem});
+            var itemID = $(allItemLines[y]).find('td.label').parent().attr('id').match('\\d+$');
+	    var modelToAddItem = new workflowItem({itemId : itemID, id : parseInt(itemID)});
 	    var viewToAdd = new workflowItemView({el : $(allItemLines[y]), model : modelToAddItem});
-	    currentCategory.viewCollection.push(viewToAdd);
+	    currentCategory.model.itemsView[viewToAdd.model.get('itemId')] = viewToAdd;
 	}
     }
 }
