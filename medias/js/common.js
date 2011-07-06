@@ -61,20 +61,3 @@ function update_statistics_progressbar() {
     $("span#stats-failed").parent().html("<span id='stats-failed'></span> Failed Miserably: " + gl_failed);
     $("span#stats-unsolved").parent().html("<span id='stats-unsolved'></span> Untested: " + gl_not_solved);
 }
-
-
-function intervalAjaxCall() {
-    if (requestIntervalAjaxCall) {
-        requestIntervalAjaxCall.abort();
-    }
-    var instanceID = $("div.categories_table_workflow").attr("id").split('-')[1];
-    requestIntervalAjaxCall = $.ajax({
-        url: '/workflow/getall/' + gl_workflowId + '/',
-        type: 'POST',
-        dataType: 'json',
-        timeout: 3000,
-        success: function (data) { _update_page(data); },
-        error: function () {}
-    });
-   setTimeout("intervalAjaxCall()", 45000);
-}

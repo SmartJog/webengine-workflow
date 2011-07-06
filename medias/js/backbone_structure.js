@@ -1,5 +1,3 @@
-var requestIntervalAjaxCall;
-
 workflowItem = Backbone.Model.extend({
     initialize : function () {
         this.url = '/workflow/item/' + this.id + '/';
@@ -211,6 +209,7 @@ workflowMainView = Backbone.View.extend({
     initialize : function () {
         this.modelItemsCollection = new workflowCollection();
         this._generateMainView();
+        this.requestRefreshPage = null;
     },
     _generateMainView : function () {
         // Generate view/models for categories
@@ -227,6 +226,21 @@ workflowMainView = Backbone.View.extend({
                 currentCategory.itemsView[viewToAdd.model.get('itemId')] = viewToAdd;
             }
         }
+    },
+    // Make a ajax call to retrieve up to date information
+    _refreshPage : function () {
+        if (this.requestRefreshPage) {
+            this.requestRefreshPage.abort();
+        }
+        this.requestRefreshPage = $.ajax({
+            url: '/workflow/item/',
+            data: JSON.stringify({'workflowId' : gl_workflowId}),
+            type: 'POST',
+            dataType: 'json',
+            timeout: 3000,
+            success: _update_page,
+        });
+        setTimeout('mainView._refreshPage()', 45000);
     }
 });
 
@@ -239,5 +253,5 @@ $(document).ready(function () {
     update_statistics_filters();
     mainView = new workflowMainView();
 
-    intervalAjaxCall();
+    mainView._refreshPage();
 });
