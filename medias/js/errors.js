@@ -1,6 +1,26 @@
+function displayError(title, errorMessage) {
+   $("div#dialogError").attr("style", "visibility: visible;");
+   $("div#dialogError").attr("title", title);
+   $("div#dialogError p").html(errorMessage);
+   $("div#dialogError").dialog({
+      modal    : true,
+      buttons  : {
+         Ok    : function () {
+            if (errorMessage === errorHappened) {
+                location.reload();
+            } else {
+                mainView._refreshPage();
+            }
+            $("div#dialogError").attr("style", "visibility: hidden;");
+            $(this).dialog("close");
+         }
+      }
+   });
+}
+
 // Error messages
-var errorHappened = "An error unexpectedly happened. Would you like to update the page ?";
-var errorPageNotUpToDate = "Your workflow is not up to date. Would you like to update the page ?";
+var errorHappened = "An error happened unexpectedly. The page need to be reloaded.";
+var errorPageNotUpToDate = "The item you clicked on was not up to date, and has now been refreshed. Would you like to refresh remaining items ?";
 
 // Title box
 var titleErrorPageNotUpToDate = "Page not up to date.";

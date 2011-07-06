@@ -18,22 +18,6 @@ function _check_if_has_changed(data, el, toCheck) {
     }
 }
 
-function displayError(title, errorMessage) {
-   $("div#dialogError").attr("style", "visibility: visible;");
-   $("div#dialogError").attr("title", title);
-   $("div#dialogError p").html(errorMessage);
-   $("div#dialogError").dialog({
-      modal    : true,
-      buttons    : {
-         Ok    : function () {
-            intervalAjaxCall();
-            $("div#dialogError").attr("style", "visibility: hidden;");
-            $(this).dialog("close");
-         }
-      }
-   });
-}
-
 function _item_has_changed(model, elParent, toCheck) {
     // toCheck:
     // 0 will check for owner
