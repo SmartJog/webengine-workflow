@@ -25,6 +25,3 @@ var errorPageNotUpToDate = "The item you clicked on was not up to date, and has 
 // Title box
 var titleErrorPageNotUpToDate = "Page not up to date.";
 var titleErrorHappened = "Error unexpectedly happened.";
-
-// URLs
-var checkBaseURL = "/workflow/check/";

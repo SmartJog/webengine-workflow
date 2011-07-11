@@ -71,21 +71,6 @@ def workflow_listing(request):
         ret.update({'display' : display})
     return ret
 
-@render(output='json')
-def check_states_before_change(request, item_id, category_id):
-    """ Check if @item_id@ or @category_id@ have changed before change anything"""
-    if int(item_id):
-        item = Item.objects.filter(id=item_id)[0]
-        return {"assigned_to" : item.assigned_to_id or "None",\
-                "validation" : item.validation_id == 1 and "OK" or item.validation_id == 2 and "KO" or "None",\
-                "item_id" : item_id}
-    else:
-        item_assignation_id = {}
-        instance_items = Item.objects.filter(category=category_id)
-        for item in instance_items:
-            item_assignation_id[item.id] = item.assigned_to_id or "None"
-        return {"owners_id" : item_assignation_id}
-
 def _fill_container(dict_to_fill, which_display, categories_order):
     for order in categories_order:
         if dict_to_fill[which_display].has_key(int(order)):
@@ -245,40 +230,6 @@ def item_update(request, item_id):
         'owner'          : owner,
         'comments'       : _get_comments(item_id),
         'details'        : item.details,
-    }
-    return ret
-
-
-@render(output='json')
-def validate_item(request, item_id, validation_label):
-    """ Output JSON for AJAX interaction
-        Change item state: Validate/Invalidate
-        Return @item_id@ which is the item id with user lastname and firstname
-    """
-    item = Item.objects.filter(id=item_id)[0]
-    person = Person.objects.filter(django_user=request.user.id)[0]
-    item.validation_id = validation_label == "OK" and 1 or 2
-    item.save()
-    ret = {
-        'item_id' : item_id,
-        'person_lastname' : person.lastname,
-        'person_firstname' : person.firstname,
-    }
-    return ret
-
-@render(output='json')
-def reset_item_state(request, item_id):
-    """ Reset item state
-        Return @item_id@ with user lastname and firstname
-    """
-    item = Item.objects.filter(id=item_id)[0]
-    person = Person.objects.filter(django_user=request.user.id)[0]
-    item.validation_id = None
-    item.save()
-    ret = {
-        'item_id' : item_id,
-        'person_lastname' : person.lastname,
-        'person_firstname' : person.firstname,
     }
     return ret
 
