@@ -3,5 +3,4 @@ dist_mediasjs_DATA =	\
 	common.js		\
 	compute.js		\
 	errors.js		\
-	progressbar.js		\
-	shortcut.js
+	progressbar.js

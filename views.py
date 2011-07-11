@@ -258,55 +258,6 @@ def get_all_items(request, workflow_id):
     }
     return ret
 
-@render(output='json')
-def show_item(request, item_id):
-    """ Return dictionnary with comments and detail for @item_id@ """
-    return_d = {}
-    item = Item.objects.filter(id=item_id)[0]
-    if item.details:
-        item.details = item.details
-    else:
-        item.details = []
-    comments = Comment.objects.filter(item=item_id)
-    commentsToSubmit = []
-    for comment in comments:
-        assigned_to = Person.objects.filter(id=comment.person_id)[0]
-        owner = assigned_to and ' '.join([assigned_to.firstname, assigned_to.lastname.upper()]) or 'Unknow'
-        detailComment = {
-            'date'    : str(comment.date),
-            'owner'   : owner,
-            'comment' : comment.comments,
-        }
-        commentsToSubmit.append(detailComment)
-    return_d = {}
-    return_d.update({'details'    : item.details,\
-                     'comments'   : commentsToSubmit,\
-                     'categoryId' : item.category_id,\
-                     'itemId'     : item.id})
-    return return_d
-
-@render(output='json')
-def item_comments(request, item_id):
-    """ Add comment into db for @item_id@ and return appropriate status """
-    if request.method == 'POST' and request.POST["new_comment"]:
-        person = Person.objects.filter(django_user=request.user.id)[0]
-        all_comments = Comment.objects.all()
-        comment = Comment(id=int(all_comments.count() + 1), comments=request.POST["new_comment"], item_id=item_id, person=person)
-        comment.save()
-        return {'status' : 'OK'}
-    return {'status' : 'KO'}
-
-@render(output='json')
-def item_details(request, item_id):
-    """ Change detail of @item_id@ ans return appropriate status """
-    item = Item.objects.filter(id=item_id)[0]
-    if request.method == 'POST':
-        category = Category.objects.filter(id=item.category_id)[0]
-        item.details = request.POST["new_details"]
-        item.save()
-        return {'status' : 'OK'}
-	return {'status' : 'KO'}
-
 def item_create(request, workflowinstanceitem_id):
     workflowinstanceitem = Item.objects.filter(id=workflowinstanceitem_id)[0]
     workflowinstanceitem.save()
