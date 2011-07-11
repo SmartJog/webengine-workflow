@@ -58,81 +58,28 @@ def new_workflow(request):
 def workflow_listing(request):
     workflows = WorkflowSection.objects.all()
     ret = {'workflows' : []}
-    display = {
-        'mine'       : 'mine',
-        'all'        : 'all',
-        'successful' : 'successful',
-        'failed'     : 'failed',
-        'untaken'    : 'untaken',
-        'taken'      : 'taken',
-    }
     for workflow in workflows:
         ret['workflows'] += [{'name' : workflow, 'workflowinstances' : Workflow.objects.filter(workflow_section=workflow)}]
-        ret.update({'display' : display})
     return ret
 
-def _fill_container(dict_to_fill, which_display, categories_order):
-    for order in categories_order:
-        if dict_to_fill[which_display].has_key(int(order)):
-            dict_to_fill[which_display][order]['items'] = dict_to_fill[which_display][order]['items'].values()
-    ret = {
-        'categories' : len(dict_to_fill[which_display]) and dict_to_fill[which_display].values() or None,
-        'order'      : categories_order,
-    }
-    return ret
-
-def _get_all_item_for_specific_condition(category, person_id, which_display):
-    """ Return list of items on demand """
-    if which_display == "all":
-        return Item.objects.filter(category=category)
-    elif which_display == "successful":
-        return Item.objects.filter(category=category, validation=1)
-    elif which_display == "failed":
-        return Item.objects.filter(category=category, validation=2)
-    elif which_display == "untaken":
-        return Item.objects.filter(category=category, assigned_to=None)
-    elif which_display == "taken":
-        return Item.objects.filter(category=category).exclude(assigned_to=None)
-    elif which_display == "mine":
-        return Item.objects.filter(category=category, assigned_to=person_id)
-
-@render(view='show_workflow')
-def show_workflow(request, workflow_id, which_display):
-    categories = Category.objects.filter(workflow=workflow_id).order_by("order")
+@render(view='workflow')
+def workflow(request, workflow_id):
     person_id = Person.objects.filter(django_user=request.user.id)[0].id
-    container = {}
-    container[which_display] = {}
-    if not which_display in container.keys():
-        which_display = "all"
-    items = []
+    categories = Category.objects.filter(workflow=workflow_id).order_by('id')
+    container = []
     for category in categories:
-        items += _get_all_item_for_specific_condition(category, person_id, which_display)
-    categories_order = Category.objects.filter(workflow=workflow_id).order_by("order").values_list("order")
-    display = {
-        'mine'       : 'mine',
-        'all'        : 'all',
-        'successful' : 'successful',
-        'failed'     : 'failed',
-        'untaken'    : 'untaken',
-        'taken'      : 'taken',
-    }
-    categories_order  = [x[0] for x in categories_order]
-
-    for cur_item in items:
-        category_id=cur_item.category_id
-        container[which_display].setdefault(category_id, {'id'    : category_id,
-                                                          'order' : cur_item.category.order,
-                                                          'name'  : cur_item.category.label,
-                                                          'items' : {},})
-        container[which_display][category_id]['items'][cur_item.id] = cur_item
-
-    return_d = {
+        tmp = {
+            'items' : Item.objects.filter(category=category.id).order_by('id'),
+            'name' : category.label,
+            'id' : category.id
+        }
+        container.append(tmp)
+    ret = {
         'workflow_id' : workflow_id,
         'myId'        : person_id,
-        'display'     : display,
+        'categories'  : container,
     }
-    return_d.update(_fill_container(container, which_display, categories_order))
-    return return_d
+    return ret
 
 def delete_workflow(request, workflow_id):
     Workflow.objects.filter(id=workflow_id).delete()
