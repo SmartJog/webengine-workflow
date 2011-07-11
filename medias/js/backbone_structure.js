@@ -15,17 +15,6 @@ workflowItem = Backbone.Model.extend({
     }
 });
 
-workflowCategory = Backbone.Model.extend({
-    url : function () {
-	return this.get('targetURL');
-    },
-    defaults : {
-	'targetURL' : 'None'
-    },
-    initialize : function () {
-    }
-});
-
 /* Unused for now
 workflowCollection = Backbone.Collection.extend({
 });
@@ -134,28 +123,24 @@ workflowItemView = Backbone.View.extend({
 });
 
 workflowCategoryView = Backbone.View.extend({
-    events      : {
-	"click td.take_untake_group"    :   "takeOrUntakeGroupOfItem"
-    },
     initialize : function () {
-	this.model.itemsView = {};
+        this.itemsView = {};
     },
-    takeOrUntakeGroupOfItem : function (e) {
-	var actionOnGroup = $(e.target).attr("class").split('-')[0] + '/';
-	this.model.set({actionURL : actionOnGroup});
-	this.model.set({ajaxCallback : {
-	    success : function (model, resp) {
-		if (actionOnGroup == "take/") {
-		    _update_whole_group_add_owner(resp);
-		} else {
-		    _update_whole_group_reset_owner(resp);
-		}
-	    },
-	    error   : function () {
-		displayError(titleErrorHappened, errorHappened);
-	    }
-	}});
-	_item_has_changed(this.model, $(e.target).parents("table"), 2);
+    events : {
+        'click a.take-group'   : 'take',
+        'click a.untake-group' : 'untake'
+    },
+    take : function () {
+        _.each(this.itemsView, function (item) {
+            item.model.takeOrUntake('take');
+        });
+    },
+    untake : function () {
+        _.each(this.itemsView, function (item) {
+            if (item.model.get('assigned_to') == gl_myId) {
+                item.model.takeOrUntake('untake');
+            }
+        });
     }
 });
 
@@ -171,7 +156,7 @@ function generateBackboneModelsCollection() {
             var itemID = $(allItemLines[y]).find('td.label').parent().attr('id').match('\\d+$');
 	    var modelToAddItem = new workflowItem({itemId : itemID, id : parseInt(itemID)});
 	    var viewToAdd = new workflowItemView({el : $(allItemLines[y]), model : modelToAddItem});
-	    currentCategory.model.itemsView[viewToAdd.model.get('itemId')] = viewToAdd;
+	    currentCategory.itemsView[viewToAdd.model.get('itemId')] = viewToAdd;
 	}
     }
 }
