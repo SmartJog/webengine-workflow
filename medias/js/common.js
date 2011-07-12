@@ -48,33 +48,6 @@ function _item_has_changed(model, elParent, toCheck) {
     });
 }
 
-function updateCategoriesOrderInDb() {
-    // Update categories_order in db
-    var categories = $("table.category_workflow").find("td.take_untake_group");
-    var categoriesOrder = "";
-    for (i = 0; i < categories.length; i++) {
-        var ID = $(categories[i]).attr("id").split('-')[1];
-        categoriesOrder += ID;
-        if (i + 1 != categories.length) {
-            categoriesOrder += ", ";
-        }
-    }
-    var workflowinstance_id = $("div.categories_table_workflow").attr("id").split('-')[1] + '/';
-    $.ajax({
-        url: "/workflow/set_categories_order/" + workflowinstance_id,
-        type: "POST",
-        data: {"categories_id" : categoriesOrder},
-        dataType: "json",
-        timeout: 3000,
-        success: function (data) {
-            if (data.status == "KO") {
-                displayError(titleErrorHappened, errorHappened);
-            }
-        },
-        error: function () { displayError(titleErrorHappened, errorHappened); }
-    });
-}
-
 function _show_commentOrDetail(el, what) {
     if (what == 'detail') {
         $(el).parents("tr").find("div.all_for_detail").attr('style', 'display: block;');

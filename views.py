@@ -290,26 +290,6 @@ def get_all_items(request, workflow_id):
     return ret
 
 @render(output='json')
-def	set_workflow_categories_order(request, workflow_id):
-    """ Set categories order in db for a particular instance of workflow """
-    categories = Category.objects.filter(workflow=workflow_id)
-    position = 0
-    if (len(request.POST["categories_id"])):
-        order_list = request.POST["categories_id"].split(', ')
-        order_list.reverse()
-        while len(order_list) > 0:
-            for category in categories:
-                if category.id == int(order_list[-1]):
-                    category.order = position
-                    category.save()
-                    order_list.pop()
-                    if len(order_list) == 0:
-                        break
-                    position += 1
-        return {'HTTPStatusCode' : '200',}
-    return {'HTTPStatusCode' : '400',}
-
-@render(output='json')
 def show_item(request, item_id):
     """ Return dictionnary with comments and detail for @item_id@ """
     return_d = {}

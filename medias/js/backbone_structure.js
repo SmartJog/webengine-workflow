@@ -7,15 +7,6 @@ $(document).ready(function () {
     update_statistics_filters();
     categoryNumerotation();
 
-    $(function () {
-        $("#sortable").sortable();
-        $("#sortable").disableSelection();
-    });
-    $("div#sortable").bind("sortstop", function () {
-        categoryNumerotation();
-        updateCategoriesOrderInDb();
-    });
-
     workflowItem = Backbone.Model.extend({
         url         : function (completeURL) {
             if (completeURL == null) {

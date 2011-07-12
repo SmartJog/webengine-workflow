@@ -55,7 +55,6 @@ var gl_mine = {{ counter.Mine }};
 <!-- ** -->
 
 <div class="categories_table_workflow" id="workflowinstance_id-{{ workflow_id }}">
-<div id="sortable">
 {% for id_category in order %}
 {% for category in categories %}
 {% ifequal id_category category.order %}
@@ -172,7 +171,6 @@ var gl_mine = {{ counter.Mine }};
 {% endifequal %}
 {% endfor %}
 {% endfor %}
-</div>
 </div>
 <!-- Error box -->
 <div id="dialogError" title="" style="visibility: hidden;">
