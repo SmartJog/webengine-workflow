@@ -81,18 +81,13 @@ var gl_mine = {{ counter.Mine }};
 	<!-- ** -->
 
 	<!-- Cell containing owner of the item -->
-	{% ifequal item.assigned_to None %}
-		<td class="take-item owner-{{ item.assigned_to_id }}" id="take-item-{{ item.id }}">
-			<a title="Take item" href="" onclick="return false;">take</a>
-		</td>
-	{% else %}
-		<td class="untake-item owner-{{ item.assigned_to_id }}" id="untake-item-{{ item.id }}">
-			{{ item.assigned_to }}
-			<a title="Reset owner of item" href="" onclick="return false;">
+		<td class="take-item untake-item {% ifequal item.assigned_to None %} is-untaken {% else %} is-taken {% endifequal %}">
+			<a title="Take item" href="" onclick="return false;" class='untake'>take</a>
+			<a title="Reset owner of item" href="" onclick="return false;" class='take'>
+			<span>{{ item.assigned_to }}</span>
 			<img src="/medias/workflow/img/untake.png" />
 			</a>
 		</td>
-	{% endifequal %}
 	<!-- ** -->
 
 	<!-- Cell containing validation of the item -->

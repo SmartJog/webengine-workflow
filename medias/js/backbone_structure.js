@@ -4,6 +4,15 @@ var myID;
 workflowItem = Backbone.Model.extend({
     initialize : function () {
         this.url = '/workflow/item/' + this.id + '/';
+    },
+    // Take or untake one item
+    takeOrUntake : function (action) {
+        if (action === 'take') {
+            this.set({'assigned_to' : gl_myId}, {silent : true});
+        } else {
+            this.set({'assigned_to' : null}, {silent : true});
+        }
+        this.save({'previousAttributes' : this.previousAttributes()});
     }
 });
 
@@ -25,14 +34,16 @@ workflowCollection = Backbone.Collection.extend({
 
 workflowItemView = Backbone.View.extend({
     initialize  : function () {
+        _.bindAll(this, 'render', 'renderError');
+        this.model.bind('change', this.render);
+        this.model.bind('error', this.renderError);
     },
     events  : {
 	"click a.validation-disabled-None"  :       "resetItemState",
 	"click a.validation-disabled-OK"    :       "updateItemState",
 	"click a.validation-disabled-KO"    :       "updateItemState",
-	"click td.take-item"                :       "takeOrUntakeOneItem",
-	"click td.untake-item"              :       "takeOrUntakeOneItem",
 	"click a.label_item"                :       "getDetailItem"
+        'click a.untake, a.take'                 : 'takeOrUntake'
     },
     updateItemState : function (e) {
 	this.model.set({actionURL : "validate/"});
@@ -61,22 +72,28 @@ workflowItemView = Backbone.View.extend({
 	}});
 	_item_has_changed(this.model, $(e.target).parents("td"), 0);
     },
-    takeOrUntakeOneItem    : function (e) {
-	var actionOnItem = $(e.target).parents("td").attr("class").split('-')[0] + '/';
-	this.model.set({actionURL : actionOnItem});
-	this.model.set({ajaxCallback : {
-	    success : function (model, resp) {
-		if (actionOnItem == "take/") {
-		    _update_item_add_owner(resp, model.url(), $(e.target).parents("td"));
-		} else {
-		    _update_item_reset_owner(resp, model.url(), $(e.target).parents("td"));
-		}
-	    },
-	    error   : function () {
-		displayError(titleErrorHappened, errorHappened);
-	    }
-	}});
-	_item_has_changed(this.model, $(e.target).parents("td"), 1);
+    takeOrUntake : function (e) {
+        var action = null;
+        if ($(e.target).parent().hasClass('is-untaken')) {
+            action = 'take';
+        } else {
+            action = 'untake';
+        }
+        this.model.takeOrUntake(action);
+    },
+    render : function (model) {
+        if (model.get('HTTPStatusCode') === '200') {
+            this._updateLine();
+        } else {
+            this.renderError(model);
+        }
+    },
+    renderError : function (model) {
+        if (model.get('HTTPStatusCode') === '409') {
+            displayError(titleErrorPageNotUpToDate, errorPageNotUpToDate);
+        } else {
+            displayError(titleErrorHappened, errorHappened);
+        }
     },
     getDetailItem       : function (e) {
 	var prop = $("tr#detail-item-" + this.model.id).css("visibility");
@@ -90,6 +107,30 @@ workflowItemView = Backbone.View.extend({
 	    _show_commentOrDetail(targetSection, 'detail');
 	    _show_item_detail(this.model.url(this.model.get("detailURL")), $("tr#detail-item-" + this.model.id));
 	}
+    },
+    _updateLine : function () {
+        // Update state of item contained in @el@
+        this._updateValidation();
+        var target = $(this.el).find('td.take-item');
+        $(target).removeClass('is-taken is-untaken');
+        if (this.model.get('owner') != 'None') {
+            $(target).find('a.take span').html(this.model.get('owner'));
+            $(target).addClass('is-taken');
+        } else {
+            $(target).addClass('is-untaken');
+        }
+    },
+    _updateValidation : function () {
+        var cellToUpdate = $(this.el).find('td.validation-cell');
+        var validation = this.model.get('validation');
+        $(cellToUpdate).removeClass('item-validation-OK item-validation-KO item-validation-None');
+        if (validation === 1) {
+            $(cellToUpdate).addClass('item-validation-OK');
+        } else if (validation === 2) {
+            $(cellToUpdate).addClass('item-validation-KO');
+        } else {
+            $(cellToUpdate).addClass('item-validation-None');
+        }
     }
 });
 

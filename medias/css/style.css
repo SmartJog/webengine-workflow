@@ -18,6 +18,14 @@ div.fullpage {
 
 /* For workflow instance page */
 
+td.is-taken a.untake {
+    display: none;
+}
+
+td.is-untaken a.take {
+    display: none;
+}
+
 pre.details_item, pre.comments_item {
     padding: 10px;
 }
