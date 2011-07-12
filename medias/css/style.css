@@ -133,23 +133,29 @@ div.title_detail_item {
     font-weight: bold;
     text-align: left;
     padding-left: 5px;
+    width: 70%;
 }
 
-.category_workflow a.label_item {
+.item_table {
+    width: 100%;
+}
+
+table.item_table a.label_item {
     width: 70%;
     padding-left: 10px;
 }
 
-.category_workflow td.take_untake_group {
+td.take_untake_group {
     text-align: center;
+    width: 20%;
 }
 
-.category_workflow td.take-item {
+table.item_table td.take-item {
     width: 20%;
     text-align: center;
 }
 
-.category_workflow td.untake-item {
+table.item_table td.untake-item {
     width: 20%;
     text-align: center;
 }
@@ -167,6 +173,10 @@ table.item_table td.validation-cell a span {
 
 table.item_table td.validation-cell a.validation-None.validation-disabled span {
     color: #babdb6;
+}
+
+button {
+    width: 25%;
 }
 
 .urls {
@@ -194,6 +204,34 @@ table tr.highlight:hover {
 div.detail_on_item {
     border: 1px solid grey;
     padding: 10px;
+}
+
+div.detail_on_item div.all_for_comment {
+    display: none;
+}
+
+div.detail_on_item div.all_for_detail {
+    display: block;
+}
+
+div.detail_on_item a.title_details {
+    font-weight: bold;
+}
+
+div.detail_on_item.show-comments div.all_for_comment {
+    display: block;
+}
+
+div.detail_on_item.show-comments div.all_for_detail {
+    display: none;
+}
+
+div.detail_on_item.show-comments a.title_comment {
+    font-weight: bold;
+}
+
+div.detail_on_item.show-comments a.title_details {
+    font-weight: normal;
 }
 
 pre.details_item, pre.comments_item {

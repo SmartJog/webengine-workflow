@@ -67,9 +67,12 @@ var gl_myId = {{ myId }}
 			<a class="take-group" title="Take all items of the category" href="" onclick="return false;">take</a>&nbsp;/&nbsp;
 			<a class="untake-group" title="Untake all items of the category" href="" onclick="return false;">untake</a>
 		</td>
+		<td>&nbsp;</td>
 		<!-- ** -->
 	</tr>
 	{% for item in category.items %}
+	<tr><td colspan="3">
+	<table class="item_table">
 	<tr class="highlight {% if forloop.counter|divisibleby:2 %}{% else %}odd_line{% endif %}">
 	<!-- Cell containing label of the item -->
 	<td id="label-item-{{ item.id }}" class="label">
@@ -112,47 +115,38 @@ var gl_myId = {{ myId }}
 	</td>
 	</tr>
 	<!-- ** -->
-
 	<!-- Details and comments of the item -->
 	<tr id="detail-item-{{item.id }}">
 	<td colspan="3">
 		<div class="detail_on_item">
 			<div class="title_detail_item">
-				<a title="Details" onclick="_show_commentOrDetail(this, 'detail'); return false;" href="."><b>Details</b></a>
+				<a title="Details" onclick="return false;" href="." class="title_details">Details</a>
 					&nbsp;/&nbsp;
-				<a title="Comments" onclick="_show_commentOrDetail(this, 'comment'); return false;" href=".">Comments</a>
+				<a title="Comments" onclick="return false;" href="." class="title_comment">Comments</a>
 			</div>
-			<div class="all_for_detail">
-				<pre class="details_item" id="details_item-{{ item.id }}"></pre>
-				<form>
-					<input type="submit" value="Edit detail"
-					onclick="edit_details($('pre#details_item-{{ item.id }}')); return false;"
-					style="width:25%;"/>
-				</form>
-				<div class="add_details">
+			<div class='all_for_detail'>
+				<pre class='details_item'></pre>
+				<button onclick='return false;' class='edit_details'>Edit details</button>
+				<div class='add_details'>
 					<h2>Edit details</h2>
-					<form onsubmit="changeDetailsOrAddComment('detail', this); return false;" method=POST>
-						<textarea class="textarea_edit_detail" rows="7" cols="75" name="new_details"></textarea>
-						<br />
-						<input type="submit" value="Post" name="_post" style="width: 25%;"/>
-					</form>
-					</div>
+					<textarea class='textarea_edit_detail' rows='7' cols='75' name='new_details'></textarea><br />
+					<button type='button' onclick='return false;' class='details'>Post</button>
 				</div>
-				<div class="all_for_comment">
-					<pre class="comments_item" id="comments_item-{{ item.id }}"></pre>
-					<div class="add_comment">
+			</div>
+			<div class='all_for_comment'>
+				<pre class='comments_item'></pre>
+				<div class='add_comment'>
 					<h2>Add comment</h2>
-					<form onsubmit="changeDetailsOrAddComment('comment', this); return false;" method=POST>
-						<textarea class="textarea_add_comment" rows="7" cols="75" name="new_comment"></textarea>
-						<br />
-						<input type="submit" value="Post comment" style="width: 25%;"/>
-					</form>
+					<textarea class='textarea_add_comment' rows='7' cols='75' name='new_comment'></textarea><br />
+					<button type='button' onclick='return false;' class='comment'>Post</button>
 				</div>
 			</div>
 		</div>
 	</td>
 	</tr>
 	<!-- ** -->
+	</table>
+	</td></tr>
 	{% endfor %}
 </table>
 {% endifequal %}
