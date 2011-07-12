@@ -121,6 +121,20 @@ div.title_detail_item {
     padding: 3px;
 }
 
+input:checked + span {
+    font-weight: bold;
+}
+
+.disabled {
+    color: #babdb6;
+}
+
+.disabled a {
+    pointer-events: none;
+    cursor: default;
+    color: #babdb6;
+}
+
 .category_workflow {
     text-decoration: bold;
     border-top: 1px solid gray;

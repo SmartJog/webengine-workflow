@@ -81,18 +81,6 @@ def _fill_container(dict_to_fill, which_display, categories_order):
     }
     return ret
 
-def _compute_statistics_items(category, person_id):
-    """ Compute the number of items in each categories """
-    counter = {
-        'Success'   : Item.objects.filter(category=category, validation=1).count(),
-        'Failed'    : Item.objects.filter(category=category, validation=2).count(),
-        'NotSolved' : Item.objects.filter(category=category, validation=3).count(),
-        'Taken'     : Item.objects.filter(category=category).exclude(assigned_to=None).count(),
-        'Free'      : Item.objects.filter(category=category, assigned_to=None).count(),
-        'Mine'      : Item.objects.filter(category=category, assigned_to=person_id).count(),
-    }
-    return counter
-
 def _get_all_item_for_specific_condition(category, person_id, which_display):
     """ Return list of items on demand """
     if which_display == "all":
@@ -117,12 +105,8 @@ def show_workflow(request, workflow_id, which_display):
     if not which_display in container.keys():
         which_display = "all"
     items = []
-    counter = {'Success' : 0, 'Failed' : 0, 'NotSolved' : 0, 'Taken' : 0, 'Free' : 0, 'Mine' : 0}
     for category in categories:
         items += _get_all_item_for_specific_condition(category, person_id, which_display)
-        for key, value in _compute_statistics_items(category, person_id).items():
-            counter[key] += value
-    counter['Total'] = counter['Failed'] + counter['Success'] + counter['NotSolved']
     categories_order = Category.objects.filter(workflow=workflow_id).order_by("order").values_list("order")
     display = {
         'mine'       : 'mine',
@@ -146,7 +130,6 @@ def show_workflow(request, workflow_id, which_display):
         'workflow_id' : workflow_id,
         'myId'        : person_id,
         'display'     : display,
-        'counter'     : counter,
     }
     return_d.update(_fill_container(container, which_display, categories_order))
     return return_d

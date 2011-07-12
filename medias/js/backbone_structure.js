@@ -179,12 +179,20 @@ workflowItemView = Backbone.View.extend({
         } else {
             $(this.detailEl).find('div.detail_on_item').addClass('show-comments');
         }
+    },
+    show : function () {
+        $(this.el).show();
+    },
+    hide : function () {
+        $(this.el).hide();
     }
 });
 
 workflowCategoryView = Backbone.View.extend({
     initialize : function () {
         this.itemsView = {};
+        this.bind('enabledTakeUntake', this.enabledTakeUntake);
+        this.bind('disabledTakeUntake', this.disabledTakeUntake);
     },
     events : {
         'click a.take-group'   : 'take',
@@ -201,6 +209,18 @@ workflowCategoryView = Backbone.View.extend({
                 item.model.takeOrUntake('untake');
             }
         });
+    },
+    show : function () {
+        $(this.el).parents('table').show();
+    },
+    hide : function () {
+        $(this.el).parents('table').hide();
+    },
+    disabledTakeUntake : function () {
+        $(this.el).parents('table').find('td.take_untake_group').addClass('disabled');
+    },
+    enabledTakeUntake : function () {
+        $(this.el).parents('table').find('td.take_untake_group').removeClass('disabled');
     }
 });
 
@@ -237,7 +257,6 @@ workflowProgressBarView = Backbone.View.extend({
     render : function () {
         $('#progress_bar').html(this._progressBar());
         this._updateProgressBarStatistics();
-        update_statistics_filters()
     },
     _updateProgressBarStatistics : function () {
         $('span#stats-success').parent().html("<span id='stats-success'></span> Success: " + this.statItems.successful);
@@ -267,11 +286,82 @@ workflowProgressBarView = Backbone.View.extend({
     }
 });
 
+workflowFiltersView = Backbone.View.extend({
+    initialize : function (options) {
+        _.bindAll(this, 'render');
+        this.filters = {
+            'successful' : ['validation', 1],
+            'broken'     : ['validation', 2],
+            'taken'      : ['assigned_to', 'taken'],
+            'untaken'    : ['assigned_to', null],
+            'mine'       : ['assigned_to', gl_myId],
+            'all'        : ['all', 'all']
+        };
+        this.enabled = 'all';
+        this.categoriesView = options.categoriesView;
+        this.progressBar = options.progressBar;
+        this.modelItemsCollection = options.modelItemsCollection;
+        this.modelItemsCollection.bind('change', this.render);
+    },
+    events : {
+        'click input' : 'onClick'
+    },
+    onClick : function (e) {
+        if (this.progressBar.statItems[$(e.target).attr('id')]) {
+            this.enabled = $(e.target).attr('id');
+            var filtersValues = this.filters[$(e.target).attr('id')];
+            var filter = filtersValues[0];
+            var filterValue = filtersValues[1];
+            _.each(mainView.categoriesView, function (category) {
+                var counter = 0;
+                _.each(category.itemsView, function (itemView) {
+                    if (filter === 'all') {
+                        itemView.show();
+                        category.show();
+                        category.trigger('enabledTakeUntake');
+                    } else {
+                        category.trigger('disabledTakeUntake');
+                        itemView.hide();
+                        if (filterValue === 'taken' && itemView.model.get(filter) !== null) {
+                            itemView.show();
+                            counter += 1;
+                        } else if (itemView.model.get(filter) === filterValue) {
+                            itemView.show();
+                            counter += 1;
+                        }
+                    }
+                });
+                if (counter || filter === 'all') {
+                    category.show();
+                } else {
+                    category.hide();
+                }
+            });
+            this.render();
+        }
+    },
+    render : function () {
+        $('input#all + span').html(' All items (' + this.progressBar.statItems.all + ')');
+        $('input#mine + span').html(' My items (' + this.progressBar.statItems.mine + ')');
+        $('input#untaken + span').html(' Untaken (' + this.progressBar.statItems.untaken + ')');
+        $('input#taken + span').html(' Taken (' + this.progressBar.statItems.taken + ')');
+        $('input#successful + span').html(' Successful items (' + this.progressBar.statItems.successful + ')');
+        $('input#broken + span').html(' Broken items (' + this.progressBar.statItems.broken + ')');
+    }
+});
+
 // Main view for all the workflow instance
 workflowMainView = Backbone.View.extend({
     initialize : function () {
+        this.categoriesView = [];
         this.modelItemsCollection = new workflowCollection();
         this.progressBar = new workflowProgressBarView(this.modelItemsCollection);
+        this.filters = new workflowFiltersView({
+            'el'                   : $('div.filters_workflow'),
+            'categoriesView'       : this.categoriesView,
+            'progressBar'          : this.progressBar,
+            'modelItemsCollection' : this.modelItemsCollection
+        });
         this._generateMainView();
         this.requestRefreshPage = null;
     },
@@ -289,6 +379,7 @@ workflowMainView = Backbone.View.extend({
                 var viewToAdd = new workflowItemView({el : $(allItemLines[y]), model : modelToAddItem});
                 currentCategory.itemsView[viewToAdd.model.get('itemId')] = viewToAdd;
             }
+            this.categoriesView.push(currentCategory);
         }
     },
     // Function which display up to date information on the page
@@ -326,7 +417,6 @@ workflowMainView = Backbone.View.extend({
 $(document).ready(function () {
     Backbone.emulateHTTP = true;
 
-    update_statistics_filters();
     mainView = new workflowMainView();
 
     mainView._refreshPage();
