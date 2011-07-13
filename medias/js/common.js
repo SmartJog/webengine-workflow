@@ -13,9 +13,3 @@ function update_statistics_filters() {
         $("div#sortable").attr("id", "sortable");
     }
 }
-
-function update_statistics_progressbar() {
-    $("span#stats-success").parent().html("<span id='stats-success'></span> Success: " + gl_success);
-    $("span#stats-failed").parent().html("<span id='stats-failed'></span> Failed Miserably: " + gl_failed);
-    $("span#stats-unsolved").parent().html("<span id='stats-unsolved'></span> Untested: " + gl_not_solved);
-}

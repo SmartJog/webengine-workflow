@@ -8,9 +8,7 @@
 <script src="/javascript/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>
 
 <script src="/medias/workflow/js/backbone_structure.js" type="text/javascript"></script>
-<script src="/medias/workflow/js/progressbar.js" type="text/javascript"></script>
 <script src="/medias/workflow/js/common.js" type="text/javascript"></script>
-<script src="/medias/workflow/js/compute.js" type="text/javascript"></script>
 <script src="/medias/workflow/js/errors.js" type="text/javascript"></script>
 {% endblock %}
 
@@ -56,9 +54,7 @@ var gl_workflowId = {{ workflow_id }};
 <!-- ** -->
 
 <div class="categories_table_workflow">
-{% for id_category in order %}
 {% for category in categories %}
-{% ifequal id_category category.order %}
 <table class="category_workflow" id="category_id-{{ category.id }}">
 	<tr class="category-header">
 	<th>{{ forloop.counter }} -{{ category.name }} </th>
@@ -149,8 +145,6 @@ var gl_workflowId = {{ workflow_id }};
 	</td></tr>
 	{% endfor %}
 </table>
-{% endifequal %}
-{% endfor %}
 {% endfor %}
 </div>
 <!-- Error box -->

@@ -204,10 +204,74 @@ workflowCategoryView = Backbone.View.extend({
     }
 });
 
+workflowProgressBarView = Backbone.View.extend({
+    initialize : function (modelItemsCollection) {
+        _.bindAll(this, 'render', '_computeStatOfAllItems');
+        this.modelItemsCollection = modelItemsCollection;
+        this.modelItemsCollection.bind('change', this._computeStatOfAllItems);
+        this.colors = {'successful' : '#73bd5a', 'broken' : '#dc5555', 'none' :'#babdb6'}
+        this._computeStatOfAllItems();
+    },
+    _computeStatOfAllItems : function () {
+        this.statItems = {'all' : 0, 'mine' : 0, 'taken' : 0, 'untaken' : 0, 'successful' : 0, 'broken' : 0, 'none' : 0};
+        this.statItems.all = this.modelItemsCollection.length;
+        this.modelItemsCollection.forEach(function (modelItem, key, list) {
+            if (modelItem.get('assigned_to') == null) {
+                this.statItems.untaken += 1;
+            } else {
+                if (modelItem.get('assigned_to') === gl_myId) {
+                    this.statItems.mine += 1;
+                }
+                this.statItems.taken += 1;
+            }
+            if (modelItem.get('validation') === 1) {
+                this.statItems.successful += 1;
+            } else if (modelItem.get('validation') === 2) {
+                this.statItems.broken += 1;
+            } else {
+                this.statItems.none += 1;
+            }
+        }, this);
+        this.render();
+    },
+    render : function () {
+        $('#progress_bar').html(this._progressBar());
+        this._updateProgressBarStatistics();
+        update_statistics_filters()
+    },
+    _updateProgressBarStatistics : function () {
+        $('span#stats-success').parent().html("<span id='stats-success'></span> Success: " + this.statItems.successful);
+        $('span#stats-failed').parent().html("<span id='stats-failed'></span> Failed Miserably: " + this.statItems.broken);
+        $('span#stats-unsolved').parent().html("<span id='stats-unsolved'></span> Untested: " + this.statItems.none);
+    },
+    _getPercentage : function (value, ceil) {
+        if (ceil === 1) {
+            return Math.ceil((value * 100) / this.statItems.all);
+        }
+        return (value * 100) / this.statItems.all;
+    },
+    _progressBar : function () {
+        var successful = this._getPercentage(this.statItems.successful, 0);
+        var broken = this._getPercentage(this.statItems.broken, 0);
+        var none = this._getPercentage(this.statItems.none, 0);
+
+        var tested = this._getPercentage(this.statItems.successful + this.statItems.broken, 1);
+
+        // Generate progressBar
+        var workflowProgressbar = '<tr><table><tr>';
+        workflowProgressbar += "<td style='width: " + successful + '%; background-color: ' + this.colors.successful + ";'></td>";
+        workflowProgressbar += "<td style='width: " + broken + '%; background-color: ' + this.colors.broken + ";'></td>";
+        workflowProgressbar += "<td style='width: " + none + '%; background-color: ' + this.colors.none + ";'></td>";
+        workflowProgressbar += "<td style='width: auto; text-align: left; padding-left: 4px;'>" + tested + '% tested</td></tr></table></tr>';
+        return workflowProgressbar;
+    }
+});
+
 // Main view for all the workflow instance
 workflowMainView = Backbone.View.extend({
     initialize : function () {
         this.modelItemsCollection = new workflowCollection();
+        this.progressBar = new workflowProgressBarView(this.modelItemsCollection);
         this._generateMainView();
         this.requestRefreshPage = null;
     },
@@ -262,8 +326,6 @@ workflowMainView = Backbone.View.extend({
 $(document).ready(function () {
     Backbone.emulateHTTP = true;
 
-    $('#progress_bar').append(progressBar);
-    update_statistics_progressbar();
     update_statistics_filters();
     mainView = new workflowMainView();
 
