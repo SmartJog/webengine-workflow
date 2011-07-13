@@ -34,10 +34,8 @@ workflowItem = Backbone.Model.extend({
     }
 });
 
-/* Unused for now
 workflowCollection = Backbone.Collection.extend({
 });
-*/
 
 workflowItemView = Backbone.View.extend({
     initialize  : function () {
@@ -208,24 +206,30 @@ workflowCategoryView = Backbone.View.extend({
     }
 });
 
-function generateBackboneModelsCollection() {
-    // Generate view/models for categories
-    var allCategoriesLines = $('tr.category-header');
-    for (i = 0; i < allCategoriesLines.length; i++) {
-        var categoryID = $(allCategoriesLines[i]).parents('table').attr('id').match('\\d+$');
-	var modelToAdd = new workflowCategory({categoryId : categoryID});
-	var currentCategory = new workflowCategoryView({el : $(allCategoriesLines[i]), model : modelToAdd});
-	var allItemLines = $(allCategoriesLines[i]).parents('table').find('table.item_table');
-	for (y = 0; y < allItemLines.length; y++) {
-            var itemID = $(allItemLines[y]).find('td.label').parent().attr('id').match('\\d+$');
-	    var modelToAddItem = new workflowItem({itemId : itemID, id : parseInt(itemID)});
-	    var viewToAdd = new workflowItemView({el : $(allItemLines[y]), model : modelToAddItem});
-	    currentCategory.itemsView[viewToAdd.model.get('itemId')] = viewToAdd;
-	}
+// Main view for all the workflow instance
+workflowMainView = Backbone.View.extend({
+    initialize : function () {
+        this.modelItemsCollection = new workflowCollection();
+        this._generateMainView();
+    },
+    _generateMainView : function () {
+        // Generate view/models for categories
+        var allCategoriesLines = $('tr.category-header');
+        for (i = 0; i < allCategoriesLines.length; i++) {
+            var categoryID = $(allCategoriesLines[i]).parents('table').attr('id').match('\\d+$');
+            var currentCategory = new workflowCategoryView({el : $(allCategoriesLines[i])});
+            var allItemLines = $(allCategoriesLines[i]).parents('table').find('table.item_table');
+            for (y = 0; y < allItemLines.length; y++) {
+                var itemID = $(allItemLines[y]).find('td.label').parent().attr('id').match('\\d+$');
+                var modelToAddItem = new workflowItem({itemId : itemID, id : parseInt(itemID)});
+                this.modelItemsCollection.add(modelToAddItem);
+                var viewToAdd = new workflowItemView({el : $(allItemLines[y]), model : modelToAddItem});
+                currentCategory.itemsView[viewToAdd.model.get('itemId')] = viewToAdd;
+            }
+        }
     }
-}
+});
 
-generateBackboneModelsCollection();
 
 $(document).ready(function () {
     Backbone.emulateHTTP = true;
@@ -233,6 +237,7 @@ $(document).ready(function () {
     $('#progress_bar').append(progressBar);
     update_statistics_progressbar();
     update_statistics_filters();
+    mainView = new workflowMainView();
 
     intervalAjaxCall();
 });

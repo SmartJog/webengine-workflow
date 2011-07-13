@@ -40,14 +40,6 @@ function _update_page(resp) {
     }
 }
 
-function categoryNumerotation() {
-    var categoriesTitle = $("table.category_workflow").find("th");
-    for (i = 0; i < categoriesTitle.length; i++) {
-        var title = $(categoriesTitle[i]).html();
-        $(categoriesTitle[i]).html(i + 1 + " - "  + title.split('-')[1]);
-    }
-}
-
 function update_statistics_filters() {
     $("input[type=radio]#filters-all + span").html(" All items (" + gl_total + ")");
     $("input[type=radio]#filters-mine + span").html(" My items (" + gl_mine + ")");
@@ -77,9 +69,9 @@ function intervalAjaxCall() {
     }
     var instanceID = $("div.categories_table_workflow").attr("id").split('-')[1];
     requestIntervalAjaxCall = $.ajax({
-        url: "/workflow/getall/" + instanceID + '/',
-        type: "POST",
-        dataType: "json",
+        url: '/workflow/getall/' + gl_workflowId + '/',
+        type: 'POST',
+        dataType: 'json',
         timeout: 3000,
         success: function (data) { _update_page(data); },
         error: function () {}
