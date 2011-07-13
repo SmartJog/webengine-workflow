@@ -1,5 +1,4 @@
 var requestIntervalAjaxCall;
-var myID;
 
 workflowItem = Backbone.Model.extend({
     initialize : function () {

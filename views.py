@@ -160,6 +160,7 @@ def show_workflow(request, workflow_id, which_display):
     return_d = {
         'validations' : Validation.objects.all(),
         'workflow_id' : workflow_id,
+        'myId'        : person_id,
         'display'     : display,
         'counter'     : counter,
     }
