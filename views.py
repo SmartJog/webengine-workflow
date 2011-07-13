@@ -158,7 +158,6 @@ def show_workflow(request, workflow_id, which_display):
         container[which_display][category_id]['items'][cur_item.id] = cur_item
 
     return_d = {
-        'validations' : Validation.objects.all(),
         'workflow_id' : workflow_id,
         'myId'        : person_id,
         'display'     : display,

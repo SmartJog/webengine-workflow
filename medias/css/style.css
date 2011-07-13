@@ -18,6 +18,19 @@ div.fullpage {
 
 /* For workflow instance page */
 
+td                      a.validation-enabled,
+td.item-validation-OK   a.validation-OK,
+td.item-validation-KO   a.validation-KO,
+td.item-validation-None a.validation-None {
+   display: none;
+}
+
+td.item-validation-OK   a.validation-OK.validation-enabled,
+td.item-validation-KO   a.validation-KO.validation-enabled,
+td.item-validation-None a.validation-None.validation-enabled {
+   display: inline;
+}
+
 td.is-taken a.untake {
     display: none;
 }
@@ -152,7 +165,7 @@ table.item_table td.validation-cell a span {
     color: black;
 }
 
-table.item_table td.validation-cell a.validation-disabled-None span {
+table.item_table td.validation-cell a.validation-None.validation-disabled span {
     color: #babdb6;
 }
 

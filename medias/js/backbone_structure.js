@@ -12,6 +12,11 @@ workflowItem = Backbone.Model.extend({
             this.set({'assigned_to' : null}, {silent : true});
         }
         this.save({'previousAttributes' : this.previousAttributes()});
+    },
+    // Change state of one item to OK or KO
+    validation : function (validation) {
+        this.set({'validation' : validation}, {silent : true});
+        this.save({'previousAttributes' : this.previousAttributes()});
     }
 });
 
@@ -27,38 +32,20 @@ workflowItemView = Backbone.View.extend({
         this.model.bind('error', this.renderError);
     },
     events  : {
-	"click a.validation-disabled-None"  :       "resetItemState",
-	"click a.validation-disabled-OK"    :       "updateItemState",
-	"click a.validation-disabled-KO"    :       "updateItemState",
 	"click a.label_item"                :       "getDetailItem"
-        'click a.untake, a.take'                 : 'takeOrUntake'
+        'click a.untake, a.take'                 : 'takeOrUntake',
+        'click a.validation'                     : 'validation'
     },
-    updateItemState : function (e) {
-	this.model.set({actionURL : "validate/"});
-	this.model.set({state : $(e.target).parent().attr("class").split(' ')[0].split('-')[2]});
-	this.model.set({ajaxCallback : {
-	    success : function (model, resp) {
-		_update_item_shortcut(resp, model.url(), $(e.target).parent());
-	    },
-	    error   : function (model) {
-		model.set({state : model.get("state") == "OK" ? "KO" : "OK"});
-		displayError(titleErrorHappened, errorHappened);
-	    }
-	}});
-	_item_has_changed(this.model, $(e.target).parents("td"), 0);
-    },
-    resetItemState  : function (e) {
-	this.model.set({actionURL : "no_state/"});
-	this.model.set({ajaxCallback : {
-	    success : function (model, resp) {
-		model.set({state : "None"});
-		_update_item_shortcut(resp, model.url(), $(e.target));
-	    },
-	    error   : function () {
-		displayError(titleErrorHappened, errorHappened);
-	    }
-	}});
-	_item_has_changed(this.model, $(e.target).parents("td"), 0);
+    validation : function (e) {
+        var validation = null;
+        if ($(e.target).parent().hasClass('validation-OK')) {
+            validation = 1; // State: 'OK'
+        } else if ($(e.target).parent().hasClass('validation-KO')) {
+            validation = 2; // State: 'KO'
+        } else {
+            validation = 3; // State: 'None'
+        }
+        this.model.validation(validation);
     },
     takeOrUntake : function (e) {
         var action = null;
