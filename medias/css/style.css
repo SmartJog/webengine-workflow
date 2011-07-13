@@ -19,13 +19,13 @@ div.fullpage {
 /* For workflow instance page */
 
 pre.details_item, pre.comments_item {
-	padding: 10px;
+    padding: 10px;
 }
 
 div.one_comment {
     margin: 10px;
     margin-bottom: 20px;
-	background-color: #ddd;
+    background-color: #ddd;
 }
 
 .one_comment span#ancre_comment a {
@@ -48,11 +48,11 @@ div.one_comment {
 }
 
 div.title_detail_item {
-	height: 20px;
-	width: auto;
-	position: relative;
-	text-align: center;
-	padding-top: 3px;
+    height: 20px;
+    width: auto;
+    position: relative;
+    text-align: center;
+    padding-top: 3px;
 }
 
 .progress_workflow {
@@ -171,29 +171,29 @@ table tr.highlight:hover {
 }
 
 div.detail_on_item {
-	border: 1px solid grey;
-	padding: 10px;
+    border: 1px solid grey;
+    padding: 10px;
 }
 
 pre.details_item, pre.comments_item {
-	border: 1px solid black;
-	padding: 10px;
-	margin-bottom: 10px;
-	overflow: auto;
+    border: 1px solid black;
+    padding: 10px;
+    margin-bottom: 10px;
+    overflow: auto;
 }
 
 pre.details_item {
-	background-color: #ddd;
+    background-color: #ddd;
 }
 
 textarea.textarea_edit_detail, textarea.textarea_add_comment {
-	margin-bottom: 10px;
+    margin-bottom: 10px;
 }
 
 li {
-	line-height: 18px;
-	margin-left: 7px;
-	padding-left: 18px;
-	cursor: pointer;
+    line-height: 18px;
+    margin-left: 7px;
+    padding-left: 18px;
+    cursor: pointer;
     list-style: none;
 }
