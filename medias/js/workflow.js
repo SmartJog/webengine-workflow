@@ -280,6 +280,13 @@ workflowProgressBarView = Backbone.View.extend({
                 this.statItems.none += 1;
             }
         }, this);
+
+        this.successfulPercent = this._getPercentage(this.statItems.successful, 0);
+        this.brokenPercent = this._getPercentage(this.statItems.broken, 0);
+        this.nonePercent = this._getPercentage(this.statItems.none, 0);
+
+        this.testedPercent = this._getPercentage(this.statItems.successful + this.statItems.broken, 1);
+
         this.render();
     },
     render : function () {
@@ -300,18 +307,12 @@ workflowProgressBarView = Backbone.View.extend({
         return (value * 100) / this.statItems.all;
     },
     _progressBar : function () {
-        var successful = this._getPercentage(this.statItems.successful, 0);
-        var broken = this._getPercentage(this.statItems.broken, 0);
-        var none = this._getPercentage(this.statItems.none, 0);
-
-        var tested = this._getPercentage(this.statItems.successful + this.statItems.broken, 1);
-
         // Generate progressBar
         var workflowProgressbar = '<tr><table><tr>';
-        workflowProgressbar += "<td style='width: " + successful + '%; background-color: ' + this.colors.successful + ";'></td>";
-        workflowProgressbar += "<td style='width: " + broken + '%; background-color: ' + this.colors.broken + ";'></td>";
-        workflowProgressbar += "<td style='width: " + none + '%; background-color: ' + this.colors.none + ";'></td>";
-        workflowProgressbar += "<td style='width: auto; text-align: left; padding-left: 4px;'>" + tested + '% tested</td></tr></table></tr>';
+        workflowProgressbar += "<td style='width: " + this.successfulPercent + '%; background-color: ' + this.colors.successful + ";'></td>";
+        workflowProgressbar += "<td style='width: " + this.brokenPercent + '%; background-color: ' + this.colors.broken + ";'></td>";
+        workflowProgressbar += "<td style='width: " + this.nonePercent + '%; background-color: ' + this.colors.none + ";'></td>";
+        workflowProgressbar += "<td style='width: auto; text-align: left; padding-left: 4px;'>" + this.testedPercent + '% tested</td></tr></table></tr>';
         return workflowProgressbar;
     }
 });
