@@ -281,11 +281,11 @@ workflowProgressBarView = Backbone.View.extend({
             }
         }, this);
 
-        this.successfulPercent = this._getPercentage(this.statItems.successful, 0);
-        this.brokenPercent = this._getPercentage(this.statItems.broken, 0);
-        this.noStatePercent = this._getPercentage(this.statItems.none, 0);
+        this.successfulPercent = this._getPercentage(this.statItems.successful, false);
+        this.brokenPercent = this._getPercentage(this.statItems.broken, false);
+        this.noStatePercent = this._getPercentage(this.statItems.none, false);
 
-        this.testedPercent = this._getPercentage(this.statItems.successful + this.statItems.broken, 1);
+        this.testedPercent = this._getPercentage(this.statItems.successful + this.statItems.broken, true);
 
         this.render();
     },
@@ -301,7 +301,7 @@ workflowProgressBarView = Backbone.View.extend({
         $('div.progress_bar_stats').html(progressBarStats);
     },
     _getPercentage : function (value, ceil) {
-        if (ceil === 1) {
+        if (ceil) {
             return Math.ceil((value * 100) / this.statItems.all);
         }
         return (value * 100) / this.statItems.all;
