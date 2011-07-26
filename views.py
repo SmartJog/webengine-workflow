@@ -66,6 +66,7 @@ def workflow_listing(request):
 def workflow(request, workflow_id):
     person_id = Person.objects.filter(django_user=request.user.id)[0].id
     categories = Category.objects.filter(workflow=workflow_id).order_by('id')
+    workflow_label = Workflow.objects.filter(id=workflow_id)[0].label
     container = []
     for category in categories:
         tmp = {
@@ -76,6 +77,7 @@ def workflow(request, workflow_id):
         container.append(tmp)
     ret = {
         'workflow_id' : workflow_id,
+        'workflow_label' : workflow_label,
         'myId'        : person_id,
         'categories'  : container,
     }
