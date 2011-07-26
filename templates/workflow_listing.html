@@ -3,6 +3,27 @@
 
 {% block title %}Workflow List{% endblock %}
 
+{% block optional_js %}
+<script src='/javascript/jquery-ui/jquery-ui.min.js' type='text/javascript'></script>
+<script>
+function askConfirmation(workflowId) {
+    $('#dialog-confirm').attr('style', 'visibility: visibile;');
+    $('#dialog-confirm').dialog({
+        resizable : false,
+        modal     : true,
+        buttons   : {
+	    'Yes': function() {
+		window.location.pathname = '/workflow/delete/' + workflowId;
+            },
+            'No': function() {
+                $(this).dialog('close');
+            }
+        }
+    });
+}
+</script>
+{% endblock %}
+
 {% block content %}
 <div class="fullpage">
 
@@ -12,12 +33,16 @@
         <h2> {{ workflow.label }} </h2>
         {% for workflowinstance in workflow.workflowinstances %}
             <li>
-            <a href={% url workflow workflowinstance.id %}>{{ workflowinstance.label }} </a> <a href={% url workflow-delete workflowinstance.id %}> <img src="/medias/workflow/img/untake.png" class="untake"/> </a> 
+            <a href={% url workflow workflowinstance.id %}>{{ workflowinstance.label }} </a> <a onclick='askConfirmation({{ workflowinstance.id }});'> <img src="/medias/workflow/img/untake.png" class="untake"/> </a>
 
             </li>
         {% endfor %}
     {% endfor %}
     </ul>
 
+</div>
+
+<div id='dialog-confirm' title='Delete workflow ?' style='visibility: hidden;'>
+    <p><span></span>This action is irrecoverable !<br />Are you sure ?</p>
 </div>
 {% endblock content %}

@@ -1,6 +1,7 @@
 Version 0.3.2~dev
 
 	* Add workflow label on workflow instance page.
+	* Add confirmation for deleting a workflow.
 
 Version 0.3.1 Released on 2011/07/26
 
