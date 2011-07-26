@@ -1,5 +1,5 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_INIT(webengine-workflow, 0.3.1~dev)
+AC_INIT(webengine-workflow, 0.3.1)
 
 dnl 2.52 is quite realistic
 AC_PREREQ(2.52)
