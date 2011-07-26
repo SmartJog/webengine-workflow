@@ -253,9 +253,9 @@ workflowCategoryView = Backbone.View.extend({
 });
 
 workflowProgressBarView = Backbone.View.extend({
-    initialize : function (modelItemsCollection) {
+    initialize : function (options) {
         _.bindAll(this, 'render', '_updateStats');
-        this.modelItemsCollection = modelItemsCollection;
+        this.modelItemsCollection = options.itemsCollection;
         this.modelItemsCollection.bind('change', this._updateStats);
         this.colors = {'successful' : '#73bd5a', 'broken' : '#dc5555', 'none' :'#babdb6'}
         this._updateStats();
@@ -272,8 +272,8 @@ workflowProgressBarView = Backbone.View.extend({
         progressBarStats += "<li><span id='stats-failed'></span> Failed Miserably: " + this.statItems.broken + '</li>';
         progressBarStats += "<li><span id='stats-unsolved'></span> Untested: " + this.statItems.none + '</li>';
 
-        $('#progress_bar').html(workflowProgressbar);
-        $('div.progress_bar_stats').html(progressBarStats);
+        this.el.find('#progress_bar').html(workflowProgressbar);
+        this.el.find('div.progress_bar_stats').html(progressBarStats);
     },
     _updateStats : function () {
         this.statItems = {'all' : 0, 'mine' : 0, 'taken' : 0, 'untaken' : 0, 'successful' : 0, 'broken' : 0, 'none' : 0};
@@ -381,7 +381,10 @@ workflowMainView = Backbone.View.extend({
     initialize : function () {
         this.categoriesView = [];
         this.modelItemsCollection = new workflowCollection();
-        this.progressBar = new workflowProgressBarView(this.modelItemsCollection);
+        this.progressBar = new workflowProgressBarView({
+            'el'              : $('div.progress_workflow'),
+            'itemsCollection' : this.modelItemsCollection,
+        });
         this.filters = new workflowFiltersView({
             'el'                   : $('div.filters_workflow'),
             'categoriesView'       : this.categoriesView,
