@@ -254,13 +254,13 @@ workflowCategoryView = Backbone.View.extend({
 
 workflowProgressBarView = Backbone.View.extend({
     initialize : function (modelItemsCollection) {
-        _.bindAll(this, 'render', '_computeStatOfAllItems');
+        _.bindAll(this, 'render', '_updateStats');
         this.modelItemsCollection = modelItemsCollection;
-        this.modelItemsCollection.bind('change', this._computeStatOfAllItems);
+        this.modelItemsCollection.bind('change', this._updateStats);
         this.colors = {'successful' : '#73bd5a', 'broken' : '#dc5555', 'none' :'#babdb6'}
-        this._computeStatOfAllItems();
+        this._updateStats();
     },
-    _computeStatOfAllItems : function () {
+    _updateStats : function () {
         this.statItems = {'all' : 0, 'mine' : 0, 'taken' : 0, 'untaken' : 0, 'successful' : 0, 'broken' : 0, 'none' : 0};
         this.statItems.all = this.modelItemsCollection.length;
         this.modelItemsCollection.forEach(function (modelItem, key, list) {
