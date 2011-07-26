@@ -260,6 +260,21 @@ workflowProgressBarView = Backbone.View.extend({
         this.colors = {'successful' : '#73bd5a', 'broken' : '#dc5555', 'none' :'#babdb6'}
         this._updateStats();
     },
+    render : function () {
+        var workflowProgressbar = '<tr><table><tr>';
+        workflowProgressbar += "<td style='width: " + this.successfulPercent + '%; background-color: ' + this.colors.successful + ";'></td>";
+        workflowProgressbar += "<td style='width: " + this.brokenPercent + '%; background-color: ' + this.colors.broken + ";'></td>";
+        workflowProgressbar += "<td style='width: " + this.noStatePercent + '%; background-color: ' + this.colors.none + ";'></td>";
+        workflowProgressbar += "<td style='width: auto; text-align: left; padding-left: 4px;'>" + this.testedPercent + '% tested</td></tr></table></tr>';
+
+        var progressBarStats = '<ul>';
+        progressBarStats += "<li><span id='stats-success'></span> Success: " + this.statItems.successful + '</li>';
+        progressBarStats += "<li><span id='stats-failed'></span> Failed Miserably: " + this.statItems.broken + '</li>';
+        progressBarStats += "<li><span id='stats-unsolved'></span> Untested: " + this.statItems.none + '</li>';
+
+        $('#progress_bar').html(workflowProgressbar);
+        $('div.progress_bar_stats').html(progressBarStats);
+    },
     _updateStats : function () {
         this.statItems = {'all' : 0, 'mine' : 0, 'taken' : 0, 'untaken' : 0, 'successful' : 0, 'broken' : 0, 'none' : 0};
         this.statItems.all = this.modelItemsCollection.length;
@@ -288,21 +303,6 @@ workflowProgressBarView = Backbone.View.extend({
         this.testedPercent = this._getPercentage(this.statItems.successful + this.statItems.broken, true);
 
         this.render();
-    },
-    render : function () {
-        var workflowProgressbar = '<tr><table><tr>';
-        workflowProgressbar += "<td style='width: " + this.successfulPercent + '%; background-color: ' + this.colors.successful + ";'></td>";
-        workflowProgressbar += "<td style='width: " + this.brokenPercent + '%; background-color: ' + this.colors.broken + ";'></td>";
-        workflowProgressbar += "<td style='width: " + this.noStatePercent + '%; background-color: ' + this.colors.none + ";'></td>";
-        workflowProgressbar += "<td style='width: auto; text-align: left; padding-left: 4px;'>" + this.testedPercent + '% tested</td></tr></table></tr>';
-
-        var progressBarStats = '<ul>';
-        progressBarStats += "<li><span id='stats-success'></span> Success: " + this.statItems.successful + '</li>';
-        progressBarStats += "<li><span id='stats-failed'></span> Failed Miserably: " + this.statItems.broken + '</li>';
-        progressBarStats += "<li><span id='stats-unsolved'></span> Untested: " + this.statItems.none + '</li>';
-
-        $('#progress_bar').html(workflowProgressbar);
-        $('div.progress_bar_stats').html(progressBarStats);
     },
     _getPercentage : function (value, ceil) {
         if (ceil) {
