@@ -1,3 +1,7 @@
+Version 0.3.1~dev
+
+	* Remove forgotten line in urls.py.
+
 Version 0.3.0 Released on 2011/07/13
 
 	* Provide RESTful API.

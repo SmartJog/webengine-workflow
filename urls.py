@@ -9,5 +9,4 @@ urlpatterns = patterns('workflow',
     url(r'^item/(?P<item_id>\d+)/$',                                                    'views.item_update',                                name='item-update'),
     url(r'^item/new/$',                                                                 'views.new_item',                                   name='new-item'),
     url(r'^item/$',                                                                     'views.item',                                        name='item'),
-    url(r'^set_categories_order/(?P<workflow_id>\d+)/$',                                'views.set_workflow_categories_order',              name='set-categories-order'),
 )
