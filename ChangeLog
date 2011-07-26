@@ -3,6 +3,7 @@ Version 0.3.2~dev
 	* Add workflow label on workflow instance page.
 	* Add confirmation for deleting a workflow.
 	* Manage progressBar statistics through the progressBar view.
+	* Fix bad displaying when a workflow is empty.
 
 Version 0.3.1 Released on 2011/07/26
 
