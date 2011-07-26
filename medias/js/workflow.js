@@ -287,9 +287,11 @@ workflowProgressBarView = Backbone.View.extend({
         this._updateProgressBarStatistics();
     },
     _updateProgressBarStatistics : function () {
-        $('span#stats-success').parent().html("<span id='stats-success'></span> Success: " + this.statItems.successful);
-        $('span#stats-failed').parent().html("<span id='stats-failed'></span> Failed Miserably: " + this.statItems.broken);
-        $('span#stats-unsolved').parent().html("<span id='stats-unsolved'></span> Untested: " + this.statItems.none);
+        var progressBarStats = '<ul>';
+        progressBarStats += "<li><span id='stats-success'></span> Success: " + this.statItems.successful + '</li>';
+        progressBarStats += "<li><span id='stats-failed'></span> Failed Miserably: " + this.statItems.broken + '</li>';
+        progressBarStats += "<li><span id='stats-unsolved'></span> Untested: " + this.statItems.none + '</li>';
+        $('div.progress_bar_stats').html(progressBarStats);
     },
     _getPercentage : function (value, ceil) {
         if (ceil === 1) {
