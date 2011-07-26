@@ -283,7 +283,7 @@ workflowProgressBarView = Backbone.View.extend({
 
         this.successfulPercent = this._getPercentage(this.statItems.successful, 0);
         this.brokenPercent = this._getPercentage(this.statItems.broken, 0);
-        this.nonePercent = this._getPercentage(this.statItems.none, 0);
+        this.noStatePercent = this._getPercentage(this.statItems.none, 0);
 
         this.testedPercent = this._getPercentage(this.statItems.successful + this.statItems.broken, 1);
 
@@ -311,7 +311,7 @@ workflowProgressBarView = Backbone.View.extend({
         var workflowProgressbar = '<tr><table><tr>';
         workflowProgressbar += "<td style='width: " + this.successfulPercent + '%; background-color: ' + this.colors.successful + ";'></td>";
         workflowProgressbar += "<td style='width: " + this.brokenPercent + '%; background-color: ' + this.colors.broken + ";'></td>";
-        workflowProgressbar += "<td style='width: " + this.nonePercent + '%; background-color: ' + this.colors.none + ";'></td>";
+        workflowProgressbar += "<td style='width: " + this.noStatePercent + '%; background-color: ' + this.colors.none + ";'></td>";
         workflowProgressbar += "<td style='width: auto; text-align: left; padding-left: 4px;'>" + this.testedPercent + '% tested</td></tr></table></tr>';
         return workflowProgressbar;
     }
