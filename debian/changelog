@@ -1,8 +1,8 @@
-webengine-workflow (0.3.2~dev-1) unstable; urgency=low
+webengine-workflow (0.3.2-1) unstable; urgency=low
 
   * New upstream release.
 
- -- Bryann Lamour <bryann.lamour@smartjog.com>  Tue, 26 Jul 2011 14:52:31 +0200
+ -- Rémi Cardona <remi.cardona@smartjog.com>  Wed, 27 Jul 2011 16:51:20 +0200
 
 webengine-workflow (0.3.1-1) unstable; urgency=low
 
