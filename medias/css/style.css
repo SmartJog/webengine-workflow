@@ -14,6 +14,43 @@ div.fullpage {
     font-size: 11px;
 }
 
+.hidden {
+    visibility: hidden;
+}
+
+.visible {
+    visibility: visible;
+}
+
+/* **** */
+
+/* Index */
+
+h2#workflow_management {
+   font-variant: small-caps;
+   text-decoration: underline;
+}
+
+div#workflow_management ul {
+    width: auto;
+    padding: 10px;
+    position: relative;
+}
+
+div#workflow_management li.odd_line {
+    background-color: #ddd;
+}
+
+div#workflow_management li.highlight:hover {
+    background: #BFD4FF;
+}
+
+span.action_buttons {
+    position: absolute;
+    right: 0;
+    padding-right: 10px;
+    margin: 2px;
+}
 /* **** */
 
 /* For workflow instance page */
@@ -87,7 +124,7 @@ div.title_detail_item {
     text-align: center;
 }
 
-.progress_bar_stats ul,li {
+.progress_bar_stats li {
     display: inline;
 }
 
@@ -265,8 +302,11 @@ textarea.textarea_edit_detail, textarea.textarea_add_comment {
 
 li {
     line-height: 18px;
-    margin-left: 7px;
-    padding-left: 18px;
-    cursor: pointer;
+    margin-left: 15px;
+    padding-left: 5px;
     list-style: none;
+}
+
+li a:hover {
+    text-decoration: underline;
 }

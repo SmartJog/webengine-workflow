@@ -11,7 +11,19 @@ import simplejson as json
 
 @render(view='index')
 def index(request):
-    return {}
+    """ Return the list of all the workflow instance """
+    workflow_all = []
+    workflow_sections = WorkflowSection.objects.all().extra(select={'lower_label': 'lower(label)'}).order_by('lower_label')
+    ret = {
+        'workflow_sections' : [],
+    }
+    for section in workflow_sections:
+        ret['workflow_sections'] += [
+            {'label' : section.label,\
+             'instances' : Workflow.objects.filter(workflow_section=section.id).extra(select={'lower_label': 'lower(label)'}).order_by('lower_label'),
+            }
+        ]
+    return ret
 
 @render(view='new_workflow')
 def new_workflow(request):
@@ -54,14 +66,6 @@ def new_workflow(request):
         'status' : 'NEW',
     }
 
-@render(view='workflow_listing')
-def workflow_listing(request):
-    workflows = WorkflowSection.objects.all()
-    ret = {'workflows' : []}
-    for workflow in workflows:
-        ret['workflows'] += [{'name' : workflow, 'workflowinstances' : Workflow.objects.filter(workflow_section=workflow)}]
-    return ret
-
 @render(view='workflow')
 def workflow(request, workflow_id):
     person_id = Person.objects.filter(django_user=request.user.id)[0].id
@@ -85,7 +89,7 @@ def workflow(request, workflow_id):
 
 def delete_workflow(request, workflow_id):
     Workflow.objects.filter(id=workflow_id).delete()
-    return HttpResponseRedirect(reverse('workflow-listing'))
+    return HttpResponseRedirect(reverse('index'))
 
 def _get_comments(item_id):
     comments = Comment.objects.filter(item=item_id)
