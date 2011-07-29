@@ -25,6 +25,35 @@ function deleteWorkflow(workflowId) {
         }
     });
 }
+
+function copyWorkflow(workflowId) {
+    var dialog = $('#dialog-copy-workflow');
+    dialog.addClass('visibile').removeClass('hidden');
+    var instanceLabel = $('li#instance-' + workflowId + ' a:first-child').html();
+    var message = instanceLabel + '_copy';
+    dialog.find('input').attr('value', message);
+    dialog.dialog({
+        open      : function() { dialog.find('input[type=text]').focus(); },
+        title     : 'Copy workflow ' + instanceLabel,
+        resizable : true,
+        modal     : true,
+        width     : 500,
+        buttons   : {
+            'Copy': function() {
+                if (dialog.find('input[type=text]').attr('value')) {
+                    dialog.find('p').html('Processing...');
+                    dialog.find('form').hide();
+                    $.post(
+                        '/workflow/copy/',
+                        dialog.find('form').serialize() + '&workflow_id=' + workflowId,
+                        function () { window.location.reload(); }
+                    );
+                }
+            },
+            'Cancel': function() { dialog.dialog('close'); }
+        }
+    });
+}
 </script>
 {% endblock %}
 
@@ -38,6 +67,9 @@ function deleteWorkflow(workflowId) {
         <li class='highlight {% if forloop.counter|divisibleby:2 %}{% else %}odd_line{% endif %}' id='instance-{{ instance.id }}'>
           <a href='{% url workflow instance.id %}'>{{ instance.label }}</a>
           <span class='action_buttons'>
+            <a onclick='copyWorkflow({{ instance.id }});' title='Copy Workflow'>
+              <img src='/sjwebkit/common/images/famfamfam_icons/layers.png' alt='Rename'/>
+            </a>
             <a onclick='deleteWorkflow({{ instance.id }});' title='Delete Workflow'>
               <img src='/medias/workflow/img/untake.png' class='untake' alt='Delete'/>
             </a>
@@ -51,5 +83,14 @@ function deleteWorkflow(workflowId) {
 
 <div id='dialog-delete-workflow' title='Delete workflow' class='hidden'>
   <p></p>
+</div>
+<div id='dialog-copy-workflow' title='Copy workflow' class='hidden'>
+  <p></p>
+  <form onsubmit='return false;'>
+    Name: <input type='text' name='label' style='width: 100%;'/><br/><br />
+    <label><input type='checkbox' name='reset_validation' /> Reset validation</label><br />
+    <label><input type='checkbox' name='reset_owner' /> Reset owner</label><br />
+    <label><input type='checkbox' name='reset_comments' /> Reset comments</label><br />
+  </form>
 </div>
 {% endblock content %}

@@ -7,6 +7,8 @@ from team.models import Person
 from workflow.forms import WorkflowInstanceNewForm, ItemNewForm
 from workflow.models import WorkflowSection, Workflow, Category, Item, Validation, Comment, ItemTemplate
 
+from copy import copy
+
 import simplejson as json
 
 @render(view='index')
@@ -89,6 +91,60 @@ def workflow(request, workflow_id):
 
 def delete_workflow(request, workflow_id):
     Workflow.objects.filter(id=workflow_id).delete()
+    return HttpResponseRedirect(reverse('index'))
+
+def _copy_comments(item_id, copy_item):
+    origin_comments = Comment.objects.filter(item=item_id)
+    if origin_comments:
+        top_comment_id = Comment.objects.order_by('-id')[0].id
+        for comment in origin_comments:
+            copy_comment = copy(comment)
+            copy_comment.id = top_comment_id + 1
+            top_comment_id = copy_comment.id
+            copy_comment.item_id = copy_item.id
+            copy_comment.save()
+
+def _copy_items(category_id, copy_category, options):
+    origin_items = Item.objects.filter(category=category_id)
+    if origin_items:
+        top_item_id = Item.objects.order_by('-id')[0].id
+        for item in origin_items:
+            copy_item = copy(item)
+            copy_item.id = top_item_id + 1
+            top_item_id = copy_item.id
+            copy_item.category_id = copy_category.id
+            if 'reset_validation' in options:
+                copy_item.validation_id = 3 #Set validation state to None
+            if 'reset_owner' in options:
+                copy_item.assigned_to_id = None #Unset owner of the item
+
+            copy_item.save()
+
+            if not 'reset_comments' in options:
+                _copy_comments(item.id, copy_item)
+
+def _copy_categories(workflow_id, copy_workflow, options):
+    origin_categories = Category.objects.filter(workflow=workflow_id)
+    if origin_categories:
+        top_category_id = Category.objects.order_by('-id')[0].id
+        for category in origin_categories:
+            copy_category = copy(category)
+            copy_category.id = top_category_id + 1
+            top_category_id = copy_category.id
+            copy_category.workflow_id = copy_workflow.id
+            copy_category.save()
+
+            _copy_items(category.id, copy_category, options)
+
+def copy_workflow(request):
+    options = request.POST
+    origin_workflow = Workflow.objects.filter(id=options['workflow_id'])[0];
+    copy_workflow = copy(origin_workflow)
+    copy_workflow.id = Workflow.objects.order_by('-id')[0].id + 1
+    copy_workflow.label = options['label']
+    copy_workflow.save()
+
+    _copy_categories(origin_workflow.id, copy_workflow, options)
     return HttpResponseRedirect(reverse('index'))
 
 def _get_comments(item_id):
