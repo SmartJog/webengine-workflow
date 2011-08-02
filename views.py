@@ -27,47 +27,6 @@ def index(request):
         ]
     return ret
 
-@render(view='new_workflow')
-def new_workflow(request):
-    if request.method == 'POST':
-        form = WorkflowInstanceNewForm(request, data=request.POST)
-        if form.is_valid():
-            workflow_id = form.cleaned_data['workflow']
-            persons = Person.objects.filter(django_user=request.user.id)
-            if not len(persons):
-                return {
-                    'form'   : form,
-                    'status' : 'KO',
-                    'error'  : 'Your django user is not attached to a Team person',
-                }
-            if len(WorkflowSection.objects.filter(id=workflow_id)[0].leaders.filter(id=persons[0].id)):
-                new_workflowinstance=Workflow(workflow_id=form.cleaned_data['workflow'], version = form.cleaned_data['version'])
-                new_workflowinstance.save()
-                categories = Category.objects.filter(workflow=workflow_id)
-                for category in categories:
-                    items = ItemTemplate.objects.filter(category=category.id)
-                    for item in items:
-                        rt = Item(validation=None, item_id = item.id, workflowinstance_id=new_workflowinstance.id)
-                        rt.save()
-                return HttpResponseRedirect(reverse('workflow-show', args=[new_workflowinstance.id]))
-            else:
-                return {
-                    'status' : 'KO',
-                    'error'  : 'You are not leader on this workflow',
-                }
-        else:
-            return {
-                'status' : 'KO',
-                'error'  : str(form.errors),
-            }
-    else:
-        form = WorkflowInstanceNewForm(request)
-
-    return {
-        'form'   : form,
-        'status' : 'NEW',
-    }
-
 @render(view='workflow')
 def workflow(request, workflow_id):
     person_id = Person.objects.filter(django_user=request.user.id)[0].id
@@ -151,6 +110,19 @@ def rename_workflow(request):
     workflow = Workflow.objects.filter(id=request.POST['workflow_id'])[0];
     workflow.label = request.POST['new_name']
     workflow.save()
+    return HttpResponseRedirect(reverse('index'))
+
+def create_workflow(request):
+    options = request.POST
+    if options['new_section']:
+        top_section_id = WorkflowSection.objects.order_by('-id')[0].id
+        new_section = WorkflowSection(top_section_id + 1, options['new_section'])
+        new_section.save()
+    else:
+        new_section = WorkflowSection.objects.filter(label=options['section'])[0]
+    top_id = Workflow.objects.order_by('-id')[0].id
+    new_workflow = Workflow(id=top_id + 1, workflow_section=new_section, label=options['new_name'])
+    new_workflow.save()
     return HttpResponseRedirect(reverse('index'))
 
 def _get_comments(item_id):

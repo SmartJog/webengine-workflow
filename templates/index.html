@@ -83,6 +83,47 @@ function renameWorkflow(workflowId) {
         }
     });
 }
+
+function createWorkflow() {
+    if ($('select option:selected').attr('id') === 'new_section') {
+        $('label#new_section_name').addClass('visible').removeClass('hidden');
+    }
+    $('#dialog-create-workflow').attr('class', 'visibile');
+    $('#dialog-create-workflow').dialog({
+        resizable : false,
+        modal     : true,
+        buttons   : {
+            'Create': function() {
+                $(this).find('p').html('Processing...');
+                $(this).find('form').hide();
+                if ($(this).find('input#new_workflow_name').attr('value')) {
+                    $.post(
+                        '/workflow/create/',
+                        $(this).find('form').serialize(),
+                        function () {
+                            window.location.reload();
+                        }
+                    );
+                }
+            },
+            'Cancel': function() {
+                $(this).dialog('close');
+            }
+        }
+    });
+}
+
+$(function () {
+    $('select[name=section]').click(function () {
+        if ($('select option:selected').attr('id') === 'new_section') {
+            $('label#new_section_name').addClass('visible').removeClass('hidden');
+        } else {
+            $('label#new_section_name').addClass('hidden').removeClass('visible');
+        }
+    });
+
+    $('label#new_section_name input').removeAttr('value');
+});
 </script>
 {% endblock %}
 
@@ -111,6 +152,8 @@ function renameWorkflow(workflowId) {
         </ul>
       {% endif %}
     {% endfor %}
+  <br />
+  <a onclick='createWorkflow();' title='Create Workflow' class='workflow_management'>Create Workflow</a>
 </div>
 
 <div id='dialog-delete-workflow' title='Delete workflow' class='hidden'>
@@ -129,6 +172,19 @@ function renameWorkflow(workflowId) {
   <p></p>
   <form onsubmit='return false;'>
     <label>New name: <input type='text' name='new_name' style='width: 100%;'/></label><br/>
+  </form>
+</div>
+<div id='dialog-create-workflow' title='Create workflow' class='hidden'>
+  <p></p>
+  <form onsubmit='return false;'>
+    <label>Section <select name='section'>
+      {% for section in workflow_sections %}
+      <option>{{ section.label }}</option>
+      {% endfor %}
+      <option id='new_section'>New section ...</option>
+    </select></label><br/><br/>
+    <label class='hidden' id='new_section_name'>New section name<br/><input type='text' name='new_section'></label><br/>
+    <label>New workflow name<br/><input type='text' name='new_name' id='new_workflow_name'/></label>
   </form>
 </div>
 {% endblock content %}
