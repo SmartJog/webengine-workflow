@@ -55,9 +55,16 @@ def workflow(request, workflow_id):
     }
     return ret
 
-def delete_workflow(request, workflow_id):
-    Workflow.objects.filter(id=workflow_id).delete()
-    return HttpResponseRedirect(reverse('index'))
+@render(output='json')
+def delete(request):
+    options = {}
+    for el in request.POST:
+        options.update(json.loads(el))
+    if 'workflow_id' in options:
+        Workflow.objects.filter(id=options['workflow_id']).delete()
+    elif 'item_id' in options:
+        Item.objects.filter(id=options['item_id']).delete()
+    return
 
 def _copy_comments(item_id, copy_item):
     origin_comments = Comment.objects.filter(item=item_id)

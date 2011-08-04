@@ -2,7 +2,7 @@
   <a title='Rename item' onclick="renameItem($(this).parents('tr')); return false;" href=''>
     <img src='/sjwebkit/common/images/famfamfam_icons/pencil.png' alt='Rename'/>
   </a>
-  <a title='Delete item' onclick='return false;' href=''>
+  <a title='Delete item' onclick="deleteItem($(this).parents('tr')); return false;" href=''>
     <img src='/medias/workflow/img/untake.png' alt='Delete'/>
   </a>
 </div>
@@ -27,5 +27,8 @@
     <form onsubmit='return false;'>
       <label>New name: <input type='text' name='new_name' /></label><br/>
     </form>
+  </div>
+  <div id='dialog-delete-item' title='Delete item' class='hidden'>
+    <p></p>
   </div>
 </div>

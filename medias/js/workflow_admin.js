@@ -29,3 +29,34 @@ function renameItem (el) {
         }
     });
 }
+
+function deleteItem(el) {
+    var itemLabel = $(el).find('td.label span').html();
+    var message = 'This action is irrecoverable !<br />Are you sure to delete <b>' + itemLabel + '</b> ?';
+    $('div#dialog-delete-item').removeClass('hidden').addClass('visible');
+    $('div#dialog-delete-item').find('p').html(message);
+    $('div#dialog-delete-item').dialog({
+        resizable : false,
+        modal     : true,
+        buttons   : {
+            'Delete item': function() {
+                $('div#dialog-delete-item').find('p').html('Processing...');
+                var itemId = $(el).attr('id').match('\\d+$');
+                $.post(
+                    '/workflow/delete/',
+                    JSON.stringify({'item_id' : parseInt(itemId)}),
+                    function (data) {
+                        if ($(el).parents('table.category_workflow').find('tr.highlight').length === 1) {
+                             $(el).parents('table.category_workflow').remove();
+                        }
+                        $(el).remove();
+                        $('#dialog-delete-item').dialog('close');
+                    }
+                );
+            },
+            'Cancel': function() {
+                $(this).dialog('close');
+            }
+        }
+    });
+}
