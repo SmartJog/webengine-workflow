@@ -63,3 +63,40 @@ function _delete(el, elType) {
         }
     });
 }
+
+function createCategory() {
+    var dialog = $('#dialog-create-category');
+    dialog.removeClass('hidden').addClass('visible');
+    dialog.dialog({
+        open      : function() { dialog.find('input').focus(); },
+        title     : 'Create category',
+        resizable : true,
+        modal     : true,
+        width     : 500,
+        buttons   : {
+            'Create': function() {
+                if (dialog.find('input').attr('value')) {
+                    dialog.find('p').html('Processing...');
+                    dialog.find('form').hide();
+                    $.post(
+                        '/workflow/create/',
+                        dialog.find('form').serialize() + '&workflow_id=' + gl_workflowId,
+                        function (data) {
+                            if ($('div.categories_table_workflow').length) {
+                                $('div.categories_table_workflow').append(data);
+                                mainView._generateMainView();
+                                mainView._refreshPage();
+                                dialog.dialog('close');
+                                dialog.find('form').show().find('input').attr('value', '');
+                                dialog.find('p').html('');
+                            } else {
+                                window.location.reload();
+                            }
+                        }
+                    );
+                }
+            },
+            'Cancel': function() { dialog.dialog('close'); }
+        }
+    });
+}

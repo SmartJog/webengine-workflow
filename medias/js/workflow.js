@@ -396,6 +396,7 @@ workflowMainView = Backbone.View.extend({
     },
     _generateMainView : function () {
         // Generate view/models for categories
+        this.categoriesView = [];
         var allCategoriesLines = $('tr.category-header');
         for (i = 0; i < allCategoriesLines.length; i++) {
             var categoryID = $(allCategoriesLines[i]).parents('table').attr('id').match('\\d+$');

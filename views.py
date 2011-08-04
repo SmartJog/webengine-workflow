@@ -32,7 +32,8 @@ def index(request):
 
 def get_admin(request):
     """ Return html chunk to admin workflow """
-    return render_to_response('workflow/admin.html')
+    sections = WorkflowSection.objects.all()
+    return render_to_response('workflow/admin.html', {'workflow_sections' : sections})
 
 @render(view='workflow')
 def workflow(request, workflow_id):
@@ -141,16 +142,28 @@ def rename(request):
         category.save()
     return {'label' : category.label}
 
-def create_workflow(request):
+def create(request):
     options = request.POST
+    if 'new_category' in options:
+        categories = Category.objects.order_by('-id')
+        top_category_id = categories and categories[0].id or 0
+        orders = Category.objects.order_by('-order')
+        top_order = orders and orders[0].id or 0
+        new_category = Category(top_category_id + 1, options['new_category'], top_order, options['workflow_id'])
+        new_category.save()
+        return render_to_response('workflow/one_category.html', {'category' : new_category})
+
     if options['new_section']:
-        top_section_id = WorkflowSection.objects.order_by('-id')[0].id
+        sections = WorkflowSection.objects.order_by('-id')
+        top_section_id = sections and sections[0].id or 0
         new_section = WorkflowSection(top_section_id + 1, options['new_section'])
         new_section.save()
     else:
         new_section = WorkflowSection.objects.filter(label=options['section'])[0]
-    top_id = Workflow.objects.order_by('-id')[0].id
-    new_workflow = Workflow(id=top_id + 1, workflow_section=new_section, label=options['new_name'])
+
+    workflows = Workflow.objects.order_by('-id')
+    top_id = workflows and workflows[0].id or 0
+    new_workflow = Workflow(id=top_id + 1, workflow_section=new_section, label=options['new_workflow'])
     new_workflow.save()
     return HttpResponseRedirect(reverse('index'))
 

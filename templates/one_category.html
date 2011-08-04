@@ -1,0 +1,14 @@
+<table class="category_workflow" id="category_id-{{ category.id }}">
+  <tr class="category-header">
+    <th><span class='label'>{{ category.label }}</span> </th>
+    <td class="take_untake_group">
+      <a title='Rename category' onclick="rename($(this).parents('tr'), 'category'); return false;" href=''>
+        <img src='/sjwebkit/common/images/famfamfam_icons/pencil.png' alt='Rename'/>
+      </a>
+      <a title='Delete category' onclick="_delete($(this).parents('tr'), 'category'); return false;" href=''>
+        <img src='/medias/workflow/img/untake.png' alt='Delete'/>
+      </a>
+    </td>
+    <td>&nbsp;</td>
+  </tr>
+</table>

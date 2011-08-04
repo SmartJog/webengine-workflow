@@ -18,7 +18,7 @@
 
 <div id='create_box'>
   <a title='Create item' onclick='' class='workflow_management'>Create item</a>
-  <a title='Create category' onclick='' class='workflow_management'>Create category</a>
+  <a title='Create category' onclick='createCategory();' class='workflow_management'>Create category</a>
 </div>
 
 <div id='dialog-box'>
@@ -30,5 +30,11 @@
   </div>
   <div id='dialog-delete' class='hidden'>
     <p></p>
+  </div>
+  <div id='dialog-create-category' title='Create' class='hidden'>
+    <p></p>
+    <form onsubmit='return false;'>
+      <label>Name<br/><input type='text' name='new_category' style='width: 100%;'/></label>
+    </form>
   </div>
 </div>

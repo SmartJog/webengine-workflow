@@ -95,45 +95,48 @@ function renameWorkflow(workflowId) {
 }
 
 function createWorkflow() {
-    if ($('select option:selected').attr('id') === 'new_section') {
-        $('label#new_section_name').addClass('visible').removeClass('hidden');
-    }
-    $('#dialog-create-workflow').attr('class', 'visibile');
-    $('#dialog-create-workflow').dialog({
-        resizable : false,
+    var dialog = $('#dialog-create-workflow');
+    dialog.removeClass('hidden').addClass('visible');
+    dialog.dialog({
+        open      : function() { dialog.find('input').focus(); },
+        resizable : true,
         modal     : true,
+        width     : 500,
         buttons   : {
             'Create': function() {
-                $(this).find('p').html('Processing...');
-                $(this).find('form').hide();
-                if ($(this).find('input#new_workflow_name').attr('value')) {
+                if (dialog.find('input#new_workflow_name').attr('value')) {
+                    dialog.find('p').html('Processing...');
+                    dialog.find('form').hide();
                     $.post(
                         '/workflow/create/',
-                        $(this).find('form').serialize(),
+                        dialog.find('form').serialize(),
                         function () {
                             window.location.reload();
                         }
                     );
                 }
             },
-            'Cancel': function() {
-                $(this).dialog('close');
-            }
+            'Cancel': function() { dialog.dialog('close'); }
         }
     });
 }
 
-$(function () {
-    $('select[name=section]').click(function () {
-        if ($('select option:selected').attr('id') === 'new_section') {
-            $('label#new_section_name').addClass('visible').removeClass('hidden');
-        } else {
-            $('label#new_section_name').addClass('hidden').removeClass('visible');
-        }
-    });
+function onChange () {
+    if ($('select option:selected').attr('id') === 'new_section') {
+        $('label#new_section_name input').removeAttr('readonly').removeClass('lock');
+    } else {
+        $('label#new_section_name input').attr('value', '').attr('readonly', true).addClass('lock');
+    }
+}
 
-    $('label#new_section_name input').removeAttr('value');
+$(function () {
+    if ($('select option:selected').attr('id') === 'new_section') {
+        $('label#new_section_name input').attr('readonly', '').removeClass('lock');
+    } else {
+        $('label#new_section_name input').attr('value', '').attr('readonly', 'readonly').addClass('lock');
+    }
 });
+
 </script>
 {% endblock %}
 
@@ -189,14 +192,14 @@ $(function () {
 <div id='dialog-create-workflow' title='Create workflow' class='hidden'>
   <p></p>
   <form onsubmit='return false;'>
-    <label>Section <select name='section'>
+    <label>Section <select name='section' onchange='onChange();'>
+      <option id='new_section'>New section ...</option>
       {% for section in workflow_sections %}
       <option>{{ section.label }}</option>
       {% endfor %}
-      <option id='new_section'>New section ...</option>
     </select></label><br/><br/>
-    <label class='hidden' id='new_section_name'>New section name<br/><input type='text' name='new_section'></label><br/>
-    <label>New workflow name<br/><input type='text' name='new_name' id='new_workflow_name'/></label>
+    <label id='new_section_name'>New section name<br/><input type='text' name='new_section' style='width: 100%;' /></label><br/>
+    <label>New workflow name<br/><input type='text' name='new_workflow' id='new_workflow_name' style='width: 100%;'/></label>
   </form>
 </div>
 {% endblock content %}

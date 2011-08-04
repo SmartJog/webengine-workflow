@@ -22,6 +22,10 @@ div.fullpage {
     visibility: visible;
 }
 
+.lock {
+    background-color: #babdb6;
+}
+
 /* **** */
 
 /* Index */

@@ -4,4 +4,5 @@ dist_templates_DATA =	\
 	base.html			\
 	index.html			\
 	new_item.html			\
+	one_category.html		\
 	workflow.html
