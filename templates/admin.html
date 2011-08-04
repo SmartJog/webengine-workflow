@@ -1,5 +1,5 @@
 <div id='administration-cell'>
-  <a title='Rename item' onclick="renameItem($(this).parents('tr')); return false;" href=''>
+  <a title='Rename item' onclick="rename($(this).parents('tr'), 'item'); return false;" href=''>
     <img src='/sjwebkit/common/images/famfamfam_icons/pencil.png' alt='Rename'/>
   </a>
   <a title='Delete item' onclick="deleteItem($(this).parents('tr')); return false;" href=''>
@@ -8,7 +8,7 @@
 </div>
 
 <div id='rename_delete_category'>
-  <a title='Rename category' onclick="renameCategory($(this).parents('tr')); return false;" href=''>
+  <a title='Rename category' onclick="rename($(this).parents('tr'), 'category'); return false;" href=''>
     <img src='/sjwebkit/common/images/famfamfam_icons/pencil.png' alt='Rename'/>
   </a>
   <a title='Delete category' onclick="deleteCategory($(this).parents('tr')); return false;" href=''>
@@ -22,15 +22,9 @@
 </div>
 
 <div id='dialog-box'>
-  <div id='dialog-rename-item' title='Rename item' class='hidden'>
+  <div id='dialog-rename' title='Rename' class='hidden'>
     <p></p>
     <form onsubmit='return false;'>
-      <label>New name: <input type='text' name='new_name' /></label><br/>
-    </form>
-  </div>
-  <div id='dialog-rename-category' title='Rename category' class='hidden'>
-    <p></p>
-    <form>
       <label>New name: <input type='text' name='new_name' /></label><br/>
     </form>
   </div>

@@ -1,63 +1,33 @@
-function renameItem (el) {
-    itemLabel = $(el).find('td.label span').html();
-    var message = 'Current workflow name is: <b>' + itemLabel + '</b><br /><br />';
-    $('div#dialog-rename-item').removeClass('hidden').addClass('visible');
-    $('div#dialog-rename-item').find('p').html(message);
-    $('div#dialog-rename-item').find('input').attr('value', itemLabel).attr('style', 'width: 100%;');
-    $('div#dialog-rename-item').dialog({
+function rename (el, elType) {
+    var dialog = $('#dialog-rename');
+    var label = $(el).find('span.label').html();
+    var message = 'Current ' + elType + ' name is: <b>' + label + '</b><br /><br />';
+    dialog.removeClass('hidden').addClass('visible');
+    dialog.find('p').html(message);
+    dialog.find('input').attr('value', label).attr('style', 'width: 100%;');
+    dialog.dialog({
+        open      : function() { dialog.find('input').focus(); },
+        title     : 'Rename ' + elType,
         resizable : false,
         modal     : true,
         buttons   : {
             'Rename': function() {
-                $(this).find('p').html('Processing...');
-                $(this).find('form').hide();
-                var itemId = $(el).attr('id').match('\\d+$');
-                if ($(this).find('input[type=text]').attr('value')) {
+                dialog.find('p').html('Processing...');
+                dialog.find('form').hide();
+                var id = elType === 'category' ? $(el).parents('table').attr('id').match('\\d+$') : $(el).attr('id').match('\\d+$');
+                if (dialog.find('input[type=text]').attr('value')) {
                    $.post(
                        '/workflow/rename/',
-                       $(this).find('form').serialize() + '&item_id=' + itemId,
+                       dialog.find('form').serialize() + '&' + elType + '_id=' + id,
                        function (data) {
-                            $(el).find('td.label span').html(data.label);
-                            $('div#dialog-rename-item').dialog('close');
+                            $(el).find('span.label').html(data.label);
+                            dialog.find('form').show();
+                            dialog.dialog('close');
                         }
                     );
                 }
             },
-            'Cancel': function() {
-                $(this).dialog('close');
-            }
-        }
-    });
-}
-
-function renameCategory (el) {
-    categoryLabel = $(el).find('th span').html();
-    var message = 'Current category name is: <b>' + categoryLabel + '</b><br /><br />';
-    $('div#dialog-rename-category').removeClass('hidden').addClass('visible');
-    $('div#dialog-rename-category').find('p').html(message);
-    $('div#dialog-rename-category').find('input').attr('value', categoryLabel).attr('style', 'width: 100%;');
-    $('div#dialog-rename-category').dialog({
-        resizable : false,
-        modal     : true,
-        buttons   : {
-            'Rename': function() {
-                $(this).find('p').html('Processing...');
-                $(this).find('form').hide();
-                var categoryId = $(el).parents('table').attr('id').match('\\d+$');
-                if ($(this).find('input[type=text]').attr('value')) {
-                   $.post(
-                       '/workflow/rename/',
-                       $(this).find('form').serialize() + '&category_id=' + categoryId,
-                       function (data) {
-                            $(el).find('th span').html(data.label);
-                            $('div#dialog-rename-category').dialog('close');
-                        }
-                    );
-                }
-            },
-            'Cancel': function() {
-                $(this).dialog('close');
-            }
+            'Cancel': function() { dialog.dialog('close'); }
         }
     });
 }
