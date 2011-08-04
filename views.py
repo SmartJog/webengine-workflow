@@ -134,7 +134,12 @@ def rename(request):
         item = Item.objects.filter(id=options['item_id'])[0]
         item.label = options['new_name']
         item.save()
-    return {'label' : item.label}
+        return {'label' : item.label}
+    elif 'category_id' in options:
+        category = Category.objects.filter(id=options['category_id'])[0]
+        category.label = options['new_name']
+        category.save()
+    return {'label' : category.label}
 
 def create_workflow(request):
     options = request.POST
