@@ -59,6 +59,23 @@ a.workflow_management {
 }
 /* **** */
 
+/* Admin */
+
+div#switch-to-admin, div#switch-to-user {
+    text-align: center;
+}
+
+div#admin_box {
+    width: auto;
+    height: auto;
+    padding: 10px;
+    margin: 10px;
+    border: 1px solid black;
+    text-align: center;
+}
+
+/* **** */
+
 /* For workflow instance page */
 
 td                      a.validation-enabled,

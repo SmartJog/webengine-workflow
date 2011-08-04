@@ -2,6 +2,7 @@ from django.conf.urls.defaults import *
 
 urlpatterns = patterns('workflow',
     url(r'^$',                                                                          'views.index',                                      name='index'),
+    url(r'^get_admin/$',                                                                'views.get_admin',                                  name='get-admin'),
     url(r'^(?P<workflow_id>\d+)/$',                                                     'views.workflow',                                   name='workflow'),
     url(r'^delete/(?P<workflow_id>\d+)/$',                                              'views.delete_workflow',                            name='delete'),
     url(r'^copy/$',                                                                     'views.copy_workflow',                              name='copy'),

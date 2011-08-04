@@ -1,6 +1,7 @@
 from webengine.utils.decorators import render
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
+from django.shortcuts import render_to_response
 from webengine.utils.log import logger
 
 from team.models import Person
@@ -10,6 +11,7 @@ from workflow.models import WorkflowSection, Workflow, Category, Item, Validatio
 from copy import copy
 
 import simplejson as json
+
 
 @render(view='index')
 def index(request):
@@ -26,6 +28,10 @@ def index(request):
             }
         ]
     return ret
+
+def get_admin(request):
+    """ Return html chunk to admin workflow """
+    return render_to_response('workflow/admin.html')
 
 @render(view='workflow')
 def workflow(request, workflow_id):

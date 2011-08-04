@@ -427,10 +427,7 @@ workflowMainView = Backbone.View.extend({
     },
     // Make a ajax call to retrieve up to date information
     _refreshPage : function () {
-        if (this.requestRefreshPage) {
-            this.requestRefreshPage.abort();
-        }
-        this.requestRefreshPage = $.ajax({
+        $.ajax({
             url: '/workflow/item/',
             data: JSON.stringify({'workflowId' : gl_workflowId}),
             type: 'POST',
@@ -438,10 +435,26 @@ workflowMainView = Backbone.View.extend({
             timeout: 3000,
             success: mainView._updatePage,
         });
-        setTimeout('mainView._refreshPage()', 45000);
+        this.requestRefreshPage = setTimeout('mainView._refreshPage()', 45000);
     }
 });
 
+
+function switchToAdmin (data) {
+    clearTimeout(mainView.requestRefreshPage)
+
+    $('div.progress_workflow').hide();
+    $('div.filters_workflow').hide();
+
+    $('td.validation-cell').html($(data).filter('div#administration-cell').html());
+    $('td.take_untake_group').html($(data).filter('div#rename_delete_category').html());
+    $('td.take-item, td.untake-item').addClass('disabled').find('img').remove();
+    $('div#admin').html($(data).filter('div#create_box').html()).attr('id', 'admin_box');
+    $('div#switch-to-admin button').html('Switch to user view').attr('id', 'switch-to-user').click(function () {
+        window.location.reload();
+    });
+    $('button.edit_details').removeClass('hidden').addClass('visible');
+}
 
 $(document).ready(function () {
     Backbone.emulateHTTP = true;
@@ -449,4 +462,16 @@ $(document).ready(function () {
     mainView = new workflowMainView();
 
     mainView._refreshPage();
+
+    $(function () {
+        $('div#switch-to-admin').click(function () {
+            $.ajax({
+                url      : '/workflow/get_admin/',
+                type     : 'POST',
+                dataType : 'html',
+                timeout  : 3000,
+                success  : switchToAdmin
+            });
+        });
+    });
 });
