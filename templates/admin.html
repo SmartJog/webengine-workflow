@@ -2,7 +2,7 @@
   <a title='Rename item' onclick="rename($(this).parents('tr'), 'item'); return false;" href=''>
     <img src='/sjwebkit/common/images/famfamfam_icons/pencil.png' alt='Rename'/>
   </a>
-  <a title='Delete item' onclick="deleteItem($(this).parents('tr')); return false;" href=''>
+  <a title='Delete item' onclick="_delete($(this).parents('tr'), 'item'); return false;" href=''>
     <img src='/medias/workflow/img/untake.png' alt='Delete'/>
   </a>
 </div>
@@ -11,7 +11,7 @@
   <a title='Rename category' onclick="rename($(this).parents('tr'), 'category'); return false;" href=''>
     <img src='/sjwebkit/common/images/famfamfam_icons/pencil.png' alt='Rename'/>
   </a>
-  <a title='Delete category' onclick="deleteCategory($(this).parents('tr')); return false;" href=''>
+  <a title='Delete category' onclick="_delete($(this).parents('tr'), 'category'); return false;" href=''>
     <img src='/medias/workflow/img/untake.png' alt='Delete'/>
   </a>
 </div>
@@ -28,10 +28,7 @@
       <label>New name: <input type='text' name='new_name' /></label><br/>
     </form>
   </div>
-  <div id='dialog-delete-item' title='Delete item' class='hidden'>
-    <p></p>
-  </div>
-  <div id='dialog-delete-category' title='Delete Category' class='hidden'>
+  <div id='dialog-delete' class='hidden'>
     <p></p>
   </div>
 </div>
