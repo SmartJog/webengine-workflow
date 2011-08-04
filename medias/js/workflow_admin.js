@@ -60,3 +60,31 @@ function deleteItem(el) {
         }
     });
 }
+
+function deleteCategory(el) {
+    var categoryLabel = $(el).find('th span').html();
+    var message = 'This action is irrecoverable !<br />Are you sure to delete <b>' + categoryLabel + '</b> ?';
+    $('div#dialog-delete-category').removeClass('hidden').addClass('visible');
+    $('div#dialog-delete-category').find('p').html(message);
+    $('div#dialog-delete-category').dialog({
+        resizable : false,
+        modal     : true,
+        buttons   : {
+            'Delete item': function() {
+                $('div#dialog-delete-category').find('p').html('Processing...');
+                var categoryId = $(el).parents('table').attr('id').match('\\d+$');
+                $.post(
+                    '/workflow/delete/',
+                    JSON.stringify({'category_id' : parseInt(categoryId)}),
+                    function (data) {
+                        $(el).parents('table').remove();
+                        $('#dialog-delete-category').dialog('close');
+                    }
+                );
+            },
+           'Cancel': function() {
+               $(this).dialog('close');
+            }
+        }
+    });
+}

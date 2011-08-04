@@ -11,7 +11,7 @@
   <a title='Rename category' onclick='return false;' href=''>
     <img src='/sjwebkit/common/images/famfamfam_icons/pencil.png' alt='Rename'/>
   </a>
-  <a title='Delete category' onclick='return false;' href=''>
+  <a title='Delete category' onclick="deleteCategory($(this).parents('tr')); return false;" href=''>
     <img src='/medias/workflow/img/untake.png' alt='Delete'/>
   </a>
 </div>
@@ -29,6 +29,9 @@
     </form>
   </div>
   <div id='dialog-delete-item' title='Delete item' class='hidden'>
+    <p></p>
+  </div>
+  <div id='dialog-delete-category' title='Delete Category' class='hidden'>
     <p></p>
   </div>
 </div>

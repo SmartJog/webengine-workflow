@@ -51,7 +51,7 @@ var gl_workflowId = {{ workflow_id }};
 {% for category in categories %}
 <table class="category_workflow" id="category_id-{{ category.id }}">
 	<tr class="category-header">
-	<th>{{ forloop.counter }} -{{ category.name }} </th>
+	<th>{{ forloop.counter }} -<span>{{ category.name }}</span> </th>
 		<!-- Cell containing take and untake links for the whole group of items -->
 		<td class="take_untake_group">
 			<a class="take-group" title="Take all items of the category" href="" onclick="return false;">take</a>&nbsp;/&nbsp;
