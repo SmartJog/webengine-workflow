@@ -1,5 +1,5 @@
 <div id='administration-cell'>
-  <a title='Rename item' onclick='return false;' href=''>
+  <a title='Rename item' onclick="renameItem($(this).parents('tr')); return false;" href=''>
     <img src='/sjwebkit/common/images/famfamfam_icons/pencil.png' alt='Rename'/>
   </a>
   <a title='Delete item' onclick='return false;' href=''>
@@ -19,4 +19,13 @@
 <div id='create_box'>
   <a title='Create item' onclick='' class='workflow_management'>Create item</a>
   <a title='Create category' onclick='' class='workflow_management'>Create category</a>
+</div>
+
+<div id='dialog-box'>
+  <div id='dialog-rename-item' title='Rename item' class='hidden'>
+    <p></p>
+    <form onsubmit='return false;'>
+      <label>New name: <input type='text' name='new_name' /></label><br/>
+    </form>
+  </div>
 </div>

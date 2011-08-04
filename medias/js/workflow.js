@@ -454,6 +454,8 @@ function switchToAdmin (data) {
         window.location.reload();
     });
     $('button.edit_details').removeClass('hidden').addClass('visible');
+
+    $('body').append($(data).filter('div#dialog-box').html());
 }
 
 $(document).ready(function () {

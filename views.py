@@ -2,6 +2,7 @@ from webengine.utils.decorators import render
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.shortcuts import render_to_response
+
 from webengine.utils.log import logger
 
 from team.models import Person
@@ -112,11 +113,19 @@ def copy_workflow(request):
     _copy_categories(origin_workflow.id, copy_workflow, options)
     return HttpResponseRedirect(reverse('index'))
 
-def rename_workflow(request):
-    workflow = Workflow.objects.filter(id=request.POST['workflow_id'])[0];
-    workflow.label = request.POST['new_name']
-    workflow.save()
-    return HttpResponseRedirect(reverse('index'))
+@render(output='json')
+def rename(request):
+    options = request.POST
+    if 'workflow_id' in options:
+        workflow = Workflow.objects.filter(id=options['workflow_id'])[0];
+        workflow.label = options['new_name']
+        workflow.save()
+        return {'label' : workflow.label}
+    elif 'item_id' in options:
+        item = Item.objects.filter(id=options['item_id'])[0]
+        item.label = options['new_name']
+        item.save()
+    return {'label' : item.label}
 
 def create_workflow(request):
     options = request.POST
