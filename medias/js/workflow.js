@@ -221,6 +221,8 @@ workflowCategoryView = Backbone.View.extend({
         this.itemsView = {};
         this.bind('enabledTakeUntake', this.enabledTakeUntake);
         this.bind('disabledTakeUntake', this.disabledTakeUntake);
+        this.id = this.el.parents('table').attr('id').match('\\d+$')[0];
+        this.label =  this.el.find('span.label').html();
     },
     events : {
         'click a.take-group'   : 'take',
@@ -397,9 +399,9 @@ workflowMainView = Backbone.View.extend({
     _generateMainView : function () {
         // Generate view/models for categories
         this.categoriesView = [];
+        this.modelItemsCollection = new workflowCollection();
         var allCategoriesLines = $('tr.category-header');
         for (i = 0; i < allCategoriesLines.length; i++) {
-            var categoryID = $(allCategoriesLines[i]).parents('table').attr('id').match('\\d+$');
             var currentCategory = new workflowCategoryView({el : $(allCategoriesLines[i])});
             var allItemLines = $(allCategoriesLines[i]).parents('table').find('table.item_table');
             for (y = 0; y < allItemLines.length; y++) {

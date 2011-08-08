@@ -1,8 +1,8 @@
 <div id='administration-cell'>
-  <a title='Rename item' onclick="rename($(this).parents('tr'), 'item'); return false;" href=''>
+  <a title='Rename Item' onclick="rename($(this).parents('tr'), 'item'); return false;" href=''>
     <img src='/sjwebkit/common/images/famfamfam_icons/pencil.png' alt='Rename'/>
   </a>
-  <a title='Delete item' onclick="_delete($(this).parents('tr'), 'item'); return false;" href=''>
+  <a title='Delete Item' onclick="_delete($(this).parents('tr'), 'item'); return false;" href=''>
     <img src='/medias/workflow/img/untake.png' alt='Delete'/>
   </a>
 </div>
@@ -17,7 +17,7 @@
 </div>
 
 <div id='create_box'>
-  <a title='Create item' onclick='' class='workflow_management'>Create item</a>
+  <a title='Create item' onclick='createItem();' class='workflow_management'>Create item</a>
   <a title='Create category' onclick='createCategory();' class='workflow_management'>Create category</a>
 </div>
 
@@ -35,6 +35,14 @@
     <p></p>
     <form onsubmit='return false;'>
       <label>Name<br/><input type='text' name='new_category' style='width: 100%;'/></label>
+    </form>
+  </div>
+  <div id='dialog-create-item' title='Create' class='hidden'>
+    <p></p>
+    <form onsubmit='return false;'>
+        <label>Name<br/><input type='text' name='new_item' style='width: 100%;'/></label><br/><br/>
+        <label>Details<br/><textarea name='details' rows='7' cols='35' style='width: 100%;'></textarea></label><br/><br/>
+        <label>Category<br/><select name='category'></select></label>
     </form>
   </div>
 </div>

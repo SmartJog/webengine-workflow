@@ -82,16 +82,59 @@ function createCategory() {
                         '/workflow/create/',
                         dialog.find('form').serialize() + '&workflow_id=' + gl_workflowId,
                         function (data) {
-                            if ($('div.categories_table_workflow').length) {
-                                $('div.categories_table_workflow').append(data);
-                                mainView._generateMainView();
-                                mainView._refreshPage();
-                                dialog.dialog('close');
-                                dialog.find('form').show().find('input').attr('value', '');
-                                dialog.find('p').html('');
-                            } else {
-                                window.location.reload();
-                            }
+                            $('div.categories_table_workflow').append(data);
+                            mainView._generateMainView();
+                            mainView._refreshPage();
+                            dialog.dialog('close');
+                            dialog.find('form').show().find('input').attr('value', '');
+                            dialog.find('p').html('');
+                        }
+                    );
+                }
+            },
+            'Cancel': function() { dialog.dialog('close'); }
+        }
+    });
+}
+
+function _updateCategoriesSelector() {
+     var categories = $('tr.category-header span.label');
+     var categoriesSelector = $('#dialog-create-item select');
+     categoriesSelector.html('');
+     _.each(mainView.categoriesView, function (category) {
+         var option = '<option value=' + category.id + '>' + category.label + '</option>';
+         categoriesSelector.append(option);
+    });
+}
+
+function createItem() {
+    _updateCategoriesSelector();
+    var dialog = $('#dialog-create-item');
+    dialog.removeClass('hidden').addClass('visible');
+    dialog.dialog({
+        open      : function() { dialog.find('input').focus(); },
+        title     : 'Create Item',
+        resizable : true,
+        modal     : true,
+        width     : 500,
+        buttons   : {
+            'Create Item': function() {
+                if (dialog.find('input').attr('value') && dialog.find('select option:selected').length) {
+                    dialog.find('p').html('Processing...');
+                    dialog.find('form').hide();
+                    $.post(
+                        '/workflow/create/',
+                        dialog.find('form').serialize() + '&workflow_id=' + gl_workflowId,
+                        function (data) {
+                            var selectedCategory = $('select option:selected').attr('value');
+                            $('table#category_id-'  + selectedCategory).append(data);
+                            mainView._generateMainView();
+                            mainView._refreshPage();
+                            dialog.dialog('close');
+                            dialog.find('form').show();
+                            dialog.find('p').html('');
+                            dialog.find('input').attr('value', '');
+                            dialog.find('textarea').attr('value', '');
                         }
                     );
                 }

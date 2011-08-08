@@ -56,6 +56,11 @@ span.action_buttons {
     margin: 2px;
 }
 
+span.action_buttons a:hover {
+    cursor: pointer;
+    text-decoration: none;
+}
+
 a.workflow_management {
     cursor: pointer;
     font-variant: small-caps;

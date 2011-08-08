@@ -10,6 +10,7 @@ Version 0.4.0~dev
 	* Add 'delete category' feature.
 	* Add 'rename category' feature.
 	* Add 'create category' feature.
+	* Add 'create item' feature.
 
 Version 0.3.2 Released on 2011/07/27
 

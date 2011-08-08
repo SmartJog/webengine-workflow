@@ -32,8 +32,7 @@ def index(request):
 
 def get_admin(request):
     """ Return html chunk to admin workflow """
-    sections = WorkflowSection.objects.all()
-    return render_to_response('workflow/admin.html', {'workflow_sections' : sections})
+    return render_to_response('workflow/admin.html')
 
 @render(view='workflow')
 def workflow(request, workflow_id):
@@ -144,6 +143,15 @@ def rename(request):
 
 def create(request):
     options = request.POST
+
+    if 'new_item' in options:
+        items = Item.objects.order_by('-id')
+        top_item_id = items and items[0].id or 0
+        category_id = Category.objects.filter(id=options['category'])[0].id
+        new_item = Item(id=top_item_id + 1, label=options['new_item'], details=options['details'], assigned_to_id=None, validation_id=3, category_id=category_id)
+        new_item.save()
+        return render_to_response('workflow/one_item.html', {'item' : new_item})
+
     if 'new_category' in options:
         categories = Category.objects.order_by('-id')
         top_category_id = categories and categories[0].id or 0

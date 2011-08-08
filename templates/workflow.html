@@ -46,6 +46,7 @@ var gl_workflowId = {{ workflow_id }};
 	<label><input type='radio' id='broken' name='filter'/><span></span></label>
 </div>
 <!-- ** -->
+{% endif %}
 
 <div class="categories_table_workflow">
 {% for category in categories %}
@@ -146,5 +147,4 @@ var gl_workflowId = {{ workflow_id }};
 	<p></p>
 </div>
 <!-- ** -->
-{% endif %}
 {% endblock content %}

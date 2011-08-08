@@ -1,0 +1,49 @@
+<tr><td colspan="3">
+  <table class="item_table">
+    <tr class="highligh" id="item-{{ item.id }}">
+      <td class="label">
+        <a class="label_item" title="Label item" href="" onclick="return false;"><span class='label'>{{ item.label }}</span></a>
+      </td>
+
+      <td class="untake-item take-item disabled">take</td>
+
+      <td class="validation-cell">
+        <a title='Rename Item' onclick="rename($(this).parents('tr'), 'item'); return false;" href=''>
+          <img src='/sjwebkit/common/images/famfamfam_icons/pencil.png' alt='Rename'/>
+        </a>
+        <a title='Delete Item' onclick="_delete($(this).parents('tr'), 'item'); return false;" href=''>
+          <img src='/medias/workflow/img/untake.png' alt='Delete'/>
+        </a>
+      </td>
+    </tr>
+
+    <tr id="detail-item-{{item.id }}">
+      <td colspan="3">
+        <div class="detail_on_item">
+          <div class="title_detail_item">
+            <a title="Details" onclick="return false;" href="." class="title_details">Details</a>
+              &nbsp;/&nbsp;
+            <a title="Comments" onclick="return false;" href="." class="title_comment">Comments</a>
+          </div>
+          <div class='all_for_detail'>
+            <pre class='details_item'></pre>
+            <input  type='button' onclick='return false;' class='edit_details hidden' value='Edit details' />
+            <div class='add_details'>
+              <h2>Edit details</h2>
+              <textarea class='textarea_edit_detail' rows='7' cols='75' name='new_details'></textarea><br />
+              <input type='button' onclick='return false;' class='details' value='Post' />
+            </div>
+          </div>
+          <div class='all_for_comment'>
+            <pre class='comments_item'></pre>
+            <div class='add_comment'>
+              <h2>Add comment</h2>
+              <textarea class='textarea_add_comment' rows='7' cols='75' name='new_comment'></textarea><br />
+              <input type='button' onclick='return false;' class='comment' value='Post' />
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+  </table>
+</td></tr>
