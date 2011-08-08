@@ -442,6 +442,16 @@ workflowMainView = Backbone.View.extend({
     }
 });
 
+function _setCategoriesOrder () {
+    var categoriesOrder = {};
+    var categories = $('table.category_workflow');
+    for (var i = 0; i < categories.length; i++) {
+        var categoryId = $(categories[i]).attr('id').match('\\d+$');
+        categoriesOrder[categoryId] = i;
+    }
+    $.post('/workflow/set_order/', JSON.stringify(categoriesOrder),
+        function () { window.location.reload(); });
+}
 
 function switchToAdmin (data) {
     clearTimeout(mainView.requestRefreshPage)
@@ -453,12 +463,17 @@ function switchToAdmin (data) {
     $('td.take_untake_group').html($(data).filter('div#rename_delete_category').html());
     $('td.take-item, td.untake-item').addClass('disabled').find('img').remove();
     $('div#admin').html($(data).filter('div#create_box').html()).attr('id', 'admin_box');
-    $('div#switch-to-admin button').html('Switch to user view').attr('id', 'switch-to-user').click(function () {
-        window.location.reload();
+    $('div#switch-to-admin button').html('Save and switch to user view').attr('id', 'switch-to-user').click(function () {
+        _setCategoriesOrder();
+        $.post('/workflow/' + gl_workflowId + '/');
     });
     $('button.edit_details').removeClass('hidden').addClass('visible');
 
     $('body').append($(data).filter('div#dialog-box').html());
+
+    $('#sortable').sortable().disableSelection().bind( 'sortstop', function() {
+         _numbering($('table.category_workflow th span.label'));
+    });
 }
 
 $(document).ready(function () {

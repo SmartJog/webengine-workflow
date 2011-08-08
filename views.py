@@ -37,7 +37,7 @@ def get_admin(request):
 @render(view='workflow')
 def workflow(request, workflow_id):
     person_id = Person.objects.filter(django_user=request.user.id)[0].id
-    categories = Category.objects.filter(workflow=workflow_id).order_by('id')
+    categories = Category.objects.filter(workflow=workflow_id).order_by('order')
     workflow_label = Workflow.objects.filter(id=workflow_id)[0].label
     container = []
     for category in categories:
@@ -283,3 +283,15 @@ def item(request):
         'allItems' : allItems,
     }
     return ret
+
+@render(output='json')
+def set_order(request):
+    options = request.POST
+    order = {}
+    for el in options:
+        order.update(json.loads(el))
+    for categoryId, order in order.items():
+        category = Category.objects.filter(id=categoryId)[0]
+        category.order = order
+        category.save()
+    return

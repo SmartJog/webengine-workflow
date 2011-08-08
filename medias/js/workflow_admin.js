@@ -89,7 +89,7 @@ function createCategory() {
                         '/workflow/create/',
                         dialog.find('form').serialize() + '&workflow_id=' + gl_workflowId,
                         function (data) {
-                            $('div.categories_table_workflow').append(data);
+                            $('div#sortable').append(data);
                             _numbering($('table.category_workflow th span.label'));
                             mainView._generateMainView();
                             mainView._refreshPage();
