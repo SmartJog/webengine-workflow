@@ -2,8 +2,8 @@
 {% load i18n %}
 
 {% block optional_css %}
-    <link href="/medias/workflow/css/style.css" type="text/css" rel="stylesheet">
-    <link href="/javascript/jquery-ui/css/smoothness/jquery-ui.min.css" type="text/css" rel="stylesheet">
+    <link href='/medias/workflow/css/style.css' type='text/css' rel='stylesheet' />
+    <link href='/javascript/jquery-ui/css/smoothness/jquery-ui.min.css' type='text/css' rel='stylesheet' />
 {% endblock %}
 
 {% block pagetitle %}{% trans "Workflow" %} {% ifnotequal workflowinstance None %} {{ workflowinstance }} {%else%} {{ workflowinstanceitem.workflowinstance }} {%endifnotequal%} {% endblock %}
