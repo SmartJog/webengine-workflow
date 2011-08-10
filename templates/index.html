@@ -41,7 +41,7 @@ function copyWorkflow(workflowId) {
     dialog.addClass('visibile').removeClass('hidden');
     var instanceLabel = $('li#instance-' + workflowId + ' a:first-child').html();
     var message = instanceLabel + '_copy';
-    dialog.find('input').attr('value', message);
+    dialog.find('input[name=label]').attr('value', message);
     dialog.dialog({
         open      : function() { dialog.find('input[type=text]').focus(); },
         title     : 'Copy workflow ' + instanceLabel,
@@ -50,7 +50,9 @@ function copyWorkflow(workflowId) {
         width     : 500,
         buttons   : {
             'Copy': function() {
-                if (dialog.find('input[type=text]').attr('value')) {
+                if (dialog.find('input[name=label]').attr('value')
+                   && (dialog.find('input[name=new_section]').attr('value')
+                   || dialog.find('input[name=new_section]').attr('readonly') === true)) {
                     dialog.find('p').html('Processing...');
                     dialog.find('form').hide();
                     $.post(
@@ -170,6 +172,13 @@ function onChange (form) {
 <div id='dialog-copy-workflow' title='Copy workflow' class='hidden'>
   <p></p>
   <form onsubmit='return false;'>
+    <label>Section <select name='section' onchange="onChange($(this).parents('form'));">
+      <option id='new_section'>New section ...</option>
+      {% for section in workflow_sections %}
+      <option value='{{ section.id }}'>{{ section.label }}</option>
+      {% endfor %}
+    </select></label><br/><br/>
+    <label id='new_section_name'>New section name<br/><input type='text' name='new_section' style='width: 100%;' /></label><br/>
     Name: <input type='text' name='label' style='width: 100%;'/><br/><br />
     <label><input type='checkbox' name='reset_validation' /> Reset validation</label><br />
     <label><input type='checkbox' name='reset_owner' /> Reset owner</label><br />
@@ -192,7 +201,7 @@ function onChange (form) {
 <div id='dialog-create-workflow' title='Create workflow' class='hidden'>
   <p></p>
   <form onsubmit='return false;'>
-    <label>Section <select name='section' onchange=''>
+    <label>Section <select name='section' onchange="onChange($(this).parents('form'));">
       <option id='new_section'>New section ...</option>
       {% for section in workflow_sections %}
       <option>{{ section.label }}</option>

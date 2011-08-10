@@ -114,10 +114,20 @@ def _copy_categories(workflow_id, copy_workflow, options):
 
 def copy_workflow(request):
     options = request.POST
+
     origin_workflow = Workflow.objects.filter(id=options['workflow_id'])[0];
     copy_workflow = copy(origin_workflow)
     copy_workflow.id = Workflow.objects.order_by('-id')[0].id + 1
     copy_workflow.label = options['label']
+
+    new_section = None
+    if options['new_section']:
+        sections = WorkflowSection.objects.order_by('-id')
+        top_section_id = sections and sections[0].id or 0
+        new_section = WorkflowSection(top_section_id + 1, options['new_section'])
+        new_section.save()
+
+    copy_workflow.workflow_section_id = new_section and new_section.id or options['section']
     copy_workflow.save()
 
     _copy_categories(origin_workflow.id, copy_workflow, options)
