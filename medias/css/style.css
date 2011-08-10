@@ -266,7 +266,7 @@ table.item_table td.validation-cell a.validation-None.validation-disabled span {
     color: #babdb6;
 }
 
-button {
+input[type='button'] {
     width: 25%;
 }
 

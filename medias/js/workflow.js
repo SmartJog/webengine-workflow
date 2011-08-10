@@ -461,7 +461,7 @@ function switchToAdmin (data) {
     $('td.take_untake_group').html($(data).filter('div#rename_delete_category').html());
     $('td.take-item, td.untake-item').addClass('disabled').find('img').remove();
     $('div#admin').html($(data).filter('div#create_box').html()).attr('id', 'admin_box');
-    $('div#switch-to-admin button').html('Save and switch to user view').attr('id', 'switch-to-user').click(function () {
+    $('div#switch-to-admin input').html('Save and switch to user view').attr('id', 'switch-to-user').click(function () {
         _setCategoriesOrder();
         $.post('/workflow/' + gl_workflowId + '/');
     });
