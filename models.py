@@ -6,8 +6,6 @@ import datetime
 class WorkflowSection(models.Model):
     id = models.AutoField(primary_key = True)
     label = models.CharField(max_length=32, null=False)
-    teams = models.ManyToManyField(teammodels.Team, null=False, blank=False)
-    leaders = models.ManyToManyField(teammodels.Person, null=False, blank=False)
 
     def __unicode__(self):
         return "Label: %s" % (self.label)

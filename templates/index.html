@@ -36,6 +36,33 @@ function deleteWorkflow(workflowId) {
     });
 }
 
+function deleteSection(sectionId) {
+    var dialog = $('#dialog-delete-section');
+    dialog.addClass('visibile').removeClass('hidden');
+    instanceLabel = $('div#section-' + sectionId + ' h2').html();
+    var message = 'This action is irrecoverable !<br />Are you sure to delete <b>' + instanceLabel + '</b> ?';
+    dialog.find('p').html(message);
+    dialog.dialog({
+        open      : function() { dialog.parents('.ui-dialog-buttonpane button:eq(0)').focus(); },
+        resizable : false,
+        modal     : true,
+        buttons   : {
+            'Delete section': function() {
+                dialog.find('p').html('Processing...');
+                $.post(
+                    '/workflow/delete/',
+                    JSON.stringify({'section_id' : sectionId}),
+                    function (data) {
+                        $('div#section-' + sectionId).remove();
+                        dialog.dialog('close');
+                    }
+                );
+            },
+            'Cancel': function() { dialog.dialog('close'); }
+        }
+    });
+}
+
 function copyWorkflow(workflowId) {
     var dialog = $('#dialog-copy-workflow');
     dialog.addClass('visibile').removeClass('hidden');
@@ -140,25 +167,30 @@ function onChange (form) {
     {% for section in workflow_sections %}
       {% if section.instances|length %}
       <div class='workflow_list'>
-        <h2>{{ section.label }}</h2>
-        <ul>
-        {% for instance in section.instances %}
-        <li class='highlight {% if forloop.counter|divisibleby:2 %}{% else %}odd_line{% endif %}' id='instance-{{ instance.id }}'>
-          <a href='{% url workflow instance.id %}'>{{ instance.label }}</a>
-          <span class='action_buttons'>
-            <a onclick='renameWorkflow({{ instance.id }});' title='Rename Workflow'>
-              <img src='/sjwebkit/common/images/famfamfam_icons/pencil.png' alt='Rename'/>
-            </a>
-            <a onclick='copyWorkflow({{ instance.id }});' title='Copy Workflow'>
-              <img src='/sjwebkit/common/images/famfamfam_icons/layers.png' alt='Rename'/>
-            </a>
-            <a onclick='deleteWorkflow({{ instance.id }});' title='Delete Workflow'>
-              <img src='/medias/workflow/img/untake.png' class='untake' alt='Delete'/>
-            </a>
-          </span>
-        </li>
-        {% endfor %}
-        </ul>
+        <div id='section-{{ section.id }}'>
+          <a onclick='deleteSection({{ section.id }});' title='Delete Workflow'>
+            <img src='/medias/workflow/img/untake.png' class='untake' alt='Delete' />
+          </a>
+          <h2>{{ section.label }}</h2>
+          <ul>
+            {% for instance in section.instances %}
+            <li class='highlight {% if forloop.counter|divisibleby:2 %}{% else %}odd_line{% endif %}' id='instance-{{ instance.id }}'>
+            <a href='{% url workflow instance.id %}'>{{ instance.label }}</a>
+            <span class='action_buttons'>
+              <a onclick='renameWorkflow({{ instance.id }});' title='Rename Workflow'>
+                <img src='/sjwebkit/common/images/famfamfam_icons/pencil.png' alt='Rename'/>
+              </a>
+              <a onclick='copyWorkflow({{ instance.id }});' title='Copy Workflow'>
+                <img src='/sjwebkit/common/images/famfamfam_icons/layers.png' alt='Rename'/>
+              </a>
+              <a onclick='deleteWorkflow({{ instance.id }});' title='Delete Workflow'>
+                <img src='/medias/workflow/img/untake.png' class='untake' alt='Delete'/>
+              </a>
+            </span>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
       </div>
       {% endif %}
     {% endfor %}
@@ -167,6 +199,9 @@ function onChange (form) {
 </div>
 
 <div id='dialog-delete-workflow' title='Delete workflow' class='hidden'>
+  <p></p>
+</div>
+<div id='dialog-delete-section' title='Delete section' class='hidden'>
   <p></p>
 </div>
 <div id='dialog-copy-workflow' title='Copy workflow' class='hidden'>

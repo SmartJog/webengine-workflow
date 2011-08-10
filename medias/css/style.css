@@ -30,6 +30,14 @@ div.fullpage {
 
 /* Index */
 
+div.workflow_list h2 {
+    display: inline;
+}
+
+div.workflow_list a {
+    cursor: pointer;
+}
+
 h2.workflow_management, h2#copy_options {
    font-variant: small-caps;
    text-decoration: underline;

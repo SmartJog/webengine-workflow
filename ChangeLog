@@ -12,6 +12,7 @@ Version 0.4.0~dev
 	* Add 'create category' feature.
 	* Add 'create item' feature.
 	* Add feature to sort categories.
+	* Add 'delete section' feature.
 
 Version 0.3.2 Released on 2011/07/27
 

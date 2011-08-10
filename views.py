@@ -67,6 +67,8 @@ def delete(request):
         Item.objects.filter(id=options['item_id']).delete()
     elif 'category_id' in options:
         Category.objects.filter(id=options['category_id']).delete()
+    elif 'section_id' in options:
+        WorkflowSection.objects.filter(id=options['section_id']).delete()
     return
 
 def _copy_comments(item_id, copy_item):
