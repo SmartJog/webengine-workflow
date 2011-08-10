@@ -263,11 +263,11 @@ workflowProgressBarView = Backbone.View.extend({
         this._updateStats();
     },
     render : function () {
-        var workflowProgressbar = '<tr><table><tr>';
+        var workflowProgressbar = "<table cellspacing='0'><tr>";
         workflowProgressbar += "<td style='width: " + this.successfulPercent + '%; background-color: ' + this.colors.successful + ";'></td>";
         workflowProgressbar += "<td style='width: " + this.brokenPercent + '%; background-color: ' + this.colors.broken + ";'></td>";
         workflowProgressbar += "<td style='width: " + this.noStatePercent + '%; background-color: ' + this.colors.none + ";'></td>";
-        workflowProgressbar += "<td style='width: auto; text-align: left; padding-left: 4px;'>" + this.testedPercent + '% tested</td></tr></table></tr>';
+        workflowProgressbar += "<td style='width: auto; text-align: left; padding-left: 4px;'>" + this.testedPercent + '% tested</td></tr></table>';
 
         var progressBarStats = '<ul>';
         progressBarStats += "<li><span id='stats-success'></span> Success: " + this.statItems.successful + '</li>';
@@ -310,7 +310,7 @@ workflowProgressBarView = Backbone.View.extend({
         if (ceil) {
             return Math.ceil((value * 100) / this.statItems.all);
         }
-        return (value * 100) / this.statItems.all;
+        return ((value * 100) / this.statItems.all) - 1;
     }
 });
 
@@ -381,8 +381,8 @@ workflowFiltersView = Backbone.View.extend({
 // Main view for all the workflow instance
 workflowMainView = Backbone.View.extend({
     initialize : function () {
-        this.categoriesView = [];
-        this.modelItemsCollection = new workflowCollection();
+        this._generateMainView();
+        this.requestRefreshPage = null;
         this.progressBar = new workflowProgressBarView({
             'el'              : $('div.progress_workflow'),
             'itemsCollection' : this.modelItemsCollection,
@@ -393,8 +393,6 @@ workflowMainView = Backbone.View.extend({
             'progressBar'          : this.progressBar,
             'modelItemsCollection' : this.modelItemsCollection
         });
-        this._generateMainView();
-        this.requestRefreshPage = null;
     },
     _generateMainView : function () {
         // Generate view/models for categories
