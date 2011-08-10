@@ -71,7 +71,7 @@ function renameWorkflow(workflowId) {
     instanceLabel = $('li#instance-' + workflowId + ' a:first-child').html();
     var message = 'Current workflow name is: <b>' + instanceLabel + '</b><br /><br />';
     dialog.find('p').html(message);
-    dialog.find('input').attr('value', instanceLabel);
+    dialog.find('input[name=new_name]').attr('value', instanceLabel);
     dialog.dialog({
         open      : function() { dialog.find('input').focus(); },
         resizable : true,
@@ -79,7 +79,9 @@ function renameWorkflow(workflowId) {
         width     : 500,
         buttons   : {
             'Rename': function() {
-                if (dialog.find('input[type=text]').attr('value')) {
+                if (dialog.find('input[name=new_name]').attr('value')
+                   && (dialog.find('input[name=new_section]').attr('value')
+                   || dialog.find('input[name=new_section]').attr('readonly') === true)) {
                     dialog.find('p').html('Processing...');
                     dialog.find('form').hide();
                     $.post(
@@ -121,22 +123,13 @@ function createWorkflow() {
     });
 }
 
-function onChange () {
-    if ($('select option:selected').attr('id') === 'new_section') {
-        $('label#new_section_name input').removeAttr('readonly').removeClass('lock');
+function onChange (form) {
+    if (form.find('select option:selected').attr('id') === 'new_section') {
+        form.find('label#new_section_name input').removeAttr('readonly').removeClass('lock');
     } else {
-        $('label#new_section_name input').attr('value', '').attr('readonly', true).addClass('lock');
+        form.find('label#new_section_name input').removeAttr('value').attr('readonly', true).addClass('lock');
     }
 }
-
-$(function () {
-    if ($('select option:selected').attr('id') === 'new_section') {
-        $('label#new_section_name input').attr('readonly', '').removeClass('lock');
-    } else {
-        $('label#new_section_name input').attr('value', '').attr('readonly', 'readonly').addClass('lock');
-    }
-});
-
 </script>
 {% endblock %}
 
@@ -186,13 +179,20 @@ $(function () {
 <div id='dialog-rename-workflow' title='Rename workflow' class='hidden'>
   <p></p>
   <form onsubmit='return false;'>
-    <label>New name: <input type='text' name='new_name' style='width: 100%;'/></label><br/>
+    <label>Section <select name='section' onchange="onChange($(this).parents('form'));">
+      <option id='new_section'>New section ...</option>
+      {% for section in workflow_sections %}
+      <option value='{{ section.id }}'>{{ section.label }}</option>
+      {% endfor %}
+    </select></label><br/><br/>
+    <label id='new_section_name'>New section name<br/><input type='text' name='new_section' style='width: 100%;' /></label><br/>
+    <label>New name: <input type='text' name='new_name' style='width: 100%;'/></label><br/><br/>
   </form>
 </div>
 <div id='dialog-create-workflow' title='Create workflow' class='hidden'>
   <p></p>
   <form onsubmit='return false;'>
-    <label>Section <select name='section' onchange='onChange();'>
+    <label>Section <select name='section' onchange=''>
       <option id='new_section'>New section ...</option>
       {% for section in workflow_sections %}
       <option>{{ section.label }}</option>

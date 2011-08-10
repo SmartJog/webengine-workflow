@@ -25,6 +25,7 @@ def index(request):
     for section in workflow_sections:
         ret['workflow_sections'] += [
             {'label' : section.label,\
+             'id'    : section.id,\
              'instances' : Workflow.objects.filter(workflow_section=section.id).extra(select={'lower_label': 'lower(label)'}).order_by('lower_label'),
             }
         ]
@@ -126,8 +127,16 @@ def copy_workflow(request):
 def rename(request):
     options = request.POST
     if 'workflow_id' in options:
+        new_section = None
+        if options['new_section']:
+            sections = WorkflowSection.objects.order_by('-id')
+            top_section_id = sections and sections[0].id or 0
+            new_section = WorkflowSection(top_section_id + 1, options['new_section'])
+            new_section.save()
+
         workflow = Workflow.objects.filter(id=options['workflow_id'])[0];
         workflow.label = options['new_name']
+        workflow.workflow_section_id = new_section and new_section.id or options['section']
         workflow.save()
         return {'label' : workflow.label}
     elif 'item_id' in options:
