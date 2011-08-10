@@ -76,10 +76,10 @@ workflowItemView = Backbone.View.extend({
         'click a.untake, a.take'                 : 'takeOrUntake',
         'click a.validation'                     : 'validation',
         'click a.label_item'                     : 'retrieveDetailsAndComments',
-        'click button.details'                   : 'updateDetails',
-        'click button.comment'                   : 'addComment',
+        'click input.details'                    : 'updateDetails',
+        'click input.comment'                    : 'addComment',
         'click a.title_details, a.title_comment' : 'displayDetailsOrComments',
-        'click button.edit_details'              : 'editDetails'
+        'click input.edit_details'               : 'editDetails'
     },
     validation : function (e) {
         var validation = null;
@@ -465,7 +465,7 @@ function switchToAdmin (data) {
         _setCategoriesOrder();
         $.post('/workflow/' + gl_workflowId + '/');
     });
-    $('button.edit_details').removeClass('hidden').addClass('visible');
+    $('input.edit_details').removeClass('hidden').addClass('visible');
 
     $('body').append($(data).filter('div#dialog-box').html());
 

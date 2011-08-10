@@ -118,11 +118,11 @@ var gl_workflowId = {{ workflow_id }};
 			</div>
 			<div class='all_for_detail'>
 				<pre class='details_item'></pre>
-				<button onclick='return false;' class='edit_details hidden'>Edit details</button>
+				<input  type='button' onclick='return false;' class='edit_details hidden' value='Edit details' />
 				<div class='add_details'>
 					<h2>Edit details</h2>
 					<textarea class='textarea_edit_detail' rows='7' cols='75' name='new_details'></textarea><br />
-					<button type='button' onclick='return false;' class='details'>Post</button>
+					<input type='button' onclick='return false;' class='details' value='Post' />
 				</div>
 			</div>
 			<div class='all_for_comment'>
@@ -130,7 +130,7 @@ var gl_workflowId = {{ workflow_id }};
 				<div class='add_comment'>
 					<h2>Add comment</h2>
 					<textarea class='textarea_add_comment' rows='7' cols='75' name='new_comment'></textarea><br />
-					<button type='button' onclick='return false;' class='comment'>Post</button>
+					<input type='button' onclick='return false;' class='comment' value='Post' />
 				</div>
 			</div>
 		</div>
