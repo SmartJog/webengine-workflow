@@ -21,18 +21,21 @@
           <h2>{{ section.label }}</h2>
           <ul>
             {% for instance in section.instances %}
-            <li class='highlight {% if forloop.counter|divisibleby:2 %}{% else %}odd_line{% endif %}' id='instance-{{ instance.id }}'>
-            <a href='{% url workflow instance.id %}'>{{ instance.label }}</a>
+            <li class='highlight {% if forloop.counter|divisibleby:2 %}{% else %}odd_line{% endif %}' id='instance-{{ instance.0.id }}'>
+            <a href='{% url workflow instance.0.id %}'>{{ instance.0.label }}</a>
             <span class='action_buttons'>
-              <a onclick='renameWorkflow({{ instance.id }});' title='Rename Workflow'>
+              <a onclick='renameWorkflow({{ instance.0.id }});' title='Rename Workflow'>
                 <img src='/sjwebkit/common/images/famfamfam_icons/pencil.png' alt='Rename'/>
               </a>
-              <a onclick='copyWorkflow({{ instance.id }});' title='Copy Workflow'>
+              <a onclick='copyWorkflow({{ instance.0.id }});' title='Copy Workflow'>
                 <img src='/sjwebkit/common/images/famfamfam_icons/layers.png' alt='Rename'/>
               </a>
-              <a onclick='deleteWorkflow({{ instance.id }});' title='Delete Workflow'>
+              <a onclick='deleteWorkflow({{ instance.0.id }});' title='Delete Workflow'>
                 <img src='/medias/workflow/img/untake.png' class='untake' alt='Delete'/>
               </a>
+            </span>
+            <span class='workflow_progress'>
+              <p>{{ instance.1 }}%</p>
             </span>
             </li>
             {% endfor %}

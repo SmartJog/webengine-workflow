@@ -69,6 +69,11 @@ span.action_buttons a:hover {
     text-decoration: none;
 }
 
+span.workflow_progress {
+    position: absolute;
+    left: 0;
+}
+
 a.workflow_management {
     cursor: pointer;
     font-variant: small-caps;

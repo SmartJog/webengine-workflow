@@ -23,10 +23,24 @@ def index(request):
         'workflow_sections' : [],
     }
     for section in workflow_sections:
+        progress = 0
+        all_item = 0
+        instances = []
+        workflows = Workflow.objects.filter(workflow_section=section.id).extra(select={'lower_label': 'lower(label)'}).order_by('lower_label')
+        for workflow in workflows:
+            for category in workflow.category_set.all():
+                for item in category.item_set.all():
+                    if item.validation_id == 3:
+                        progress += 1
+                all_item += len(category.item_set.all())
+            instances.append((workflow, all_item and 100 - (progress * 100) / all_item or 0))
+            progress = 0
+            all_item = 0
+
         ret['workflow_sections'] += [
             {'label' : section.label,\
              'id'    : section.id,\
-             'instances' : Workflow.objects.filter(workflow_section=section.id).extra(select={'lower_label': 'lower(label)'}).order_by('lower_label'),
+             'instances' : instances,
             }
         ]
     return ret
