@@ -147,6 +147,12 @@ def copy_workflow(request):
     _copy_categories(origin_workflow.id, copy_workflow, options)
     return HttpResponseRedirect(reverse('index'))
 
+def rename_workflow(request):
+    workflow = Workflow.objects.filter(id=request.POST['workflow_id'])[0];
+    workflow.label = request.POST['new_name']
+    workflow.save()
+    return HttpResponseRedirect(reverse('index'))
+
 def _get_comments(item_id):
     comments = Comment.objects.filter(item=item_id)
     commentsToSubmit = []

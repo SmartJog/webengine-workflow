@@ -2,6 +2,7 @@ Version 0.4.0~dev
 
 	* Move workflow_listing page to index page.
 	* Add 'copy workflow' feature.
+	* Add 'rename workflow' feature.
 
 Version 0.3.2 Released on 2011/07/27
 

@@ -54,6 +54,35 @@ function copyWorkflow(workflowId) {
         }
     });
 }
+
+function renameWorkflow(workflowId) {
+    var dialog = $('#dialog-rename-workflow');
+    dialog.addClass('visibile').removeClass('hidden');
+    instanceLabel = $('li#instance-' + workflowId + ' a:first-child').html();
+    var message = 'Current workflow name is: <b>' + instanceLabel + '</b><br /><br />';
+    dialog.find('p').html(message);
+    dialog.find('input').attr('value', instanceLabel);
+    dialog.dialog({
+        open      : function() { dialog.find('input').focus(); },
+        resizable : true,
+        modal     : true,
+        width     : 500,
+        buttons   : {
+            'Rename': function() {
+                if (dialog.find('input[type=text]').attr('value')) {
+                    dialog.find('p').html('Processing...');
+                    dialog.find('form').hide();
+                    $.post(
+                        '/workflow/rename/',
+                        dialog.find('form').serialize() + '&workflow_id=' + workflowId,
+                        function () { window.location.reload(); }
+                    );
+                }
+            },
+            'Cancel': function() { dialog.dialog('close'); }
+        }
+    });
+}
 </script>
 {% endblock %}
 
@@ -67,6 +96,9 @@ function copyWorkflow(workflowId) {
         <li class='highlight {% if forloop.counter|divisibleby:2 %}{% else %}odd_line{% endif %}' id='instance-{{ instance.id }}'>
           <a href='{% url workflow instance.id %}'>{{ instance.label }}</a>
           <span class='action_buttons'>
+            <a onclick='renameWorkflow({{ instance.id }});' title='Rename Workflow'>
+              <img src='/sjwebkit/common/images/famfamfam_icons/pencil.png' alt='Rename'/>
+            </a>
             <a onclick='copyWorkflow({{ instance.id }});' title='Copy Workflow'>
               <img src='/sjwebkit/common/images/famfamfam_icons/layers.png' alt='Rename'/>
             </a>
@@ -91,6 +123,12 @@ function copyWorkflow(workflowId) {
     <label><input type='checkbox' name='reset_validation' /> Reset validation</label><br />
     <label><input type='checkbox' name='reset_owner' /> Reset owner</label><br />
     <label><input type='checkbox' name='reset_comments' /> Reset comments</label><br />
+  </form>
+</div>
+<div id='dialog-rename-workflow' title='Rename workflow' class='hidden'>
+  <p></p>
+  <form onsubmit='return false;'>
+    <label>New name: <input type='text' name='new_name' style='width: 100%;'/></label><br/>
   </form>
 </div>
 {% endblock content %}
