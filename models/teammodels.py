@@ -1,6 +1,11 @@
 from django.db import models
 from django.contrib.auth import models as AuthModels
 
+class WorkflowBase(models.Model):
+    class Meta:
+        app_label = 'workflow'
+        abstract = True
+
 class ContractType(models.Model):
     id = models.AutoField(primary_key = True)
     name = models.CharField(max_length = 64, null=False)
@@ -8,7 +13,7 @@ class ContractType(models.Model):
     def __unicode__(self):
         return u"%s" % (self.name)
 
-class Person(models.Model):
+class Person(WorkflowBase):
     id = models.AutoField(primary_key = True)
     firstname = models.CharField(max_length = 64, null=False)
     lastname = models.CharField(max_length = 64, null=False)
@@ -22,7 +27,6 @@ class Person(models.Model):
 
     def __unicode__(self):
         return u"%s %s" % (self.firstname, self.lastname.upper())
-
 
 class Team(models.Model):
     id = models.AutoField(primary_key = True)

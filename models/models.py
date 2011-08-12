@@ -1,25 +1,30 @@
 from django.db import models
 from django.contrib.auth import models as AuthModels
-from team import models as teammodels
+from workflow.models import teammodels
 import datetime
 
-class WorkflowSection(models.Model):
+class WorkflowBase(models.Model):
+    class Meta:
+        app_label = 'workflow'
+        abstract = True
+
+class WorkflowSection(WorkflowBase):
     id = models.AutoField(primary_key = True)
     label = models.CharField(max_length=32, null=False)
 
     def __unicode__(self):
         return "Label: %s" % (self.label)
 
-class Workflow(models.Model):
+class Workflow(WorkflowBase):
     id = models.AutoField(primary_key = True)
     creation_date = models.DateField(null=False, auto_now=True)
     label = models.CharField(max_length=128, null=False)
     workflow_section = models.ForeignKey(WorkflowSection, null=False)
-    
+
     def __unicode__(self):
         return "Workflow Section: %s - Label: %s" % (self.workflow_section.label, self.label)
 
-class Category(models.Model):
+class Category(WorkflowBase):
     id = models.AutoField(primary_key = True)
     label = models.CharField(max_length=64, null=False)
     order = models.SmallIntegerField(null=False)
@@ -29,14 +34,14 @@ class Category(models.Model):
         return "Workflow Section : %s - Workflow: %s - Label: %s"\
                 % (self.workflow.workflow_section.label, self.workflow.label, self.label)
 
-class Validation(models.Model):
+class Validation(WorkflowBase):
     id = models.AutoField(primary_key = True)
     label = models.CharField(max_length=32, null=False)
 
     def __unicode__(self):
         return self.label
 
-class Item(models.Model):
+class Item(WorkflowBase):
     id = models.AutoField(primary_key = True)
     label = models.CharField(max_length=512, null=False)
     details = models.TextField(max_length=1000, blank=True, null=True)
@@ -49,7 +54,7 @@ class Item(models.Model):
                 %(self.category.workflow.workflow_section.label, self.category.workflow.label,\
                 self.category.label, self.label)
 
-class Comment(models.Model):
+class Comment(WorkflowBase):
     id = models.AutoField(primary_key=True)
     item = models.ForeignKey(Item, null=False)
     person = models.ForeignKey(teammodels.Person, null=True, blank=True)
@@ -59,7 +64,7 @@ class Comment(models.Model):
     def __unicode__(self):
         return self.comments
 
-class ItemTemplate(models.Model):
+class ItemTemplate(WorkflowBase):
     id = models.AutoField(primary_key = True)
     category = models.ForeignKey(Category, null=False)
     label = models.CharField(max_length=512, null=False)

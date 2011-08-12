@@ -5,7 +5,7 @@ from django.shortcuts import render_to_response
 
 from webengine.utils.log import logger
 
-from team.models import Person
+from workflow.models.teammodels import Person
 from workflow.forms import WorkflowInstanceNewForm, ItemNewForm
 from workflow.models import WorkflowSection, Workflow, Category, Item, Validation, Comment, ItemTemplate
 
