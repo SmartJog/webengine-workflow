@@ -1,10 +1,13 @@
-webengine-workflow (0.4.0~dev-1) unstable; urgency=low
+webengine-workflow (0.4.0-1) unstable; urgency=low
 
-  * New upstream release.
+  [ Bryann Lamour ]
   * Add sjwebkit dependency.
   * Remove webengine-team dependency.
 
- -- Bryann Lamour <bryann.lamour@smartjog.com>  Wed, 27 Jul 2011 14:37:51 +0200
+  [ Rémi Cardona ]
+  * New upstream release.
+
+ -- Rémi Cardona <remi.cardona@smartjog.com>  Tue, 16 Aug 2011 15:25:33 +0200
 
 webengine-workflow (0.3.2-1) unstable; urgency=low
 
