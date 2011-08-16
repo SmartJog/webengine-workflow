@@ -469,9 +469,7 @@ function switchToAdmin (data) {
 
     $('body').append($(data).filter('div#dialog-box').html());
 
-    $('#sortable').sortable().disableSelection().bind( 'sortstop', function() {
-         _numbering($('table.category_workflow th span.label'));
-    });
+    $('#sortable').sortable();
 }
 
 $(document).ready(function () {

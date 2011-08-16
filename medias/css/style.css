@@ -1,3 +1,21 @@
+div.categories_table_workflow {
+    counter-reset: category_title;
+}
+
+table.category_workflow {
+    counter-reset: item_title;
+}
+
+table.category_workflow th:before {
+    content: counter(category_title) " - ";
+    counter-increment: category_title;
+}
+
+table.item_table a.label_item:before {
+    content: counter(item_title) " - ";
+    counter-increment: item_title;
+}
+
 /* Global */
 
 a {

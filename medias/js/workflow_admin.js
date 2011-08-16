@@ -56,11 +56,9 @@ function _delete(el, elType) {
                         }
                         if (elType == 'category') {
                             $(el).parents('table').remove();
-                            _numbering($('table.category_workflow th span.label'));
                         } else {
                             var categoryId = $(el[0]).parents('table.category_workflow').attr('id').match('\\d+$');
                             $(el).remove();
-                            _numbering($('table#category_id-' + categoryId + ' .item_table a.label_item span.label'));
                         }
                         dialog.dialog('close');
                     }
@@ -90,7 +88,6 @@ function createCategory() {
                         dialog.find('form').serialize() + '&workflow_id=' + gl_workflowId,
                         function (data) {
                             $('div#sortable').append(data);
-                            _numbering($('table.category_workflow th span.label'));
                             mainView._generateMainView();
                             mainView._refreshPage();
                             dialog.dialog('close');
@@ -115,13 +112,6 @@ function _updateCategoriesSelector() {
     });
 }
 
-function _numbering(selector) {
-    var matchedEl = $(selector);
-    for (var i = 0; i < matchedEl.length; i++) {
-        $(matchedEl[i]).parent().html(i + 1 + " - <span class='label'>" + $(matchedEl[i]).html() + '</span>');
-    }
-}
-
 function createItem() {
     _updateCategoriesSelector();
     var dialog = $('#dialog-create-item');
@@ -144,7 +134,6 @@ function createItem() {
                             var selectedCategory = $('select option:selected').attr('value');
                             $('table#category_id-'  + selectedCategory).append(data);
                             var categoryId = dialog.find('select option:selected').attr('value');
-                            _numbering($('table#category_id-' + categoryId + ' .item_table a.label_item span.label'));
                             mainView._generateMainView();
                             mainView._refreshPage();
                             dialog.dialog('close');
