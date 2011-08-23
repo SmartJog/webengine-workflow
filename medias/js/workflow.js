@@ -175,7 +175,7 @@ workflowItemView = Backbone.View.extend({
         var el = $(this.detailEl).find('div.all_for_detail');
         $(el).children().attr('style', 'display: none;');
         $(this.detailEl).find('div.add_details').attr('style', 'display: block;');
-        $(this.detailEl).find('div.add_details textarea').attr('value', $(el).find('pre').html());
+        $(this.detailEl).find('div.add_details textarea').attr('value', $(el).find('p').html());
     },
     render : function (model) {
         if (model.get('HTTPStatusCode') === '200') {
@@ -221,23 +221,24 @@ workflowItemView = Backbone.View.extend({
         blockComment += "<h3><span id='ancre_comment'><a name='" + iterator + "'";
         blockComment += " href='#" + iterator + "' title='Comment anchor - " + iterator + "'>";
         blockComment += '#' + iterator + '</a></span> - ' + comment.date + ' - ' + comment.owner + '</h3>';
-        blockComment += '<pre>' + comment.comment + '</pre>';
+        blockComment += '<p>' + comment.comment + '</p>';
         blockComment += '</div>';
         return blockComment;
     },
     _generateDetailsAndComments : function () {
         if (this.model.get('details').length) {
-            $(this.detailEl).find('pre.details_item').html(this.model.get('details'));
+            $(this.detailEl).find('p.details_item').html(this.model.get('details'));
         } else {
-            $(this.detailEl).find('pre.details_item').html('** No details **');
+            $(this.detailEl).find('p.details_item').html('** No details **');
         }
-        if (this.model.get('comments')[0]) {
-            $(this.detailEl).find('pre.comments_item').html(this._displayOneComment(this.model.get('comments')[0], 0));
-            for (i = 1; i < this.model.get('comments').length; i++) {
-                $(this.detailEl).find('pre.comments_item').append(this._displayOneComment(this.model.get('comments')[i], i));
+        var comments = this.model.get('comments');
+        if (comments && comments[0]) {
+            $(this.detailEl).find('p.comments_item').html(this._displayOneComment(comments[0], 0));
+            for (i = 1; i < comments.length; i++) {
+                $(this.detailEl).find('p.comments_item').append(this._displayOneComment(comments[i], i));
             }
         } else {
-            $(this.detailEl).find('pre.comments_item').html('** No comments **');
+            $(this.detailEl).find('p.comments_item').html('** No comments **');
         }
     },
     _showDetailsOrComments : function (what) {

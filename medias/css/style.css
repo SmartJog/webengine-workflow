@@ -139,10 +139,6 @@ td.is-untaken a.take {
     display: none;
 }
 
-pre.details_item, pre.comments_item {
-    padding: 10px;
-}
-
 div.one_comment {
     margin: 10px;
     margin-bottom: 20px;
@@ -348,14 +344,15 @@ div.detail_on_item.show-comments a.title_details {
     font-weight: normal;
 }
 
-pre.details_item, pre.comments_item {
+p.details_item, p.comments_item {
     border: 1px solid black;
     padding: 10px;
     margin-bottom: 10px;
     overflow: auto;
+    font-family: monospace;
 }
 
-pre.details_item {
+p.details_item {
     background-color: #ddd;
 }
 
