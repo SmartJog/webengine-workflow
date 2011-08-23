@@ -38,24 +38,28 @@ workflowItem = Backbone.Model.extend({
             this.set({'assigned_to' : null}, {silent : true});
         }
         this.save({'previousAttributes' : this.previousAttributes()});
+        this.unset('previousAttributes');
     },
     // Change state of one item to OK or KO
     validation : function (validation) {
         this.set({'validation' : validation}, {silent : true});
         this.save({'previousAttributes' : this.previousAttributes()});
+        this.unset('previousAttributes');
     },
     // Retrieve the details and comments of the item
     retrieveDetailsAndComments : function () {
         this.fetch();
     },
     updateDetails : function (newDetails) {
-        this.set({details : newDetails.trim()}, {silent : true});
+        this.set({details : escape(newDetails.trim())}, {silent : true});
         this.save({'previousAttributes' : this.previousAttributes()});
+        this.unset('previousAttributes');
     },
     addComment : function (newComment) {
         if (newComment.trim()) {
-            this.set({comments : newComment.trim()}, {silent : true});
+            this.set({comments : escape(newComment.trim())}, {silent : true});
             this.save({'previousAttributes' : this.previousAttributes()});
+            this.unset('previousAttributes');
         }
     }
 });
