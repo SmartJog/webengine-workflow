@@ -37,30 +37,65 @@ workflowItem = Backbone.Model.extend({
         } else {
             this.set({'assigned_to' : null}, {silent : true});
         }
-        this.save({'previousAttributes' : this.previousAttributes()});
-        this.unset('previousAttributes');
+        this.save();
     },
     // Change state of one item to OK or KO
     validation : function (validation) {
         this.set({'validation' : validation}, {silent : true});
-        this.save({'previousAttributes' : this.previousAttributes()});
-        this.unset('previousAttributes');
+        this.save();
     },
     // Retrieve the details and comments of the item
     retrieveDetailsAndComments : function () {
         this.fetch();
     },
     updateDetails : function (newDetails) {
-        this.set({details : escape(newDetails.trim())}, {silent : true});
-        this.save({'previousAttributes' : this.previousAttributes()});
-        this.unset('previousAttributes');
+        newDetails = newDetails.replace(/"/g, '\\"').replace(/\n/g, '\\n');
+        this.set({details : newDetails.trim()}, {silent : true});
+        this.save();
     },
     addComment : function (newComment) {
         if (newComment.trim()) {
-            this.set({comments : escape(newComment.trim())}, {silent : true});
-            this.save({'previousAttributes' : this.previousAttributes()});
-            this.unset('previousAttributes');
+            newComment = newComment.replace(/"/g, '\\"').replace(/\n/g, '\\n');
+            this.set({new_comment : newComment.trim()}, {silent : true});
+            this.save();
         }
+    },
+    // Override Backbone save method
+    // Set a hash of model attributes, and sync the model to the server.
+    // If the server returns an attributes hash that differs, the model's
+    // state will be `set` again
+    save : function(attrs, options) {
+        options || (options = {});
+        if (attrs && !this.set(attrs, options)) {
+            return false;
+        }
+        var model = this;
+        var success = options.success;
+        options.success = function (resp, status, xhr) {
+            if (!model.set(model.parse(resp, xhr), options)) {
+                return false;
+            }
+            if (success) {
+                success(model, resp, xhr);
+            }
+        };
+        options.error = this.wrapError(options.error, model, options);
+        var method = this.isNew() ? 'create' : 'update';
+        var old = this.previousAttributes();
+        model.set({old : old}, {silent : true});
+        Backbone.sync.call(this, method, model, options.success, options.error);
+        model.unset('old');
+    },
+    // Override Backbone wrapError method
+    // Wrap an optional error callback with a fallback error event.
+    wrapError : function(onError, model, options) {
+        return function(resp) {
+            if (onError) {
+                onError(model, resp, options);
+            } else {
+                model.trigger('error', model, resp, options);
+            }
+        };
     }
 });
 

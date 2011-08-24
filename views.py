@@ -250,7 +250,7 @@ def item_update(request, item_id):
     }
 
     for key in local_item.keys():
-        if not local_item[key] == remote_item['previousAttributes'][key]:
+        if not local_item[key] == remote_item['old'][key]:
             owner = item.assigned_to and ' '.join([item.assigned_to.firstname, item.assigned_to.lastname.upper()]) or 'None'
             ret = {
                 'HTTPStatusCode' : '409',
@@ -268,11 +268,6 @@ def item_update(request, item_id):
     item.validation_id = remote_item['validation']
     item.details = remote_item['details']
     item.save()
-    if not isinstance(remote_item['comments'], list):
-        person = Person.objects.filter(django_user=request.user.id)[0]
-        id_comment = int(Comment.objects.all().count() + 1)
-        comment = Comment(id=id_comment, item_id=item_id, person=person, comments=remote_item['comments'])
-        comment.save()
 
     item = Item.objects.filter(id=item_id)[0]
     owner = item.assigned_to and ' '.join([item.assigned_to.firstname, item.assigned_to.lastname.upper()]) or 'None'
@@ -283,9 +278,15 @@ def item_update(request, item_id):
         'validation'     : item.validation_id,
         'state'          : item.validation.label,
         'owner'          : owner,
-        'comments'       : _get_comments(item_id),
         'details'        : item.details,
     }
+
+    if 'new_comment' in remote_item and not isinstance(remote_item['new_comment'], list):
+        person = Person.objects.filter(django_user=request.user.id)[0]
+        id_comment = int(Comment.objects.all().count() + 1)
+        comment = Comment(id=id_comment, item_id=item_id, person=person, comments=remote_item['new_comment'])
+        comment.save()
+        ret.update({'comments' : _get_comments(item_id),})
     return ret
 
 @render(output='json')
