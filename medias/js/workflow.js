@@ -516,7 +516,7 @@ function switchToAdmin (data) {
 
     $('body').append($(data).filter('div#dialog-box').html());
 
-    $('#sortable').sortable();
+    $('#sortable').sortable({cancel: 'div.all_for_detail, div.all_for_comment, span.label'});
 }
 
 $(document).ready(function () {
