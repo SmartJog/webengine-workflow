@@ -50,13 +50,13 @@ workflowItem = Backbone.Model.extend({
     },
     updateDetails : function (newDetails) {
         newDetails = newDetails.replace(/"/g, '\\"').replace(/\n/g, '\\n');
-        this.set({details : newDetails.trim()}, {silent : true});
+        this.set({details : newDetails}, {silent : true});
         this.save();
     },
     addComment : function (newComment) {
         if (newComment.trim()) {
             newComment = newComment.replace(/"/g, '\\"').replace(/\n/g, '\\n');
-            this.set({new_comment : newComment.trim()}, {silent : true});
+            this.set({new_comment : newComment}, {silent : true});
             this.save();
         }
     },
