@@ -111,24 +111,20 @@ var gl_workflowId = {{ workflow_id }};
 	<tr id="detail-item-{{item.id }}">
 	<td colspan="3">
 		<div class="detail_on_item">
-			<div class="title_detail_item">
-				<a title="Details" onclick="return false;" href="." class="title_details">Details</a>
-					&nbsp;/&nbsp;
-				<a title="Comments" onclick="return false;" href="." class="title_comment">Comments</a>
-			</div>
 			<div class='all_for_detail'>
+				<h2>Details</h2>
+				<input  type='button' onclick='return false;' class='edit_details hidden' value='edit' />
 				<p class='details_item'></p>
-				<input  type='button' onclick='return false;' class='edit_details hidden' value='Edit details' />
 				<div class='add_details'>
-					<h2>Edit details</h2>
 					<textarea class='textarea_edit_detail' rows='7' cols='75' name='new_details'></textarea><br />
 					<input type='button' onclick='return false;' class='details' value='Post' />
 				</div>
 			</div>
 			<div class='all_for_comment'>
-				<div class='comments_item'></div>
-				<div class='add_comment'>
-					<h2>Add comment</h2>
+				<h2>Comments</h2><span class='show_comments comments-hide'>Click to see all comments</span>
+				<div class='comments_item' style='display: none;'></div><br/><br/>
+				<p class='add_comment textarea-hide'>Click to add a comment</p>
+				<div class='add_comment' style='display: none;'>
 					<textarea class='textarea_add_comment' rows='7' cols='75' name='new_comment'></textarea><br />
 					<input type='button' onclick='return false;' class='comment' value='Post' />
 				</div>

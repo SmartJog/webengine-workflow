@@ -160,22 +160,8 @@ div.one_comment p {
     display: none;
 }
 
-.add_details h2, .add_comment h2 {
-    font-size: larger;
-    border-top: 1px solid black;
-    padding-top: 3px;
-}
-
 .add_comment {
     margin-bottom: 20px;
-}
-
-div.title_detail_item {
-    height: 20px;
-    width: auto;
-    position: relative;
-    text-align: center;
-    padding-top: 3px;
 }
 
 .progress_workflow {
@@ -322,36 +308,12 @@ div.detail_on_item {
     padding: 10px;
 }
 
-div.detail_on_item div.all_for_comment {
-    display: none;
-}
-
-div.detail_on_item div.all_for_detail {
-    display: block;
-}
-
-div.detail_on_item a.title_details {
-    font-weight: bold;
-}
-
-div.detail_on_item.show-comments div.all_for_comment {
-    display: block;
-}
-
-div.detail_on_item.show-comments div.all_for_detail {
-    display: none;
-}
-
-div.detail_on_item.show-comments a.title_comment {
-    font-weight: bold;
-}
-
-div.detail_on_item.show-comments a.title_details {
-    font-weight: normal;
+div.detail_on_item h2 {
+    margin-bottom: 5px;
+    display: inline;
 }
 
 p.details_item, div.comments_item {
-    border: 1px solid black;
     padding: 10px;
     margin-bottom: 10px;
     overflow: auto;
@@ -359,7 +321,21 @@ p.details_item, div.comments_item {
 }
 
 p.details_item {
-    background-color: #ddd;
+    border-left: 1px dotted;
+}
+
+span.show_comments, p.add_comment {
+    color: blue;
+    cursor: pointer;
+    font-size: x-small;
+}
+
+span.show_comments {
+    margin-left: 10px;
+}
+
+span.show_comments:hover, p.add_comment:hover {
+    text-decoration: underline;
 }
 
 textarea.textarea_edit_detail, textarea.textarea_add_comment {
@@ -375,4 +351,13 @@ li {
 
 li a:hover {
     text-decoration: underline;
+}
+
+div.all_for_detail input.edit_details {
+    width: 30px;
+    margin-bottom: 10px;
+}
+
+div.add_details h2 {
+    display: block;
 }

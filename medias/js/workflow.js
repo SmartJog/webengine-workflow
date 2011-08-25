@@ -124,8 +124,9 @@ workflowItemView = Backbone.View.extend({
         'click a.label_item'                     : 'retrieveDetailsAndComments',
         'click input.details'                    : 'updateDetails',
         'click input.comment'                    : 'addComment',
-        'click a.title_details, a.title_comment' : 'displayDetailsOrComments',
-        'click input.edit_details'               : 'editDetails'
+        'click input.edit_details'               : 'editDetails',
+        'click span.show_comments'               : 'showComments',
+        'click p.add_comment'                    : 'showCommentBox'
     },
     validation : function (e) {
         var validation = null;
@@ -155,9 +156,32 @@ workflowItemView = Backbone.View.extend({
         this.model.addComment($(e.target).parent().find('textarea').attr('value'));
         $(e.target).parent().find('textarea').attr('value', '');
     },
+    showComments : function (e) {
+        if ($(e.target).hasClass('comments-hide')) {
+            $(this.detailEl).find('div.comments_item').attr('style', 'display: block;');
+            $(e.target).removeClass('comments-hide');
+            $(e.target).html('Click to hide comments');
+        } else {
+            $(this.detailEl).find('div.comments_item').attr('style', 'display: none;');
+            $(e.target).addClass('comments-hide');
+            $(e.target).html('Click to see all comments');
+        }
+    },
+    showCommentBox : function (e) {
+        if ($(e.target).hasClass('textarea-hide')) {
+            $(this.detailEl).find('div.add_comment').attr('style', 'display: block;');
+            $(e.target).removeClass('textarea-hide');
+            $(e.target).html('Click to hide textarea');
+        } else {
+            $(this.detailEl).find('div.add_comment').attr('style', 'display: none;');
+            $(e.target).addClass('textarea-hide');
+            $(e.target).html('Click to add a comment');
+        }
+    },
     updateDetails : function (e) {
         this.model.updateDetails($(e.target).parent().find('textarea').attr('value'));
-        $(this.detailEl).find('div.all_for_detail').children().attr('style', 'display: block;');
+        $(this.detailEl).find('p.details_item').attr('style', 'display: block;');
+        $(this.detailEl).find('input.edit_details').attr('style', 'display: inline;');
         $(this.detailEl).find('div.add_details').attr('style', 'display: none;');
     },
     additionalInformation       : function () {
@@ -167,22 +191,13 @@ workflowItemView = Backbone.View.extend({
         } else {
             $(this.detailEl).css('visibility', 'visible').show();
             this.model.retrieveDetailsAndComments();
-            // @targetSection@ is the div which contains the details
-            this._showDetailsOrComments('details');
-        }
-    },
-    displayDetailsOrComments : function (e) {
-        if ($(e.target).attr('class') === 'title_details') {
-            this._showDetailsOrComments('details');
-        } else {
-            this._showDetailsOrComments('comment');
         }
     },
     editDetails : function () {
-        var el = $(this.detailEl).find('div.all_for_detail');
-        $(el).children().attr('style', 'display: none;');
+        $(this.detailEl).find('p.details_item').attr('style', 'display: none;');
+        $(this.detailEl).find('input.edit_details').attr('style', 'display: none;');
         $(this.detailEl).find('div.add_details').attr('style', 'display: block;');
-        $(this.detailEl).find('div.add_details textarea').attr('value', $(el).find('p').html().br2nl());
+        $(this.detailEl).find('div.add_details textarea').attr('value', this.model.get('details').br2nl());
     },
     render : function (model) {
         if (model.get('HTTPStatusCode') === '200') {
@@ -246,13 +261,6 @@ workflowItemView = Backbone.View.extend({
             }
         } else {
             $(this.detailEl).find('div.comments_item').html('** No comments **');
-        }
-    },
-    _showDetailsOrComments : function (what) {
-        if (what == 'details') {
-            $(this.detailEl).find('div.detail_on_item').removeClass('show-comments');
-        } else {
-            $(this.detailEl).find('div.detail_on_item').addClass('show-comments');
         }
     },
     show : function () {
