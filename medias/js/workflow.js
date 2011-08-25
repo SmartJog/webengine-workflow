@@ -163,9 +163,9 @@ workflowItemView = Backbone.View.extend({
     additionalInformation       : function () {
         var prop = $(this.detailEl).css('visibility');
         if (prop === 'visible') {
-            $(this.detailEl).css('visibility', 'hidden').fadeOut();
+            $(this.detailEl).css('visibility', 'hidden').hide();
         } else {
-            $(this.detailEl).css('visibility', 'visible').fadeIn();
+            $(this.detailEl).css('visibility', 'visible').show();
             this.model.retrieveDetailsAndComments();
             // @targetSection@ is the div which contains the details
             this._showDetailsOrComments('details');
