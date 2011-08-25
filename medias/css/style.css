@@ -350,7 +350,7 @@ div.detail_on_item.show-comments a.title_details {
     font-weight: normal;
 }
 
-p.details_item, p.comments_item {
+p.details_item, div.comments_item {
     border: 1px solid black;
     padding: 10px;
     margin-bottom: 10px;

@@ -240,12 +240,12 @@ workflowItemView = Backbone.View.extend({
         }
         var comments = this.model.get('comments');
         if (comments && comments[0]) {
-            $(this.detailEl).find('p.comments_item').html(this._displayOneComment(comments[0], 1));
+            $(this.detailEl).find('div.comments_item').html(this._displayOneComment(comments[0], 1));
             for (i = 1; i < comments.length; i++) {
-                $(this.detailEl).find('p.comments_item').append(this._displayOneComment(comments[i], i+1));
+                $(this.detailEl).find('div.comments_item').append(this._displayOneComment(comments[i], i+1));
             }
         } else {
-            $(this.detailEl).find('p.comments_item').html('** No comments **');
+            $(this.detailEl).find('div.comments_item').html('** No comments **');
         }
     },
     _showDetailsOrComments : function (what) {
