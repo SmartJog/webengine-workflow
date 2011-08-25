@@ -142,7 +142,13 @@ td.is-untaken a.take {
 div.one_comment {
     margin: 10px;
     margin-bottom: 20px;
-    background-color: #ddd;
+}
+
+div.one_comment p {
+    font-family: monospace;
+    border-left: 1px dotted;
+    padding-left: 15px;
+    margin-left: 15px;
 }
 
 .one_comment span#ancre_comment a {
