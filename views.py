@@ -220,6 +220,7 @@ def _get_comments(item_id):
             'date'    : str(comment.date),
             'owner'   : owner,
             'comment' : comment.comments,
+            'id'      : comment.id,
         }
         commentsToSubmit.append(detailComment)
     return commentsToSubmit

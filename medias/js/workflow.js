@@ -225,9 +225,9 @@ workflowItemView = Backbone.View.extend({
     },
     _displayOneComment : function (comment, iterator) {
         var blockComment = "<div class='one_comment'>";
-        blockComment += "<h3><span id='ancre_comment'><a name='" + iterator + "'";
-        blockComment += " href='#" + iterator + "' title='Comment anchor - " + iterator + "'>";
-        blockComment += '#' + iterator + '</a></span> - ' + comment.date + ' - ' + comment.owner + '</h3>';
+        blockComment += "<h3><a class='ancre_comment' name='" + comment.id + "'";
+        blockComment += " href='#" + comment.id + "' title='Comment anchor - " + iterator + "'>";
+        blockComment += '#' + iterator + '</a> - ' + comment.date + ' - ' + comment.owner + '</h3>';
         blockComment += '<p>' + comment.comment + '</p>';
         blockComment += '</div>';
         return blockComment;

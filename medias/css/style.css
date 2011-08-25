@@ -151,7 +151,7 @@ div.one_comment p {
     margin-left: 15px;
 }
 
-.one_comment span#ancre_comment a {
+.one_comment a.ancre_comment {
     color: #0066dd;
 }
 
