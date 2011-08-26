@@ -1,0 +1,30 @@
+{% extends "workflow/base.html" %}
+
+{% block title %}Person Management{% endblock %}
+{% block pagetitle %}Person Management{% endblock %}
+
+{% block optional_js %}
+<script src='/javascript/jquery-ui/jquery-ui.min.js' type='text/javascript'></script>
+{% endblock %}
+
+{% block content %}
+<div id='django_users'>
+    <form method='POST' action='{% url update-person %}'>
+    <table>
+    {% for user in django_users %}
+    <tr>
+        <td>{{ user }}</td>
+        <td>
+            {% if user.is_active %}
+            <input type='checkbox' name='{{ user.id }}' value='{{ user.id }}' checked='true'/>
+            {% else %}
+            <input type='checkbox' name='{{ user.id }}' value='{{ user.id }}'/>
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+    <tr><td colspan='2'><input type='submit' value='Save' /></td></tr>
+    </form>
+    </table>
+</div>
+{% endblock %}

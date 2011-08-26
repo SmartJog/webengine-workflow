@@ -2,15 +2,16 @@ from webengine.utils.decorators import render
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.shortcuts import render_to_response
+from django.contrib.auth.models import User
 
 from webengine.utils.log import logger
 
-from workflow.models.teammodels import Person
+from workflow.models.teammodels import Person, ContractType
 from workflow.forms import WorkflowInstanceNewForm, ItemNewForm
 from workflow.models import WorkflowSection, Workflow, Category, Item, Validation, Comment, ItemTemplate
 
 from copy import copy
-
+from datetime import date
 import simplejson as json
 
 
@@ -333,3 +334,35 @@ def set_order(request):
         category.order = order
         category.save()
     return
+
+@render(view='manage_person')
+def manage_person(request):
+    django_users = User.objects.all().order_by('username')
+    ret = {'django_users'   : django_users,}
+    return ret
+
+def update_person(request):
+    person_id = []
+    for id in request.POST:
+        person_id.append(id)
+
+    for id in person_id:
+        person = Person.objects.filter(django_user=id)
+        django_user = User.objects.filter(id=id)[0]
+        if not person:
+            contract = ContractType.objects.filter(id=1)[0]
+            new_person = Person(firstname=django_user.first_name,
+                                lastname=django_user.last_name,
+                                django_user=django_user,
+                                arrival_date=date.today().isoformat(),
+                                contract_type=contract)
+            new_person.save()
+
+        django_user.is_active = True
+        django_user.save()
+
+        django_users = User.objects.extra(where=['id NOT IN (%s)' % ' ,'.join(str(id) for id in person_id)])
+        for user in django_users:
+            user.is_active = False
+            user.save()
+    return HttpResponseRedirect(reverse('manage-person'))

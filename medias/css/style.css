@@ -360,3 +360,16 @@ div.all_for_detail input.edit_details {
 div.add_details h2 {
     display: block;
 }
+
+div#django_users {
+    padding: 50px;
+    float: center;
+}
+
+div#django_users td {
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+    text-align: center;
+    border-bottom: 1px dotted;
+}

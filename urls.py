@@ -11,4 +11,6 @@ urlpatterns = patterns('workflow',
     url(r'^set_order/$',                                                                'views.set_order',                                  name='set-order'),
     url(r'^item/(?P<item_id>\d+)/$',                                                    'views.item_update',                                name='item-update'),
     url(r'^item/$',                                                                     'views.item',                                        name='item'),
+    url(r'^manage_person/$',                                                            'views.manage_person',                              name='manage-person'),
+    url(r'^update_person/$',                                                            'views.update_person',                              name='update-person'),
 )

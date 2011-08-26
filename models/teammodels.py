@@ -6,7 +6,7 @@ class WorkflowBase(models.Model):
         app_label = 'workflow'
         abstract = True
 
-class ContractType(models.Model):
+class ContractType(WorkflowBase):
     id = models.AutoField(primary_key = True)
     name = models.CharField(max_length = 64, null=False)
 
