@@ -79,6 +79,7 @@ workflowItem = Backbone.Model.extend({
         };
         options.error = this.wrapError(options.error, model, options);
         var method = this.isNew() ? 'create' : 'update';
+        /* FIX ME */
         var details = this.get('details').replace(/"/g, '\\"').replace(/\n/g, '<br/>');
         this.set({'details' : escape(details)}, {silent : true});
         if ('new_comment' in this.attributes) {
@@ -88,6 +89,7 @@ workflowItem = Backbone.Model.extend({
         delete this._previousAttributes['details'];
         delete this._previousAttributes['comments'];
         delete this.attributes['comments'];
+        /* END FIX ME */
         var old = this.previousAttributes();
         model.set({old : old}, {silent : true});
         Backbone.sync.call(this, method, model, options.success, options.error);
