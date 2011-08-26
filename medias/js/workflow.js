@@ -175,7 +175,7 @@ workflowItemView = Backbone.View.extend({
         var el = $(this.detailEl).find('div.all_for_detail');
         $(el).children().attr('style', 'display: none;');
         $(this.detailEl).find('div.add_details').attr('style', 'display: block;');
-        $(this.detailEl).find('div.add_details textarea').attr('value', $(el).find('p').html());
+        $(this.detailEl).find('div.add_details textarea').attr('value', $(el).find('p').html().br2nl());
     },
     render : function (model) {
         if (model.get('HTTPStatusCode') === '200') {
@@ -513,6 +513,7 @@ function switchToAdmin (data) {
 }
 
 $(document).ready(function () {
+    String.prototype.br2nl= function(){return this.split('<br>').join('\n')}
     Backbone.emulateHTTP = true;
 
     mainView = new workflowMainView();
