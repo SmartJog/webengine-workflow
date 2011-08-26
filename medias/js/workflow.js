@@ -249,7 +249,9 @@ workflowItemView = Backbone.View.extend({
     },
     _generateDetailsAndComments : function () {
         if (this.model.get('details').length) {
-            $(this.detailEl).find('p.details_item').html(this.model.get('details'));
+            var details = this.model.get('details');
+            details = details.replace(/&/g, '%26').replace(/>/g, '%3E').replace(/</g, '%3C');
+            $(this.detailEl).find('p.details_item').html(details);
         } else {
             $(this.detailEl).find('p.details_item').html('** No details **');
         }
