@@ -49,13 +49,11 @@ workflowItem = Backbone.Model.extend({
         this.fetch();
     },
     updateDetails : function (newDetails) {
-        newDetails = newDetails.replace(/"/g, '\\"').replace(/\n/g, '\\n');
         this.set({details : newDetails}, {silent : true});
         this.save();
     },
     addComment : function (newComment) {
         if (newComment.trim()) {
-            newComment = newComment.replace(/"/g, '\\"').replace(/\n/g, '\\n');
             this.set({new_comment : newComment}, {silent : true});
             this.save();
         }
@@ -81,6 +79,15 @@ workflowItem = Backbone.Model.extend({
         };
         options.error = this.wrapError(options.error, model, options);
         var method = this.isNew() ? 'create' : 'update';
+        var details = this.get('details').replace(/"/g, '\\"').replace(/\n/g, '<br/>');
+        this.set({'details' : escape(details)}, {silent : true});
+        if ('new_comment' in this.attributes) {
+            var new_comment = this.get('new_comment').replace(/"/g, '\\"').replace(/\n/g, '<br/>');
+            this.set({'new_comment' : escape(new_comment)}, {silent : true});
+        }
+        delete this._previousAttributes['details'];
+        delete this._previousAttributes['comments'];
+        delete this.attributes['comments'];
         var old = this.previousAttributes();
         model.set({old : old}, {silent : true});
         Backbone.sync.call(this, method, model, options.success, options.error);

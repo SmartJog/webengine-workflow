@@ -286,7 +286,8 @@ def item_update(request, item_id):
         id_comment = int(Comment.objects.all().count() + 1)
         comment = Comment(id=id_comment, item_id=item_id, person=person, comments=remote_item['new_comment'])
         comment.save()
-        ret.update({'comments' : _get_comments(item_id),})
+
+    ret.update({'comments' : _get_comments(item_id),})
     return ret
 
 @render(output='json')
