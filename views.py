@@ -212,7 +212,7 @@ def create(request):
     return HttpResponseRedirect(reverse('index'))
 
 def _get_comments(item_id):
-    comments = Comment.objects.filter(item=item_id)
+    comments = Comment.objects.filter(item=item_id).order_by('id')
     commentsToSubmit = []
     for comment in comments:
         assigned_to = Person.objects.filter(id=comment.person_id)[0]
@@ -285,8 +285,9 @@ def item_update(request, item_id):
 
     if 'new_comment' in remote_item and not isinstance(remote_item['new_comment'], list):
         person = Person.objects.filter(django_user=request.user.id)[0]
-        id_comment = int(Comment.objects.all().count() + 1)
-        comment = Comment(id=id_comment, item_id=item_id, person=person, comments=remote_item['new_comment'])
+        comments = Comment.objects.order_by('-id')
+        id_comment = comments and comments[0].id or 0
+        comment = Comment(id=id_comment+1, item_id=item_id, person=person, comments=remote_item['new_comment'])
         comment.save()
 
     ret.update({'comments' : _get_comments(item_id),})
