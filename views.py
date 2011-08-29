@@ -3,6 +3,7 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.shortcuts import render_to_response
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 
 from webengine.utils.log import logger
 
@@ -15,6 +16,7 @@ from datetime import date
 import simplejson as json
 
 
+@login_required
 @render(view='index')
 def index(request):
     """ Return the list of all the workflow instance """
@@ -50,6 +52,7 @@ def get_admin(request):
     """ Return html chunk to admin workflow """
     return render_to_response('workflow/admin.html')
 
+@login_required
 @render(view='workflow')
 def workflow(request, workflow_id):
     person_id = Person.objects.filter(django_user=request.user.id)[0].id
@@ -226,6 +229,7 @@ def _get_comments(item_id):
         commentsToSubmit.append(detailComment)
     return commentsToSubmit
 
+@login_required
 @render(output='json')
 def item_update(request, item_id):
     """ Update item which have for item @item_id@
@@ -342,6 +346,7 @@ def manage_person(request):
     ret = {'django_users'   : django_users,}
     return ret
 
+@login_required
 def update_person(request):
     person_id = []
     for id in request.POST:
