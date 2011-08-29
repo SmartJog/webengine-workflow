@@ -1,9 +1,9 @@
-webengine-workflow (0.5.0~dev-1) unstable; urgency=low
+webengine-workflow (0.5.0-1) unstable; urgency=low
 
   * New upstream release.
   * Add myself to Uploaders.
 
- -- Gilles Dartiguelongue <gilles.dartiguelongue@smartjog.com>  Mon, 29 Aug 2011 14:09:28 +0200
+ -- Gilles Dartiguelongue <gilles.dartiguelongue@smartjog.com>  Mon, 29 Aug 2011 14:16:50 +0200
 
 webengine-workflow (0.4.0-1) unstable; urgency=low
 
