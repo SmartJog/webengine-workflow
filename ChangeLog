@@ -1,4 +1,4 @@
-Version 0.5.1~dev
+Version 0.5.1 Released on 2011/08/29
 
 	* Add @login_required decorator to functions that require information
 	  from the currently logged in User.
