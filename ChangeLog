@@ -1,6 +1,9 @@
-Version 0.4.1~dev
+Version 0.5.0~dev
 
 	* Remove recursive inclusion of previousAttributes.
+	* Fix various issues with backbone save method.
+	* Change various interface rendering properties.
+	* Add feature to manage Person objects.
 
 Version 0.4.0 Released on 2011/08/16
 
