@@ -2,7 +2,7 @@ Source: webengine-workflow
 Section: misc
 Priority: optional
 Maintainer: Philippe Bridant <philippe.bridant@smartjog.com>
-Uploaders: Bryann Lamour <bryann.lamour@smartjog.com>, Rémi Cardona <remi.cardona@smartjog.com>
+Uploaders: Bryann Lamour <bryann.lamour@smartjog.com>, Rémi Cardona <remi.cardona@smartjog.com>, Gilles Dartiguelongue <gilles.dartiguelongue@smartjog.com>
 Build-Depends: debhelper (>= 7.0.15), cdbs (>= 0.4.52), python-central (>= 0.6), txt2tags
 XS-Python-Version: >= 2.5
 Standards-Version: 3.9.2
