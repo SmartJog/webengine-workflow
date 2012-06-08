@@ -2,8 +2,9 @@ webengine-workflow (0.5.1-2~dev) unstable; urgency=low
 
   * Raise dependency on webengine (>= 0.14).
   * Drop now useless postinst/postrm files.
+  * Raise debhelper and compat to 8.
 
- -- Gilles Dartiguelongue <gilles.dartiguelongue@smartjog.com>  Fri, 08 Jun 2012 11:30:24 +0200
+ -- Gilles Dartiguelongue <gilles.dartiguelongue@smartjog.com>  Fri, 08 Jun 2012 11:32:34 +0200
 
 webengine-workflow (0.5.1-1) unstable; urgency=low
 
