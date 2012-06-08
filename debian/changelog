@@ -4,8 +4,9 @@ webengine-workflow (0.5.1-2~dev) unstable; urgency=low
   * Drop now useless postinst/postrm files.
   * Raise debhelper and compat to 8.
   * Switch to dpkg-source 3.0 (quilt) format.
+  * Drop useless docs file.
 
- -- Gilles Dartiguelongue <gilles.dartiguelongue@smartjog.com>  Fri, 08 Jun 2012 11:34:57 +0200
+ -- Gilles Dartiguelongue <gilles.dartiguelongue@smartjog.com>  Fri, 08 Jun 2012 11:42:52 +0200
 
 webengine-workflow (0.5.1-1) unstable; urgency=low
 
